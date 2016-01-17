@@ -1,20 +1,24 @@
-{
-  "parser"  : "babel-eslint",
-  "extends" : [
-    "standard",
-    "standard-react"
-  ],
-  "env"     : {
-    "browser" : true
-  },
-  "globals" : {
-    "__DEV__"      : false,
-    "__PROD__"     : false,
-    "__DEBUG__"    : false,
-    "__DEBUG_NEW_WINDOW__" : false,
-    "__BASENAME__" : false
-  },
-  "rules": {
-    "semi" : [2, "never"]
-  }
-}
+# vim:ft=yaml:
+
+# So parent files don't get applied
+root: true
+
+env:
+  browser: true
+
+extends:
+  - standard
+  - standard-react
+
+rules:
+  semi: [2, never]
+
+parser: babel-eslint
+
+globals:
+  __DEV__              : false
+  __PROD__             : false
+  __DEBUG__            : false
+  __DEBUG_NEW_WINDOW__ : false
+  __BASENAME__         : false
+

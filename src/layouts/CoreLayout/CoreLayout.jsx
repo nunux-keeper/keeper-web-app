@@ -1,5 +1,13 @@
 import React, { PropTypes } from 'react'
+import injectTapEventPlugin from 'react-tap-event-plugin'
+import AppBar from 'material-ui/lib/app-bar'
 import '../../styles/core.scss'
+
+// Needed for onTouchTap
+// Can go away when react 1.0 release
+// Check this repo:
+// https://github.com/zilverline/react-tap-event-plugin
+injectTapEventPlugin()
 
 // Note: Stateless/function components *will not* hot reload!
 // react-transform *only* works on component classes.
@@ -13,9 +21,11 @@ import '../../styles/core.scss'
 function CoreLayout ({ children }) {
   return (
     <div className='page-container'>
-      <div className='view-container'>
-        {children}
-      </div>
+      <AppBar
+        title='Title'
+        iconClassNameRight='muidocs-icon-navigation-expand-more'
+      />
+      {children}
     </div>
   )
 }
