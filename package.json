@@ -51,6 +51,7 @@
   "license": "MIT",
   "dependencies": {
     "better-npm-run": "0.0.5",
+    "chance": "^0.8.0",
     "debug": "^2.2.0",
     "dotenv": "^1.2.0",
     "history": "^1.17.0",
