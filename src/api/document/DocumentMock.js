@@ -9,9 +9,16 @@ function getRandomDocument (doc) {
     id = chance.hash({length: 15}),
     title = chance.sentence({words: 5}),
     content = chance.paragraph(),
-    contentType = 'text/plain'
+    contentType = 'text/plain',
+    origin = chance.url(),
+    labels = ['test'],
+    attachments = [{
+      key: chance.hash({length: 10}),
+      origin: chance.url({extensions: ['png']}),
+      type: 'image/png'
+    }]
   } = doc
-  return {id, title, content, contentType}
+  return {id, title, content, contentType, origin, labels, attachments}
 }
 
 function getRandomDocuments (nb = 10) {
@@ -23,7 +30,15 @@ function getRandomDocuments (nb = 10) {
   for (let i = 0; i < nb; i++) {
     result.hits.push({
       id: chance.hash({length: 15}),
-      title: chance.sentence({words: 5})
+      title: chance.sentence({words: 5}),
+      contentType: 'text/plain',
+      origin: chance.url(),
+      labels: ['test'],
+      attachments: [{
+        key: chance.hash({length: 10}),
+        origin: chance.url({extensions: ['png']}),
+        type: 'image/png'
+      }]
     })
   }
   return result

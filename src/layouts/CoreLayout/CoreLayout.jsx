@@ -1,37 +1,62 @@
 import React, { PropTypes } from 'react'
-import injectTapEventPlugin from 'react-tap-event-plugin'
 import AppBar from 'material-ui/lib/app-bar'
+import Dialog from 'material-ui/lib/dialog'
+import { connect } from 'react-redux'
+import { pushPath } from 'redux-simple-router'
 import '../../styles/core.scss'
 
-// Needed for onTouchTap
-// Can go away when react 1.0 release
-// Check this repo:
-// https://github.com/zilverline/react-tap-event-plugin
-injectTapEventPlugin()
+export class CoreLayout extends React.Component {
+  static propTypes = {
+    dispatch: PropTypes.func,
+    children: PropTypes.node,
+    location: PropTypes.object
+  };
 
-// Note: Stateless/function components *will not* hot reload!
-// react-transform *only* works on component classes.
-//
-// Since layouts rarely change, they are a good place to
-// leverage React's new Stateless Functions:
-// https://facebook.github.io/react/docs/reusable-components.html#stateless-functions
-//
-// CoreLayout is a pure function of its props, so we can
-// define it with a plain javascript function...
-function CoreLayout ({ children }) {
-  return (
-    <div className='page-container'>
-      <AppBar
-        title='Title'
-        iconClassNameRight='muidocs-icon-navigation-expand-more'
-      />
-      {children}
-    </div>
-  )
+  componentWillReceiveProps (nextProps) {
+    // if we changed routes...
+    if ((
+      nextProps.location.state &&
+      nextProps.location.state.modal
+    )) {
+      // save the old children (just like animation)
+      this.previousChildren = this.props.children
+    }
+  }
+
+  handleClose () {
+    const { returnTo } = this.props.location.state
+    this.props.dispatch(pushPath(returnTo))
+  }
+
+  render () {
+    let { location } = this.props
+    let isModal = (location.state && location.state.modal && this.previousChildren)
+
+    return (
+      <div className='page-container'>
+        <AppBar
+          title='Title'
+          iconClassNameRight='muidocs-icon-navigation-expand-more'
+        />
+        {isModal ? this.previousChildren : this.props.children }
+
+        {isModal && (
+        <Dialog
+          title={location.state.title}
+          modal={false}
+          open
+          onRequestClose={() => this.handleClose()}>
+          {this.props.children}
+        </Dialog>
+        )}
+      </div>
+    )
+  }
 }
 
-CoreLayout.propTypes = {
-  children: PropTypes.element
-}
+const mapStateToProps = (state) => ({
+  location: state.router
+})
 
-export default CoreLayout
+export default connect(mapStateToProps)(CoreLayout)
+
