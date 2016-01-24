@@ -19,9 +19,8 @@ export default (
   <Route path='/' component={CoreLayout}>
     <IndexRoute component={HomeView} />
     <Route path='login' component={LoginView} />
-    <Route path='document' component={requireAuthentication(DocumentsView)}>
-      <Route path=':docId' component={DocumentView} />
-    </Route>
+    <Route path='document' component={requireAuthentication(DocumentsView)} />
+    <Route path='document/:docId' component={DocumentView} />
     <Route path='/404' component={NotFoundView} />
     <Redirect from='*' to='/404' />
   </Route>

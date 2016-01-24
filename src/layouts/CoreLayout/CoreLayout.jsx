@@ -1,14 +1,18 @@
 import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import AppBar from 'material-ui/lib/app-bar'
 import Dialog from 'material-ui/lib/dialog'
-import { connect } from 'react-redux'
+import AppNavigation from 'components/AppNavigation'
 import { pushPath } from 'redux-simple-router'
+import { actions as navigationActions } from '../../redux/modules/navigation'
 
 export class CoreLayout extends React.Component {
   static propTypes = {
-    dispatch: PropTypes.func,
     children: PropTypes.node,
     location: PropTypes.object,
+    pushPath: PropTypes.func,
+    toggleNavigation: PropTypes.func,
     title: PropTypes.string
   };
 
@@ -25,7 +29,7 @@ export class CoreLayout extends React.Component {
 
   handleClose () {
     const { returnTo } = this.props.location.state
-    this.props.dispatch(pushPath(returnTo))
+    this.props.pushPath(returnTo)
   }
 
   getStyles () {
@@ -41,7 +45,7 @@ export class CoreLayout extends React.Component {
   }
 
   render () {
-    const { location, title } = this.props
+    const { location, title, toggleNavigation } = this.props
     const isModal = (location.state && location.state.modal && this.previousChildren)
     const styles = this.getStyles()
 
@@ -50,6 +54,7 @@ export class CoreLayout extends React.Component {
         <AppBar
           title={title}
           style={styles.appBar}
+          onLeftIconButtonTouchTap={() => toggleNavigation()}
           iconClassNameRight='muidocs-icon-navigation-expand-more'
         />
         {isModal ? this.previousChildren : this.props.children }
@@ -63,6 +68,7 @@ export class CoreLayout extends React.Component {
           {this.props.children}
         </Dialog>
         )}
+        <AppNavigation />
       </div>
     )
   }
@@ -73,5 +79,9 @@ const mapStateToProps = (state) => ({
   title: state.title
 })
 
-export default connect(mapStateToProps)(CoreLayout)
+const mapDispatchToProps = (dispatch) => (
+  bindActionCreators(Object.assign({}, navigationActions, {pushPath}), dispatch)
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(CoreLayout)
 
