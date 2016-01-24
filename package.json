@@ -63,6 +63,7 @@
     "material-ui": "^0.14.2",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
+    "react-infinite-grid": "^0.4.0",
     "react-redux": "^4.0.0",
     "react-router": "^1.0.1",
     "react-tap-event-plugin": "^0.2.1",

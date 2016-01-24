@@ -1,7 +1,17 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router'
+import { actions as titleActions } from '../../redux/modules/title'
 
 export class NotFoundView extends React.Component {
+  static propTypes = {
+    updateTitle: PropTypes.func.isRequired
+  };
+
+  componentDidMount () {
+    this.props.updateTitle()
+  }
+
   render () {
     return (
       <div className='container text-center'>
@@ -13,4 +23,4 @@ export class NotFoundView extends React.Component {
   }
 }
 
-export default NotFoundView
+export default connect(null, titleActions)(NotFoundView)

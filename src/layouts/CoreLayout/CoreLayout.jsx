@@ -3,13 +3,13 @@ import AppBar from 'material-ui/lib/app-bar'
 import Dialog from 'material-ui/lib/dialog'
 import { connect } from 'react-redux'
 import { pushPath } from 'redux-simple-router'
-import '../../styles/core.scss'
 
 export class CoreLayout extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func,
     children: PropTypes.node,
-    location: PropTypes.object
+    location: PropTypes.object,
+    title: PropTypes.string
   };
 
   componentWillReceiveProps (nextProps) {
@@ -28,14 +28,28 @@ export class CoreLayout extends React.Component {
     this.props.dispatch(pushPath(returnTo))
   }
 
+  getStyles () {
+    const styles = {
+      appBar: {
+        position: 'fixed',
+        // Needed to overlap the examples
+        zIndex: 99,
+        top: 0
+      }
+    }
+    return styles
+  }
+
   render () {
-    let { location } = this.props
-    let isModal = (location.state && location.state.modal && this.previousChildren)
+    const { location, title } = this.props
+    const isModal = (location.state && location.state.modal && this.previousChildren)
+    const styles = this.getStyles()
 
     return (
-      <div className='page-container'>
+      <div id='layout'>
         <AppBar
-          title='Title'
+          title={title}
+          style={styles.appBar}
           iconClassNameRight='muidocs-icon-navigation-expand-more'
         />
         {isModal ? this.previousChildren : this.props.children }
@@ -55,7 +69,8 @@ export class CoreLayout extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  location: state.router
+  location: state.router,
+  title: state.title
 })
 
 export default connect(mapStateToProps)(CoreLayout)
