@@ -8,17 +8,18 @@ function getRandomDocument (doc) {
   const {
     id = chance.hash({length: 15}),
     title = chance.sentence({words: 5}),
-    content = chance.paragraph(),
+    content = chance.paragraph({sentences: 50}),
     contentType = 'text/plain',
     origin = chance.url(),
     labels = ['test'],
+    date = chance.date(),
     attachments = [{
       key: chance.hash({length: 10}),
       origin: chance.url({extensions: ['png']}),
       type: 'image/png'
     }]
   } = doc
-  return {id, title, content, contentType, origin, labels, attachments}
+  return {id, title, content, contentType, origin, labels, date, attachments}
 }
 
 function getRandomDocuments (nb = 10) {

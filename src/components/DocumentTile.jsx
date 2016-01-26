@@ -3,10 +3,11 @@ import { Link } from 'react-router'
 
 import GridTile from 'material-ui/lib/grid-list/grid-tile'
 import Paper from 'material-ui/lib/paper'
-import MoreVert from 'material-ui/lib/svg-icons/navigation/more-vert'
 import IconButton from 'material-ui/lib/icon-button'
 import IconMenu from 'material-ui/lib/menus/icon-menu'
 import MenuItem from 'material-ui/lib/menus/menu-item'
+import FontIcon from 'material-ui/lib/font-icon'
+import Colors from 'material-ui/lib/styles/colors'
 
 function isInsideButton (el) {
   if (el.type === 'button') {
@@ -35,19 +36,15 @@ export default class DocumentTile extends React.Component {
     }
   }
 
-  renderMenuButton () {
-    return (
-      <IconButton>
-        <MoreVert color='white' />
-      </IconButton>
-    )
-  }
-
   renderMenu () {
+    const iconButtonElement = <IconButton>
+      <FontIcon className='material-icons' color={Colors.white}>more_vert</FontIcon>
+    </IconButton>
+
     return (
-      <IconMenu iconButtonElement={this.renderMenuButton()}>
-        <MenuItem primaryText='Share' />
-        <MenuItem primaryText='Delete' />
+      <IconMenu iconButtonElement={iconButtonElement}>
+        <MenuItem primaryText='Share' leftIcon={<FontIcon className='material-icons'>share</FontIcon>}/>
+        <MenuItem primaryText='Remove' leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}/>
       </IconMenu>
     )
   }
@@ -64,7 +61,6 @@ export default class DocumentTile extends React.Component {
           <GridTile
             key={doc.id}
             title={doc.title}
-            href='ffff'
             subtitle={<span>by <b>{doc.origin}</b></span>}
             actionIcon={this.renderMenu()}>
             <img src='http://placehold.it/320x200' />

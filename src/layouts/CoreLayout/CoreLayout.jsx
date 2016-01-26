@@ -3,17 +3,21 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import AppBar from 'material-ui/lib/app-bar'
 import Dialog from 'material-ui/lib/dialog'
+import Events from 'material-ui/lib/utils/events'
 import AppNavigation from 'components/AppNavigation'
 import { pushPath } from 'redux-simple-router'
 import { actions as navigationActions } from '../../redux/modules/navigation'
+import { actions as deviceActions, Sizes } from '../../redux/modules/device'
 
 export class CoreLayout extends React.Component {
   static propTypes = {
     children: PropTypes.node,
     location: PropTypes.object,
+    resize: PropTypes.func,
     pushPath: PropTypes.func,
     toggleNavigation: PropTypes.func,
-    title: PropTypes.string
+    title: PropTypes.string,
+    device: PropTypes.object
   };
 
   componentWillReceiveProps (nextProps) {
@@ -27,13 +31,25 @@ export class CoreLayout extends React.Component {
     }
   }
 
+  componentDidMount () {
+    const { resize } = this.props
+    Events.on(window, 'resize', resize)
+  }
+
+  componentWillUnmount () {
+    const { resize } = this.props
+    Events.off(window, 'resize', resize)
+  }
+
   handleClose () {
     const { returnTo } = this.props.location.state
     this.props.pushPath(returnTo)
   }
 
-  getStyles () {
-    const styles = {
+  render () {
+    const { location, title, toggleNavigation, device } = this.props
+    const isModal = (location.state && location.state.modal && this.previousChildren)
+    const customStyle = {
       appBar: {
         position: 'fixed',
         // Needed to overlap the examples
@@ -41,19 +57,20 @@ export class CoreLayout extends React.Component {
         top: 0
       }
     }
-    return styles
-  }
-
-  render () {
-    const { location, title, toggleNavigation } = this.props
-    const isModal = (location.state && location.state.modal && this.previousChildren)
-    const styles = this.getStyles()
+    const customBodyStyle = device.size < Sizes.MEDIUM ? {
+      maxHeight: 'inherit',
+      padding: 0
+    } : {}
+    const customContentStyle = device.size < Sizes.MEDIUM ? {
+      width: 'none',
+      maxWidth: 'none'
+    } : {}
 
     return (
       <div id='layout'>
         <AppBar
           title={title}
-          style={styles.appBar}
+          style={customStyle.appBar}
           onLeftIconButtonTouchTap={() => toggleNavigation()}
           iconClassNameRight='muidocs-icon-navigation-expand-more'
         />
@@ -64,6 +81,10 @@ export class CoreLayout extends React.Component {
           title={location.state.title}
           modal={false}
           open
+          autoScrollBodyContent
+          autoDetectWindowHeight={false}
+          bodyStyle={customBodyStyle}
+          contentStyle={customContentStyle}
           onRequestClose={() => this.handleClose()}>
           {this.props.children}
         </Dialog>
@@ -76,11 +97,12 @@ export class CoreLayout extends React.Component {
 
 const mapStateToProps = (state) => ({
   location: state.router,
-  title: state.title
+  title: state.title,
+  device: state.device
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, navigationActions, {pushPath}), dispatch)
+  bindActionCreators(Object.assign({}, navigationActions, deviceActions, {pushPath}), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoreLayout)

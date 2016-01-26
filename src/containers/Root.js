@@ -32,6 +32,14 @@ export default class Root extends React.Component {
     }
   }
 
+  componentDidMount () {
+    console.log('componentDidMount')
+  }
+
+  componentWillUnmount () {
+    console.log('componentWillUnmount')
+  }
+
   render () {
     return (
       <Provider store={this.props.store}>

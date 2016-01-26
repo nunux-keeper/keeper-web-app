@@ -62,7 +62,7 @@ export default handleActions({
     })
   },
   [RECEIVE_TOKEN]: (state, action) => {
-    sessionStorage.token = action.payload.token
+    localStorage.token = action.payload.token
     return Object.assign({}, state, {
       isFetching: false,
       token: action.payload.token,
@@ -72,6 +72,6 @@ export default handleActions({
   }
 }, {
   isFetching: false,
-  token: sessionStorage.token,
-  user: decodeToken(sessionStorage.token)
+  token: localStorage.token,
+  user: decodeToken(localStorage.token)
 })

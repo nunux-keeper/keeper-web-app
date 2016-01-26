@@ -11,8 +11,7 @@ export class DocumentsView extends React.Component {
   static propTypes = {
     documents: PropTypes.object.isRequired,
     fetchDocuments: PropTypes.func.isRequired,
-    updateTitle: PropTypes.func.isRequired,
-    children: PropTypes.node
+    updateTitle: PropTypes.func.isRequired
   };
 
   componentDidMount () {
