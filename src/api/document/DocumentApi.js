@@ -30,21 +30,21 @@ export default class DocumentApi extends AbstractApi {
     })
   }
 
-  update (id, update) {
-    return this.fetch(`/document/${id}`, {
+  update (doc, update) {
+    return this.fetch(`/document/${doc.id}`, {
       method: 'put',
       body: JSON.stringify(update)
     })
   }
 
-  remove (id) {
-    return this.fetch(`/document/${id}`, {
+  remove (doc) {
+    return this.fetch(`/document/${doc.id}`, {
       method: 'delete'
     })
   }
 
-  restore (id) {
-    return this.fetch(`/document/${id}/restore`, {
+  restore (doc) {
+    return this.fetch(`/document/${doc.id}/restore`, {
       method: 'post'
     })
   }

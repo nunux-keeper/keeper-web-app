@@ -22,7 +22,7 @@ function getRandomDocument (doc) {
   return {id, title, content, contentType, origin, labels, date, attachments}
 }
 
-function getRandomDocuments (nb = 10) {
+function getRandomDocuments (nb = 20) {
   const result = {
     total: nb,
     hits: []
@@ -54,7 +54,11 @@ export default class DocumentMock {
   }
 
   search (/* params */) {
-    return Promise.resolve(getRandomDocuments())
+    return new Promise((resolve) => {
+      window.setTimeout(() => {
+        resolve(getRandomDocuments())
+      }, 2000)
+    })
   }
 
   get (id) {
@@ -65,16 +69,15 @@ export default class DocumentMock {
     return Promise.resolve(getRandomDocument(doc))
   }
 
-  update (id, update) {
-    var doc = Object.assign({id}, update)
-    return Promise.resolve(getRandomDocument(doc))
+  update (doc, update) {
+    return Promise.resolve(Object.assign(doc, update))
   }
 
-  remove (id) {
-    return Promise.resolve(getRandomDocument({id: id}))
+  remove (doc) {
+    return Promise.resolve(doc)
   }
 
-  restore (id) {
-    return Promise.resolve(getRandomDocument({id: id}))
+  restore (doc) {
+    return Promise.resolve(doc)
   }
 }

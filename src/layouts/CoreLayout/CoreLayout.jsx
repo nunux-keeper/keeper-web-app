@@ -9,6 +9,8 @@ import { pushPath } from 'redux-simple-router'
 import { actions as navigationActions } from '../../redux/modules/navigation'
 import { actions as deviceActions, Sizes } from '../../redux/modules/device'
 
+import styles from './CoreLayout.scss'
+
 export class CoreLayout extends React.Component {
   static propTypes = {
     children: PropTypes.node,
@@ -67,7 +69,7 @@ export class CoreLayout extends React.Component {
     } : {}
 
     return (
-      <div id='layout'>
+      <div className={styles.layout}>
         <AppBar
           title={title}
           style={customStyle.appBar}

@@ -1,5 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
+import { connect } from 'react-redux'
+
+import { actions as documentsActions } from '../redux/modules/documents'
 
 import GridTile from 'material-ui/lib/grid-list/grid-tile'
 import Paper from 'material-ui/lib/paper'
@@ -21,7 +24,8 @@ function isInsideButton (el) {
 
 export default class DocumentTile extends React.Component {
   static propTypes = {
-    value: PropTypes.object.isRequired
+    value: PropTypes.object.isRequired,
+    removeFromDocuments: PropTypes.func.isRequired
   };
 
   handleTouchTap (e) {
@@ -36,15 +40,24 @@ export default class DocumentTile extends React.Component {
     }
   }
 
+  onRemoveClick () {
+    const {value, removeFromDocuments} = this.props
+    removeFromDocuments(value)
+  }
+
   renderMenu () {
     const iconButtonElement = <IconButton>
       <FontIcon className='material-icons' color={Colors.white}>more_vert</FontIcon>
     </IconButton>
 
     return (
-      <IconMenu iconButtonElement={iconButtonElement}>
+      <IconMenu iconButtonElement={iconButtonElement} touchTapCloseDelay={0} >
         <MenuItem primaryText='Share' leftIcon={<FontIcon className='material-icons'>share</FontIcon>}/>
-        <MenuItem primaryText='Remove' leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}/>
+        <MenuItem
+          primaryText='Remove'
+          leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}
+          onTouchTap={() => this.onRemoveClick()}
+        />
       </IconMenu>
     )
   }
@@ -61,7 +74,7 @@ export default class DocumentTile extends React.Component {
           <GridTile
             key={doc.id}
             title={doc.title}
-            subtitle={<span>by <b>{doc.origin}</b></span>}
+            subtitle={<span>from <b>{doc.origin}</b></span>}
             actionIcon={this.renderMenu()}>
             <img src='http://placehold.it/320x200' />
           </GridTile>
@@ -71,3 +84,4 @@ export default class DocumentTile extends React.Component {
   }
 }
 
+export default connect(null, documentsActions)(DocumentTile)

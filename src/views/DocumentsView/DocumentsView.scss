@@ -1,14 +1,12 @@
-.counter {
-  font-weight: bold;
+.inProgress {
+    text-align: center;
+    padding-top: 10%;
 }
 
-.counter--green {
-  composes: counter;
-  color: rgb(25,200,25);
-}
-
-.duck {
-  display: block;
-  width: 100%;
-  margin-top: 1.5rem;
+.noDocuments {
+    text-align: center;
+    font-size: x-large;
+    color: #CACACA;
+    font-style: italic;
+    padding-top: 10%;
 }

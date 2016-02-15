@@ -5,15 +5,20 @@ import { actions as documentActions } from '../../redux/modules/document'
 import { actions as titleActions } from '../../redux/modules/title'
 
 import Card from 'material-ui/lib/card/card'
-import CardActions from 'material-ui/lib/card/card-actions'
 import CardTitle from 'material-ui/lib/card/card-title'
 import CardText from 'material-ui/lib/card/card-text'
 import IconButton from 'material-ui/lib/icon-button'
+import RaisedButton from 'material-ui/lib/raised-button'
 import MenuItem from 'material-ui/lib/menus/menu-item'
 import IconMenu from 'material-ui/lib/menus/icon-menu'
 import Divider from 'material-ui/lib/divider'
 
 import FontIcon from 'material-ui/lib/font-icon'
+
+import Toolbar from 'material-ui/lib/toolbar/toolbar'
+import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group'
+
+import styles from './DocumentView.scss'
 
 export class DocumentView extends React.Component {
   static propTypes = {
@@ -28,7 +33,7 @@ export class DocumentView extends React.Component {
     fetchDocument()
   }
 
-  renderTitle () {
+  get title () {
     const doc = this.props.document.value
     return (
       <div>
@@ -44,46 +49,60 @@ export class DocumentView extends React.Component {
     )
   }
 
+  get moreButton () {
+    return (
+      <IconButton
+        iconClassName='material-icons'
+        tooltip='More...' tooltipPosition='bottom-center'>
+        more_vert
+      </IconButton>
+    )
+  }
+
   render () {
     const doc = this.props.document.value
-    const iconButtonElement = <IconButton
-      iconClassName='material-icons'
-      tooltip='More...' tooltipPosition='top-center'>
-      more_vert
-    </IconButton>
 
     if (doc) {
       return (
-        <Card>
-          <CardTitle title={this.renderTitle()}/>
-          <CardText>
-            {doc.content}
-            <br/>
-            <span>Last modification: {doc.date.toString()}</span>
-          </CardText>
-          <CardActions>
-            <IconButton
-              iconClassName='material-icons'
-              tooltip='Edit document' tooltipPosition='top-center'>
-              edit
-            </IconButton>
-            <IconButton
-              iconClassName='material-icons'
-              tooltip='Share document' tooltipPosition='top-center'>
-              share
-            </IconButton>
-            <IconButton
-              iconClassName='material-icons'
-              tooltip='Edit labels' tooltipPosition='top-center'>
-              label
-            </IconButton>
-            <IconMenu iconButtonElement={iconButtonElement}>
-              <MenuItem primaryText='Upload file' leftIcon={<FontIcon className='material-icons'>file_upload</FontIcon>}/>
-              <Divider />
-              <MenuItem primaryText='Remove' leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}/>
-            </IconMenu>
-          </CardActions>
-        </Card>
+        <div>
+          <Toolbar className={ styles.toolbar }>
+            <ToolbarGroup>
+              <IconButton
+                iconClassName='material-icons'
+                tooltip='Edit document' tooltipPosition='bottom-center'>
+                edit
+              </IconButton>
+              <IconButton
+                iconClassName='material-icons'
+                tooltip='Share document' tooltipPosition='bottom-center'>
+                share
+              </IconButton>
+              <IconButton
+                iconClassName='material-icons'
+                tooltip='Edit labels' tooltipPosition='bottom-center'>
+                label
+              </IconButton>
+              <IconMenu iconButtonElement={this.moreButton}>
+                <MenuItem primaryText='Upload file' leftIcon={<FontIcon className='material-icons'>file_upload</FontIcon>}/>
+                <Divider />
+                <MenuItem primaryText='Remove' leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}/>
+              </IconMenu>
+            </ToolbarGroup>
+            <ToolbarGroup float='right'>
+              <RaisedButton label='Save' primary />
+            </ToolbarGroup>
+          </Toolbar>
+          <Card className={ styles.document }>
+            <CardTitle title={this.title}/>
+            <CardText>
+              {doc.content}
+              <br/>
+              <span className={ styles.modificationDate }>
+                Last modification: {doc.date.toString()}
+              </span>
+            </CardText>
+          </Card>
+        </div>
       )
     } else {
       return (

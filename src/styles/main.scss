@@ -13,16 +13,11 @@
   body {
     margin: 0;
     padding: 0;
-    height: 100%;
   }
 
   *,
   *:before,
   *:after {
     box-sizing: inherit;
-  }
-
-  #layout {
-      padding-top: 65px;
   }
 }

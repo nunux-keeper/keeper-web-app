@@ -6,6 +6,8 @@ import DocumentApi from '../../api/document'
 // ------------------------------------
 export const REQUEST_DOCUMENT = 'REQUEST_DOCUMENT'
 export const RECEIVE_DOCUMENT = 'RECEIVE_DOCUMENT'
+export const REMOVING_DOCUMENT = 'REMOVING_DOCUMENT'
+export const REMOVED_DOCUMENT = 'REMOVED_DOCUMENT'
 
 // ------------------------------------
 // Actions
@@ -15,6 +17,13 @@ export const receiveDocument = createAction(RECEIVE_DOCUMENT, (doc) => {
   return {
     doc: doc,
     receivedAt: Date.now()
+  }
+})
+export const removingDocument = createAction(REMOVING_DOCUMENT)
+export const removedDocument = createAction(REMOVED_DOCUMENT, (doc) => {
+  return {
+    doc: doc,
+    removedAt: Date.now()
   }
 })
 
@@ -27,8 +36,18 @@ export const fetchDocument = (id) => {
   }
 }
 
+export const removeDocument = (doc) => {
+  return (dispatch, getState) => {
+    const {user} = getState()
+    dispatch(removingDocument())
+    return DocumentApi.getInstance(user).remove(doc)
+    .then(() => dispatch(removedDocument(doc)))
+  }
+}
+
 export const actions = {
-  fetchDocument
+  fetchDocument,
+  removeDocument
 }
 
 // ------------------------------------
