@@ -4,9 +4,9 @@ import { bindActionCreators } from 'redux'
 import { actions as documentActions } from '../../redux/modules/document'
 import { actions as titleActions } from '../../redux/modules/title'
 
-import Card from 'material-ui/lib/card/card'
-import CardTitle from 'material-ui/lib/card/card-title'
-import CardText from 'material-ui/lib/card/card-text'
+// import Card from 'material-ui/lib/card/card'
+// import CardTitle from 'material-ui/lib/card/card-title'
+// import CardText from 'material-ui/lib/card/card-text'
 import IconButton from 'material-ui/lib/icon-button'
 import RaisedButton from 'material-ui/lib/raised-button'
 import MenuItem from 'material-ui/lib/menus/menu-item'
@@ -23,28 +23,48 @@ import styles from './DocumentView.scss'
 export class DocumentView extends React.Component {
   static propTypes = {
     document: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
     fetchDocument: PropTypes.func.isRequired,
     updateTitle: PropTypes.func.isRequired
   };
 
   componentDidMount () {
-    const { fetchDocument } = this.props
-    // updateTitle('Document')
-    fetchDocument()
+    const { fetchDocument, updateTitle } = this.props
+    fetchDocument().then(() => {
+      const doc = this.props.document.value
+      if (!this.isModalDisplayed) {
+        updateTitle(doc.title)
+      }
+    })
   }
 
-  get title () {
+  get isModalDisplayed () {
+    const routerState = this.props.router.state
+    return routerState && routerState.modal
+  }
+
+  get originLink () {
+    const doc = this.props.document.value
+    if (doc.origin) {
+      return (
+        <span className={ styles.origin }>
+          Origin: <a href={doc.origin} target='_blank'>{doc.origin}</a>
+        </span>
+      )
+    }
+  }
+
+  get content () {
     const doc = this.props.document.value
     return (
       <div>
-        {doc.title}
-        <a href={doc.origin} target='_blank'>
-          <IconButton
-            iconClassName='material-icons'
-            tooltip='Go to origin'>
-            link
-          </IconButton>
-        </a>
+        {this.originLink}
+        <div className={ styles.content }>
+          {doc.content}
+        </div>
+        <span className={ styles.modificationDate }>
+          Last modification: {doc.date.toString()}
+        </span>
       </div>
     )
   }
@@ -59,49 +79,48 @@ export class DocumentView extends React.Component {
     )
   }
 
+  get toolbar () {
+    return (
+      <Toolbar className={ styles.toolbar }>
+        <ToolbarGroup>
+          <IconButton
+            iconClassName='material-icons'
+            tooltip='Edit document' tooltipPosition='bottom-center'>
+            edit
+          </IconButton>
+          <IconButton
+            iconClassName='material-icons'
+            tooltip='Share document' tooltipPosition='bottom-center'>
+            share
+          </IconButton>
+          <IconButton
+            iconClassName='material-icons'
+            tooltip='Edit labels' tooltipPosition='bottom-center'>
+            label
+          </IconButton>
+          <IconMenu iconButtonElement={this.moreButton}>
+            <MenuItem primaryText='Upload file' leftIcon={<FontIcon className='material-icons'>file_upload</FontIcon>}/>
+            <Divider />
+            <MenuItem primaryText='Remove' leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}/>
+          </IconMenu>
+        </ToolbarGroup>
+        <ToolbarGroup float='right'>
+          <RaisedButton label='Save' primary />
+        </ToolbarGroup>
+      </Toolbar>
+    )
+  }
+
   render () {
     const doc = this.props.document.value
 
     if (doc) {
       return (
         <div>
-          <Toolbar className={ styles.toolbar }>
-            <ToolbarGroup>
-              <IconButton
-                iconClassName='material-icons'
-                tooltip='Edit document' tooltipPosition='bottom-center'>
-                edit
-              </IconButton>
-              <IconButton
-                iconClassName='material-icons'
-                tooltip='Share document' tooltipPosition='bottom-center'>
-                share
-              </IconButton>
-              <IconButton
-                iconClassName='material-icons'
-                tooltip='Edit labels' tooltipPosition='bottom-center'>
-                label
-              </IconButton>
-              <IconMenu iconButtonElement={this.moreButton}>
-                <MenuItem primaryText='Upload file' leftIcon={<FontIcon className='material-icons'>file_upload</FontIcon>}/>
-                <Divider />
-                <MenuItem primaryText='Remove' leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}/>
-              </IconMenu>
-            </ToolbarGroup>
-            <ToolbarGroup float='right'>
-              <RaisedButton label='Save' primary />
-            </ToolbarGroup>
-          </Toolbar>
-          <Card className={ styles.document }>
-            <CardTitle title={this.title}/>
-            <CardText>
-              {doc.content}
-              <br/>
-              <span className={ styles.modificationDate }>
-                Last modification: {doc.date.toString()}
-              </span>
-            </CardText>
-          </Card>
+          {this.toolbar}
+          <div className={ styles.document }>
+            {this.content}
+          </div>
         </div>
       )
     } else {
@@ -113,7 +132,8 @@ export class DocumentView extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  document: state.document
+  document: state.document,
+  router: state.router
 })
 
 const mapDispatchToProps = (dispatch) => (

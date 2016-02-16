@@ -5,6 +5,7 @@ import { actions as documentsActions } from '../../redux/modules/documents'
 import { actions as titleActions } from '../../redux/modules/title'
 
 import CircularProgress from 'material-ui/lib/circular-progress'
+import LinearProgress from 'material-ui/lib/linear-progress'
 import Snackbar from 'material-ui/lib/snackbar'
 
 import InfiniteGrid from 'react-infinite-grid'
@@ -29,21 +30,28 @@ export class DocumentsView extends React.Component {
   }
 
   get spinner () {
-    const { isFetching } = this.props.documents
+    const { isFetching, items } = this.props.documents
     if (isFetching) {
-      return (
-        <div className={styles.inProgress}><CircularProgress /></div>
-      )
+      if (items.length) {
+        return (
+          <LinearProgress mode='indeterminate'/>
+        )
+      } else {
+        return (
+          <div className={styles.inProgress}><CircularProgress /></div>
+        )
+      }
     }
   }
 
   get documents () {
+    const { isFetching } = this.props.documents
     const items = this.props.documents.items.map((doc) => <DocumentTile value={doc} />)
     if (items.length) {
       return (
         <InfiniteGrid entries={items} wrapperHeight={400} height={200} />
       )
-    } else {
+    } else if (!isFetching) {
       return (
         <p className={styles.noDocuments}>No documents :(</p>
       )
@@ -52,18 +60,24 @@ export class DocumentsView extends React.Component {
 
   get snackbar () {
     const { removed, restored } = this.props.documents
-    if (removed || restored) {
-      return (
+    return (
+      <div>
         <Snackbar
-          open
-          message={ removed ? 'Document removed' : 'Document restored'}
-          action={ removed ? 'undo' : null}
+          open={restored !== null && removed === null}
+          message={'Document restored'}
           autoHideDuration={4000}
           onRequestClose={() => this.handleRequestClose()}
-          onActionTouchTap={ removed ? () => this.handleUndoRemove() : null}
         />
-      )
-    }
+        <Snackbar
+          open={removed !== null && restored === null}
+          message='Document removed'
+          action='undo'
+          autoHideDuration={4000}
+          onRequestClose={() => this.handleRequestClose()}
+          onActionTouchTap={ () => this.handleUndoRemove()}
+        />
+      </div>
+    )
   }
 
   handleRequestClose () {

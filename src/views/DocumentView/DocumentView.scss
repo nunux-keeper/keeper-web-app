@@ -3,14 +3,23 @@
     //top: 64px;
     z-index: 1;
 }
+
 .document {
     //margin-top: 120px;
+    padding: 20px;
 }
-.modificationDate {
+
+.content {
+    margin: 1em 0;
+}
+
+.modificationDate, .origin {
     font-size: smaller;
     color: #808080;
     font-style: italic;
+}
+
+.modificationDate {
     float: right;
-    margin: 1em 0;
 }
 

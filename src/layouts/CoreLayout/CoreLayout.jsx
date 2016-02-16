@@ -59,10 +59,10 @@ export class CoreLayout extends React.Component {
         top: 0
       }
     }
-    const customBodyStyle = device.size < Sizes.MEDIUM ? {
+    const customBodyStyle = {
       maxHeight: 'inherit',
       padding: 0
-    } : {}
+    }
     const customContentStyle = device.size < Sizes.MEDIUM ? {
       width: 'none',
       maxWidth: 'none'

@@ -9,7 +9,7 @@ export class HomeView extends React.Component {
   };
 
   componentDidMount () {
-    this.props.updateTitle('Home')
+    this.props.updateTitle('Keeper')
   }
 
   render () {
