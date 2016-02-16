@@ -53,7 +53,7 @@ export class AppNavigation extends React.Component {
   get labels () {
     const { isFetching } = this.props.labels
     const items = this.props.labels.items.map(
-      (label) => <Link key={`label-${label.id}`} to={`/documents?label=${label.id}`}>
+      (label) => <Link key={`label-${label.id}`} to={`/document?label=${label.id}`}>
         <MenuItem primaryText={label.label} leftIcon={<Label />} />
       </Link>
     )

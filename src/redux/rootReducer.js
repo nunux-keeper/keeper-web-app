@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { routeReducer as router } from 'redux-simple-router'
+import { routeReducer as routing } from 'react-router-redux'
 import auth from './modules/auth'
 import device from './modules/device'
 import title from './modules/title'
@@ -16,5 +16,5 @@ export default combineReducers({
   document,
   title,
   navigation,
-  router
+  routing
 })

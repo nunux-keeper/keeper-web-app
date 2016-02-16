@@ -1,17 +1,16 @@
 import React, { PropTypes } from 'react'
 import { Provider } from 'react-redux'
-import { Router } from 'react-router'
+import { Router, browserHistory } from 'react-router'
 
 export default class Root extends React.Component {
   static propTypes = {
-    history: PropTypes.object.isRequired,
     routes: PropTypes.element.isRequired,
     store: PropTypes.object.isRequired
   };
 
   get content () {
     return (
-      <Router history={this.props.history}>
+      <Router history={browserHistory}>
         {this.props.routes}
       </Router>
     )

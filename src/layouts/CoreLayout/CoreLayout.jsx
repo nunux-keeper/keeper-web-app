@@ -5,7 +5,7 @@ import AppBar from 'material-ui/lib/app-bar'
 import Dialog from 'material-ui/lib/dialog'
 import Events from 'material-ui/lib/utils/events'
 import AppNavigation from 'components/AppNavigation'
-import { pushPath } from 'redux-simple-router'
+import { routeActions } from 'react-router-redux'
 import { actions as navigationActions } from 'redux/modules/navigation'
 import { actions as deviceActions, Sizes } from 'redux/modules/device'
 
@@ -16,7 +16,7 @@ export class CoreLayout extends React.Component {
     children: PropTypes.node,
     location: PropTypes.object,
     resize: PropTypes.func,
-    pushPath: PropTypes.func,
+    push: PropTypes.func,
     toggleNavigation: PropTypes.func,
     title: PropTypes.string,
     device: PropTypes.object
@@ -45,7 +45,7 @@ export class CoreLayout extends React.Component {
 
   handleClose () {
     const { returnTo } = this.props.location.state
-    this.props.pushPath(returnTo)
+    this.props.push(returnTo)
   }
 
   render () {
@@ -98,13 +98,13 @@ export class CoreLayout extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  location: state.router,
+  location: state.routing.location,
   title: state.title,
   device: state.device
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, navigationActions, deviceActions, {pushPath}), dispatch)
+  bindActionCreators(Object.assign({}, navigationActions, deviceActions, routeActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoreLayout)
