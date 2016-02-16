@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom'
 import { createHistory, useBasename } from 'history'
 import { syncReduxAndRouter } from 'redux-simple-router'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import routes from './routes'
-import Root from './containers/Root'
-import configureStore from './redux/configureStore'
+import routes from 'routes'
+import Root from 'containers/Root'
+import configureStore from 'redux/configureStore'
 import 'styles/main.scss'
 
 // Needed for onTouchTap

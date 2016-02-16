@@ -1,4 +1,4 @@
-import AbstractApi from '../common/AbstractApi'
+import AbstractApi from 'api/common/AbstractApi'
 
 let instance = null
 

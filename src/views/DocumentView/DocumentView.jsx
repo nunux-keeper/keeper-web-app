@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { actions as documentActions } from '../../redux/modules/document'
-import { actions as titleActions } from '../../redux/modules/title'
+import { actions as documentActions } from 'redux/modules/document'
+import { actions as titleActions } from 'redux/modules/title'
 
 // import Card from 'material-ui/lib/card/card'
 // import CardTitle from 'material-ui/lib/card/card-title'

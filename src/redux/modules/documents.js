@@ -1,5 +1,5 @@
 import { createAction, handleActions } from 'redux-actions'
-import DocumentApi from '../../api/document'
+import DocumentApi from 'api/document'
 
 import _ from 'lodash'
 

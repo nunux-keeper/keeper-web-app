@@ -6,8 +6,8 @@ import Dialog from 'material-ui/lib/dialog'
 import Events from 'material-ui/lib/utils/events'
 import AppNavigation from 'components/AppNavigation'
 import { pushPath } from 'redux-simple-router'
-import { actions as navigationActions } from '../../redux/modules/navigation'
-import { actions as deviceActions, Sizes } from '../../redux/modules/device'
+import { actions as navigationActions } from 'redux/modules/navigation'
+import { actions as deviceActions, Sizes } from 'redux/modules/device'
 
 import styles from './CoreLayout.scss'
 

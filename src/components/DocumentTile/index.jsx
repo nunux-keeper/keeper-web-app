@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 
-import { actions as documentsActions } from '../redux/modules/documents'
+import { actions as documentsActions } from 'redux/modules/documents'
 
 import GridTile from 'material-ui/lib/grid-list/grid-tile'
 import Paper from 'material-ui/lib/paper'

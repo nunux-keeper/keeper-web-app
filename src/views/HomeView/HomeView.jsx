@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { actions as titleActions } from '../../redux/modules/title'
+import { actions as titleActions } from 'redux/modules/title'
 
 export class HomeView extends React.Component {
   static propTypes = {

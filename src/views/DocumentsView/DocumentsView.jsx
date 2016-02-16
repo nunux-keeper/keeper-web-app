@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { actions as documentsActions } from '../../redux/modules/documents'
-import { actions as titleActions } from '../../redux/modules/title'
+import { actions as documentsActions } from 'redux/modules/documents'
+import { actions as titleActions } from 'redux/modules/title'
 
 import CircularProgress from 'material-ui/lib/circular-progress'
 import LinearProgress from 'material-ui/lib/linear-progress'

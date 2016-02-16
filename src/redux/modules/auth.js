@@ -1,6 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
 import { pushPath } from 'redux-simple-router'
-import AuthApi from '../../api/auth'
+import AuthApi from 'api/auth'
 import jwtDecode from 'jwt-decode'
 
 function decodeToken (token) {
