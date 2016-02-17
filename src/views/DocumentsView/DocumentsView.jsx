@@ -1,9 +1,11 @@
 import React, { PropTypes } from 'react'
+import _ from 'lodash'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { actions as documentsActions } from 'redux/modules/documents'
-import { actions as titleActions } from 'redux/modules/title'
+import { actions as navigationActions } from 'redux/modules/navigation'
 
+import AppBar from 'material-ui/lib/app-bar'
 import CircularProgress from 'material-ui/lib/circular-progress'
 import LinearProgress from 'material-ui/lib/linear-progress'
 import Snackbar from 'material-ui/lib/snackbar'
@@ -16,17 +18,51 @@ import styles from './DocumentsView.scss'
 export class DocumentsView extends React.Component {
   static propTypes = {
     documents: PropTypes.object.isRequired,
+    labels: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
     fetchDocuments: PropTypes.func.isRequired,
     restoreFromDocuments: PropTypes.func.isRequired,
     discardRestoredDocument: PropTypes.func.isRequired,
     discardRemovedDocument: PropTypes.func.isRequired,
-    updateTitle: PropTypes.func.isRequired
+    toggleNavigation: PropTypes.func
   };
 
   componentDidMount () {
-    const { fetchDocuments, updateTitle } = this.props
-    updateTitle('Documents')
-    fetchDocuments()
+    const { fetchDocuments, params } = this.props
+    if (params.labelId) {
+      fetchDocuments({label: params.labelId})
+    } else {
+      fetchDocuments()
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const { fetchDocuments, params } = this.props
+    if (JSON.stringify(params.labelId) !== JSON.stringify(nextProps.params.labelId)) {
+      fetchDocuments({label: params.labelId})
+    }
+  }
+
+  get label () {
+    const { labels, params } = this.props
+    return params.labelId ? _.find(labels.items, (item) => params.labelId === item.id) : null
+  }
+
+  get title () {
+    return this.label ? `Documents - ${this.label.label}` : 'Documents'
+  }
+
+  get header () {
+    const { toggleNavigation } = this.props
+    const bg = this.label ? {backgroundColor: this.label.color} : {}
+    return (
+      <AppBar
+        title={ this.title }
+        className='appBar'
+        style={ bg }
+        onLeftIconButtonTouchTap={() => toggleNavigation()}
+      />
+    )
   }
 
   get spinner () {
@@ -46,7 +82,8 @@ export class DocumentsView extends React.Component {
 
   get documents () {
     const { isFetching } = this.props.documents
-    const items = this.props.documents.items.map((doc) => <DocumentTile value={doc} />)
+    const baseUrl = this.label ? `/label/${this.label.id}` : '/document'
+    const items = this.props.documents.items.map((doc) => <DocumentTile value={doc} baseUrl={baseUrl} />)
     if (items.length) {
       return (
         <InfiniteGrid entries={items} wrapperHeight={400} height={200} />
@@ -58,7 +95,7 @@ export class DocumentsView extends React.Component {
     }
   }
 
-  get snackbar () {
+  get footer () {
     const { removed, restored } = this.props.documents
     return (
       <div>
@@ -97,20 +134,22 @@ export class DocumentsView extends React.Component {
   render () {
     return (
       <div>
+        {this.header}
         {this.spinner}
         {this.documents}
-        {this.snackbar}
+        {this.footer}
       </div>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
+  labels: state.labels,
   documents: state.documents
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, titleActions, documentsActions), dispatch)
+  bindActionCreators(Object.assign({}, navigationActions, documentsActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentsView)

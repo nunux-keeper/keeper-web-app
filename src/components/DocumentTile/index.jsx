@@ -25,6 +25,7 @@ function isInsideButton (el) {
 export default class DocumentTile extends React.Component {
   static propTypes = {
     value: PropTypes.object.isRequired,
+    baseUrl: PropTypes.string.isRequired,
     removeFromDocuments: PropTypes.func.isRequired
   };
 
@@ -63,12 +64,13 @@ export default class DocumentTile extends React.Component {
   }
 
   render () {
+    const { baseUrl } = this.props
     const doc = this.props.value
+    const state = { modal: true, returnTo: baseUrl, title: doc.title }
     return (
       <Paper zDepth={1}>
         <Link
-          to={`/document/${doc.id}`}
-          state={{ modal: true, returnTo: '/document', title: doc.title }}
+          to={{ pathname: `${baseUrl}/${doc.id}`, state: state }}
           onClick={this.handleTouchTap}
           title={doc.title}>
           <GridTile

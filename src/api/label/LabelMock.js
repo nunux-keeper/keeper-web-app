@@ -8,7 +8,7 @@ function getRandomLabel (_label) {
   const {
     id = chance.hash({length: 15}),
     label = chance.sentence({words: 2}),
-    color = chance.color()
+    color = chance.color({format: 'hex'})
   } = _label
   return {id, label, color}
 }

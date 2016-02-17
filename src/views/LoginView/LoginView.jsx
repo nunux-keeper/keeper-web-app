@@ -6,25 +6,24 @@ import { actions as authActions } from 'redux/modules/auth'
 export class LoginView extends React.Component {
   static propTypes = {
     loginWith: PropTypes.func.isRequired,
-    location: PropTypes.object.isRequired
+    redirect: PropTypes.string
   };
 
-  constructor (props) {
-    super(props)
-    this.redirect = this.props.location.query.next || '/document'
-  }
-
   render () {
+    const { redirect, loginWith } = this.props
     return (
-      <div className='container text-center'>
-        <RaisedButton label='Login with Google' primary onTouchTap={() => this.props.loginWith('google', this.redirect)} />
+      <div>
+        <RaisedButton
+          primary
+          label='Login with Google'
+          onTouchTap={() => loginWith('google', redirect)} />
       </div>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
-  documents: state.documents
+  redirect: state.routing.location.query.next || '/document'
 })
 
 export default connect(mapStateToProps, authActions)(LoginView)

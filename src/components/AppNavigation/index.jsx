@@ -18,6 +18,8 @@ import Share from 'material-ui/lib/svg-icons/social/share'
 import CircularProgress from 'material-ui/lib/circular-progress'
 import LinearProgress from 'material-ui/lib/linear-progress'
 
+import styles from './index.scss'
+
 export class AppNavigation extends React.Component {
   static propTypes = {
     toggleNavigation: PropTypes.func.isRequired,
@@ -51,15 +53,19 @@ export class AppNavigation extends React.Component {
   }
 
   get labels () {
-    const { isFetching } = this.props.labels
+    const { labels, toggleNavigation } = this.props
     const items = this.props.labels.items.map(
-      (label) => <Link key={`label-${label.id}`} to={`/document?label=${label.id}`}>
+      (label) => <Link
+        key={`label-${label.id}`}
+        to={{pathname: `/label/${label.id}`}}
+        onTouchTap={() => toggleNavigation(false)}
+        >
         <MenuItem primaryText={label.label} leftIcon={<Label />} />
       </Link>
     )
     if (items.length) {
       return items
-    } else if (!isFetching) {
+    } else if (!labels.isFetching) {
       return (
         <p>No labels :(</p>
       )
@@ -73,41 +79,41 @@ export class AppNavigation extends React.Component {
     } = this.props
 
     return (
-      <LeftNav open={isOpen} docked={false} onRequestChange={toggleNavigation}>
-        <Link to='/'>
+      <LeftNav open={isOpen} docked={false} onRequestChange={toggleNavigation} className={styles.navigation}>
+        <Link to={{ pathname: '/' }}>
           <MenuItem primaryText='Profile'
             leftIcon={<AccountCircle />}
             onTouchTap={() => toggleNavigation(false)}
           />
         </Link>
         <Divider />
-        <Link to='/document'>
+        <Link to={{ pathname: '/document' }}>
           <MenuItem primaryText='Documents'
             leftIcon={<ViewModule />}
             onTouchTap={() => toggleNavigation(false)}
           />
         </Link>
         <Divider />
-        <span>Labels</span>
+        <span className={styles.label}>Labels</span>
         { this.labels }
-        <Link to='/'>
+        <Link to={{ pathname: '/' }}>
           <MenuItem primaryText='Create label'
             leftIcon={<Add />}
           />
         </Link>
         <Divider />
-        <Link to='/'>
+        <Link to={{ pathname: '/' }}>
           <MenuItem primaryText='Trash'
             leftIcon={<Delete />}
           />
         </Link>
-        <Link to='/'>
+        <Link to={{ pathname: '/' }}>
           <MenuItem primaryText='Shares'
             leftIcon={<Share />}
           />
         </Link>
         <Divider />
-        <Link to='/'>
+        <Link to={{ pathname: '/' }}>
           <MenuItem primaryText='Settings'
             leftIcon={<Settings />}
           />

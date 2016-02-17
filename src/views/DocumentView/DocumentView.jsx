@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { actions as documentActions } from 'redux/modules/document'
-import { actions as titleActions } from 'redux/modules/title'
+import { actions as navigationActions } from 'redux/modules/navigation'
 
-// import Card from 'material-ui/lib/card/card'
-// import CardTitle from 'material-ui/lib/card/card-title'
-// import CardText from 'material-ui/lib/card/card-text'
+import AppBar from 'material-ui/lib/app-bar'
+import CircularProgress from 'material-ui/lib/circular-progress'
+import LinearProgress from 'material-ui/lib/linear-progress'
 import IconButton from 'material-ui/lib/icon-button'
 import RaisedButton from 'material-ui/lib/raised-button'
 import MenuItem from 'material-ui/lib/menus/menu-item'
@@ -23,47 +23,93 @@ import styles from './DocumentView.scss'
 export class DocumentView extends React.Component {
   static propTypes = {
     document: PropTypes.object.isRequired,
-    router: PropTypes.object.isRequired,
+    routing: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
     fetchDocument: PropTypes.func.isRequired,
-    updateTitle: PropTypes.func.isRequired
+    toggleNavigation: PropTypes.func
   };
 
   componentDidMount () {
-    const { fetchDocument, updateTitle } = this.props
-    fetchDocument().then(() => {
-      const doc = this.props.document.value
-      if (!this.isModalDisplayed) {
-        updateTitle(doc.title)
-      }
-    })
+    const { fetchDocument } = this.props
+    const { docId } = this.props.params
+    fetchDocument(docId)
+  }
+
+  get doc () {
+    return this.props.document.value
   }
 
   get isModalDisplayed () {
-    const routerState = this.props.router.state
+    const routerState = this.props.routing.location.state
     return routerState && routerState.modal
   }
 
   get originLink () {
-    const doc = this.props.document.value
-    if (doc.origin) {
+    if (this.doc.origin) {
       return (
         <span className={ styles.origin }>
-          Origin: <a href={doc.origin} target='_blank'>{doc.origin}</a>
+          Origin: <a href={this.doc.origin} target='_blank'>{this.doc.origin}</a>
         </span>
       )
     }
   }
 
+  get header () {
+    if (!this.isModalDisplayed) {
+      const { toggleNavigation } = this.props
+      const doc = this.props.document
+      return (
+        <AppBar
+          title={ doc.isFetching ? 'Document' : this.doc.title }
+          className='appBar'
+          onLeftIconButtonTouchTap={() => toggleNavigation()}
+        />
+      )
+    }
+  }
+
+  get spinner () {
+    const { isFetching } = this.props.document
+    if (isFetching) {
+      if (this.doc) {
+        return (
+          <LinearProgress mode='indeterminate'/>
+        )
+      } else {
+        return (
+          <div className={styles.inProgress}><CircularProgress /></div>
+        )
+      }
+    }
+  }
+
+  get document () {
+    const { isFetching, value } = this.props.document
+    if (value) {
+      return (
+        <div>
+          {this.toolbar}
+          <div className={ styles.document }>
+            {this.content}
+          </div>
+        </div>
+      )
+    } else if (!isFetching) {
+      return (
+        <p className={styles.noDocument}>No document :(</p>
+      )
+    }
+  }
+
   get content () {
-    const doc = this.props.document.value
     return (
       <div>
         {this.originLink}
         <div className={ styles.content }>
-          {doc.content}
+          {this.doc.content}
         </div>
         <span className={ styles.modificationDate }>
-          Last modification: {doc.date.toString()}
+          Last modification: {this.doc.date.toString()}
         </span>
       </div>
     )
@@ -112,32 +158,23 @@ export class DocumentView extends React.Component {
   }
 
   render () {
-    const doc = this.props.document.value
-
-    if (doc) {
-      return (
-        <div>
-          {this.toolbar}
-          <div className={ styles.document }>
-            {this.content}
-          </div>
-        </div>
-      )
-    } else {
-      return (
-        <p>LOADING...</p>
-      )
-    }
+    return (
+      <div>
+        {this.header}
+        {this.spinner}
+        {this.document}
+      </div>
+    )
   }
 }
 
 const mapStateToProps = (state) => ({
   document: state.document,
-  router: state.router
+  routing: state.routing
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, titleActions, documentActions), dispatch)
+  bindActionCreators(Object.assign({}, navigationActions, documentActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentView)

@@ -6,7 +6,8 @@ import { Route, IndexRoute, Redirect } from 'react-router'
 // they were from the root of the ~/src directory. This makes it
 // very easy to navigate to files regardless of how deeply nested
 // your current file is.
-import CoreLayout from 'layouts/CoreLayout/CoreLayout'
+import RootLayout from 'layouts/RootLayout'
+import MainLayout from 'layouts/MainLayout'
 import NotFoundView from 'views/NotFoundView/NotFoundView'
 import HomeView from 'views/HomeView/HomeView'
 import LoginView from 'views/LoginView/LoginView'
@@ -16,11 +17,15 @@ import DocumentView from 'views/DocumentView/DocumentView'
 import { requireAuthentication } from 'components/AuthenticatedComponent'
 
 export default (
-  <Route path='/' component={CoreLayout}>
+  <Route path='/' component={RootLayout}>
     <IndexRoute component={HomeView} />
-    <Route path='login' component={LoginView} />
-    <Route path='document' component={requireAuthentication(DocumentsView)} />
-    <Route path='document/:docId' component={requireAuthentication(DocumentView)} />
+    <Route component={MainLayout}>
+      <Route path='login' component={LoginView} />
+      <Route path='document' component={requireAuthentication(DocumentsView)} />
+      <Route path='document/:docId' component={requireAuthentication(DocumentView)} />
+      <Route path='label/:labelId' component={requireAuthentication(DocumentsView)} />
+      <Route path='label/:labelId/:docId' component={requireAuthentication(DocumentView)} />
+    </Route>
     <Route path='/404' component={NotFoundView} />
     <Redirect from='*' to='/404' />
   </Route>

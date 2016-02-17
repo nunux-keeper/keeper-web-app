@@ -1,21 +1,11 @@
-import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
 import { Link } from 'react-router'
-import { actions as titleActions } from 'redux/modules/title'
 
-export class NotFoundView extends React.Component {
-  static propTypes = {
-    updateTitle: PropTypes.func.isRequired
-  };
-
-  componentDidMount () {
-    this.props.updateTitle()
-  }
-
+export default class NotFoundView extends React.Component {
   render () {
     return (
-      <div className='container text-center'>
-        <h1>This is a demo 404 page!</h1>
+      <div>
+        <h1>Page not found!</h1>
         <hr />
         <Link to='/'>Back To Home View</Link>
       </div>
@@ -23,4 +13,3 @@ export class NotFoundView extends React.Component {
   }
 }
 
-export default connect(null, titleActions)(NotFoundView)
