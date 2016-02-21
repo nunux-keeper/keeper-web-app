@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 import { actions as documentsActions } from 'redux/modules/documents'
+import { actions as notificationActions } from 'redux/modules/notification'
 
 import GridTile from 'material-ui/lib/grid-list/grid-tile'
 import Paper from 'material-ui/lib/paper'
@@ -26,7 +28,9 @@ export default class DocumentTile extends React.Component {
   static propTypes = {
     value: PropTypes.object.isRequired,
     baseUrl: PropTypes.string.isRequired,
-    removeFromDocuments: PropTypes.func.isRequired
+    showNotification: PropTypes.func.isRequired,
+    removeFromDocuments: PropTypes.func.isRequired,
+    restoreFromDocuments: PropTypes.func.isRequired
   };
 
   handleTouchTap (e) {
@@ -41,9 +45,24 @@ export default class DocumentTile extends React.Component {
     }
   }
 
-  onRemoveClick () {
-    const {value, removeFromDocuments} = this.props
-    removeFromDocuments(value)
+  handleUndoRemove () {
+    const { restoreFromDocuments, showNotification } = this.props
+    restoreFromDocuments().then(() => {
+      showNotification({
+        message: 'Document restored'
+      })
+    })
+  }
+
+  handleRemoveTouchTap () {
+    const {value, removeFromDocuments, showNotification} = this.props
+    removeFromDocuments(value).then(() => {
+      showNotification({
+        message: 'Document removed',
+        actionLabel: 'undo',
+        actionFn: () => this.handleUndoRemove()
+      })
+    })
   }
 
   renderMenu () {
@@ -57,7 +76,7 @@ export default class DocumentTile extends React.Component {
         <MenuItem
           primaryText='Remove'
           leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}
-          onTouchTap={() => this.onRemoveClick()}
+          onTouchTap={() => this.handleRemoveTouchTap()}
         />
       </IconMenu>
     )
@@ -86,4 +105,8 @@ export default class DocumentTile extends React.Component {
   }
 }
 
-export default connect(null, documentsActions)(DocumentTile)
+const mapDispatchToProps = (dispatch) => (
+  bindActionCreators(Object.assign({}, notificationActions, documentsActions), dispatch)
+)
+
+export default connect(null, mapDispatchToProps)(DocumentTile)

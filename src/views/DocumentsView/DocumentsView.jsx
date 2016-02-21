@@ -1,14 +1,17 @@
 import React, { PropTypes } from 'react'
-import _ from 'lodash'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { actions as documentsActions } from 'redux/modules/documents'
+import { Link } from 'react-router'
 import { actions as navigationActions } from 'redux/modules/navigation'
 
 import AppBar from 'material-ui/lib/app-bar'
 import CircularProgress from 'material-ui/lib/circular-progress'
 import LinearProgress from 'material-ui/lib/linear-progress'
-import Snackbar from 'material-ui/lib/snackbar'
+import Divider from 'material-ui/lib/divider'
+import IconButton from 'material-ui/lib/icon-button'
+import IconMenu from 'material-ui/lib/menus/icon-menu'
+import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
+import MenuItem from 'material-ui/lib/menus/menu-item'
 
 import InfiniteGrid from 'react-infinite-grid'
 import DocumentTile from 'components/DocumentTile'
@@ -17,49 +20,50 @@ import styles from './DocumentsView.scss'
 
 export class DocumentsView extends React.Component {
   static propTypes = {
+    routing: PropTypes.object.isRequired,
     documents: PropTypes.object.isRequired,
-    labels: PropTypes.object.isRequired,
-    params: PropTypes.object.isRequired,
-    fetchDocuments: PropTypes.func.isRequired,
-    restoreFromDocuments: PropTypes.func.isRequired,
-    discardRestoredDocument: PropTypes.func.isRequired,
-    discardRemovedDocument: PropTypes.func.isRequired,
+    label: PropTypes.object.isRequired,
     toggleNavigation: PropTypes.func
   };
 
-  componentDidMount () {
-    const { fetchDocuments, params } = this.props
-    if (params.labelId) {
-      fetchDocuments({label: params.labelId})
-    } else {
-      fetchDocuments()
-    }
-  }
-
-  componentWillReceiveProps (nextProps) {
-    const { fetchDocuments, params } = this.props
-    if (JSON.stringify(params.labelId) !== JSON.stringify(nextProps.params.labelId)) {
-      fetchDocuments({label: params.labelId})
-    }
-  }
-
   get label () {
-    const { labels, params } = this.props
-    return params.labelId ? _.find(labels.items, (item) => params.labelId === item.id) : null
+    const { label } = this.props
+    return label.value
   }
 
   get title () {
     return this.label ? `Documents - ${this.label.label}` : 'Documents'
   }
 
+  get contextMenu () {
+    const { routing } = this.props
+    const labelSpecificMenu = this.label ? <div>
+      <Divider />
+      <Link to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: routing.location.pathname, title: `Edit label: ${this.label.label}`} }}>
+        <MenuItem primaryText='Edit Label' />
+      </Link>
+    </div> : null
+    return (
+      <IconMenu
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}>
+        <MenuItem primaryText='Refresh' />
+        { labelSpecificMenu }
+      </IconMenu>
+    )
+  }
+
   get header () {
     const { toggleNavigation } = this.props
     const bg = this.label ? {backgroundColor: this.label.color} : {}
+
     return (
       <AppBar
         title={ this.title }
         className='appBar'
         style={ bg }
+        iconElementRight={this.contextMenu}
         onLeftIconButtonTouchTap={() => toggleNavigation()}
       />
     )
@@ -95,61 +99,25 @@ export class DocumentsView extends React.Component {
     }
   }
 
-  get footer () {
-    const { removed, restored } = this.props.documents
-    return (
-      <div>
-        <Snackbar
-          open={restored !== null && removed === null}
-          message={'Document restored'}
-          autoHideDuration={4000}
-          onRequestClose={() => this.handleRequestClose()}
-        />
-        <Snackbar
-          open={removed !== null && restored === null}
-          message='Document removed'
-          action='undo'
-          autoHideDuration={4000}
-          onRequestClose={() => this.handleRequestClose()}
-          onActionTouchTap={ () => this.handleUndoRemove()}
-        />
-      </div>
-    )
-  }
-
-  handleRequestClose () {
-    const { removed } = this.props.documents
-    if (removed) {
-      this.props.discardRemovedDocument()
-    } else {
-      this.props.discardRestoredDocument()
-    }
-  }
-
-  handleUndoRemove () {
-    const { documents, restoreFromDocuments } = this.props
-    restoreFromDocuments(documents.removed)
-  }
-
   render () {
     return (
       <div>
         {this.header}
         {this.spinner}
         {this.documents}
-        {this.footer}
       </div>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
-  labels: state.labels,
+  routing: state.routing,
+  label: state.label,
   documents: state.documents
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, navigationActions, documentsActions), dispatch)
+  bindActionCreators(Object.assign({}, navigationActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentsView)

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Dialog from 'material-ui/lib/dialog'
 import AppNavigation from 'components/AppNavigation'
+import AppNotification from 'components/AppNotification'
 import { routeActions } from 'react-router-redux'
 import { Sizes } from 'redux/modules/device'
 
@@ -60,6 +61,7 @@ export class MainLayout extends React.Component {
         </Dialog>
         )}
         <AppNavigation />
+        <AppNotification />
       </div>
     )
   }

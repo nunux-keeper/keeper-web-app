@@ -62,11 +62,11 @@ export const restoredFromDocuments = createAction(RESTORED_FROM_DOCUMENTS, (doc)
   }
 })
 
-export const restoreFromDocuments = (doc) => {
+export const restoreFromDocuments = () => {
   return (dispatch, getState) => {
-    const {user} = getState()
+    const {user, documents} = getState()
     dispatch(restoringFromDocuments())
-    return DocumentApi.getInstance(user).restore(doc)
+    return DocumentApi.getInstance(user).restore(documents.removed)
     .then((_doc) => dispatch(restoredFromDocuments(_doc)))
   }
 }
@@ -103,6 +103,7 @@ export default handleActions({
     const index = _.findIndex(state.items, item => item.id === action.payload.doc.id)
     return Object.assign({}, state, {
       isProcessing: false,
+
       items: state.items.filter(item => item.id !== action.payload.doc.id),
       removed: action.payload.doc,
       removedIndex: index,

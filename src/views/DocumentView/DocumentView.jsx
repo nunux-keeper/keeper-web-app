@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { actions as documentActions } from 'redux/modules/document'
 import { actions as navigationActions } from 'redux/modules/navigation'
 
 import AppBar from 'material-ui/lib/app-bar'
@@ -25,15 +24,8 @@ export class DocumentView extends React.Component {
     document: PropTypes.object.isRequired,
     routing: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
-    fetchDocument: PropTypes.func.isRequired,
     toggleNavigation: PropTypes.func
   };
-
-  componentDidMount () {
-    const { fetchDocument } = this.props
-    const { docId } = this.props.params
-    fetchDocument(docId)
-  }
 
   get doc () {
     return this.props.document.value
@@ -174,7 +166,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, navigationActions, documentActions), dispatch)
+  bindActionCreators(Object.assign({}, navigationActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentView)

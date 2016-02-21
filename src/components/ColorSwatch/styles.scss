@@ -1,0 +1,17 @@
+.swatch {
+    button {
+        width: 50px;
+        height: 50px;
+        border: none;
+        transition: transform 0.1s;
+        transform: translateZ(0);
+        position: relative;
+        outline: none;
+    }
+    .selected {
+        transform: scale(1.1) !important;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+        border-radius: 3px;
+        z-index: 10 !important;
+    }
+}

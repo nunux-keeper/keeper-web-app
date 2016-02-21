@@ -18,7 +18,7 @@ import Share from 'material-ui/lib/svg-icons/social/share'
 import CircularProgress from 'material-ui/lib/circular-progress'
 import LinearProgress from 'material-ui/lib/linear-progress'
 
-import styles from './index.scss'
+import styles from './styles.scss'
 
 export class AppNavigation extends React.Component {
   static propTypes = {
@@ -29,7 +29,8 @@ export class AppNavigation extends React.Component {
     discardRestoredLabel: PropTypes.func.isRequired,
     discardRemovedLabel: PropTypes.func.isRequired,
     isOpen: PropTypes.bool.isRequired,
-    labels: PropTypes.object.isRequired
+    labels: PropTypes.object.isRequired,
+    routing: PropTypes.object.isRequired
   };
 
   componentDidMount () {
@@ -75,7 +76,8 @@ export class AppNavigation extends React.Component {
   render () {
     const {
       toggleNavigation,
-      isOpen
+      isOpen,
+      routing
     } = this.props
 
     return (
@@ -96,9 +98,12 @@ export class AppNavigation extends React.Component {
         <Divider />
         <span className={styles.label}>Labels</span>
         { this.labels }
-        <Link to={{ pathname: '/' }}>
+        <Link
+          to={{ pathname: '/label/create', state: {modal: true, returnTo: routing.location.pathname, title: 'Create new label'} }}
+          title='Create new label'>
           <MenuItem primaryText='Create label'
             leftIcon={<Add />}
+            onTouchTap={() => toggleNavigation(false)}
           />
         </Link>
         <Divider />
@@ -124,6 +129,7 @@ export class AppNavigation extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
+  routing: state.routing,
   isOpen: state.navigation.isOpen,
   labels: state.labels
 })
