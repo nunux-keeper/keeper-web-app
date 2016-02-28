@@ -86,7 +86,7 @@ export class LabelView extends React.Component {
         />
         <br />
         <TextField disabled floatingLabelText='Color' value={ color }/>
-        <ColorSwatch onColorChange={ c => this.handleColorChange(c) } />
+        <ColorSwatch value={ color } onColorChange={ c => this.handleColorChange(c) } />
         <Divider />
         <div className={ styles.actionsForm}>
           <FlatButton

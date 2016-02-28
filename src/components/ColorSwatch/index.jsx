@@ -8,18 +8,28 @@ export default class ColorSwatch extends React.Component {
   static propTypes = {
     colors: PropTypes.array,
     selected: PropTypes.number,
+    value: PropTypes.string,
     onColorChange: PropTypes.func.isRequired
   };
 
   static defaultProps = {
     colors: colors,
-    selected: 0
+    value: colors[0]
   };
 
   constructor (props) {
     super(props)
+    const {colors, value} = props
+    let selected = 0
+    for (const c in colors) {
+      if (colors[c].toUpperCase() === value.toUpperCase()) {
+        selected = parseInt(c, 10)
+        break
+      }
+    }
+
     this.state = {
-      selected: props.selected
+      selected: selected
     }
   }
 
