@@ -31,22 +31,34 @@ export function fetchDocuments (Component) {
   class DocumentsAwareComponent extends React.Component {
     static propTypes = {
       params: PropTypes.object.isRequired,
+      location: PropTypes.object.isRequired,
       fetchDocuments: PropTypes.func.isRequired,
       discardLabel: PropTypes.func.isRequired
     };
 
     componentDidMount () {
-      const { params, fetchDocuments, discardLabel } = this.props
-      fetchDocuments()
+      const { params, location, fetchDocuments, discardLabel } = this.props
+      fetchDocuments({
+        label: params.labelId,
+        ... location.query
+      })
       if (!params.labelId) {
         discardLabel()
       }
     }
 
     componentWillReceiveProps (nextProps) {
-      const { params, fetchDocuments } = this.props
+      const { params, location, fetchDocuments } = this.props
       if (params.labelId !== nextProps.params.labelId) {
-        fetchDocuments(nextProps.params.labelId)
+        fetchDocuments({
+          label: nextProps.params.labelId,
+          ... nextProps.location.query
+        })
+      } else if (location.search !== nextProps.location.search) {
+        fetchDocuments({
+          label: params.labelId,
+          ... nextProps.location.query
+        })
       }
     }
 

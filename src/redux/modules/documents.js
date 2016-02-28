@@ -26,11 +26,11 @@ export const receiveDocuments = createAction(RECEIVE_DOCUMENTS, (json) => {
   }
 })
 
-export const fetchDocuments = () => {
+export const fetchDocuments = (params) => {
   return (dispatch, getState) => {
-    const {user, query} = getState()
-    dispatch(requestDocuments())
-    return DocumentApi.getInstance(user).search(query)
+    const {user} = getState()
+    dispatch(requestDocuments(params))
+    return DocumentApi.getInstance(user).search(params)
     .then(json => dispatch(receiveDocuments(json)))
   }
 }
@@ -86,10 +86,15 @@ export const actions = {
 // Reducer
 // ------------------------------------
 export default handleActions({
-  [REQUEST_DOCUMENTS]: (state) => {
-    return Object.assign({}, state, {isFetching: true})
+  [REQUEST_DOCUMENTS]: (state, action) => {
+    console.debug('Fetching documents:', action.payload)
+    return Object.assign({}, state, {
+      params: action.payload.params,
+      isFetching: true
+    })
   },
   [RECEIVE_DOCUMENTS]: (state, action) => {
+    console.debug('Documents fetched:', action.payload.documents.length)
     return Object.assign({}, state, {
       isFetching: false,
       items: action.payload.documents,
@@ -137,5 +142,6 @@ export default handleActions({
   removed: null,
   removedIndex: null,
   restored: null,
+  params: null,
   items: []
 })

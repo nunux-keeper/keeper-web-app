@@ -14,6 +14,7 @@ import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
 import MenuItem from 'material-ui/lib/menus/menu-item'
 
 import InfiniteGrid from 'react-infinite-grid'
+import SearchBar from 'components/SearchBar'
 import DocumentTile from 'components/DocumentTile'
 
 import styles from './DocumentsView.scss'
@@ -59,13 +60,16 @@ export class DocumentsView extends React.Component {
     const bg = this.label ? {backgroundColor: this.label.color} : {}
 
     return (
-      <AppBar
-        title={ this.title }
-        className='appBar'
-        style={ bg }
-        iconElementRight={this.contextMenu}
-        onLeftIconButtonTouchTap={() => toggleNavigation()}
-      />
+      <div>
+        <AppBar
+          title={ this.title }
+          className='appBar'
+          style={ bg }
+          iconElementRight={this.contextMenu}
+          onLeftIconButtonTouchTap={() => toggleNavigation()}
+        />
+        <SearchBar />
+      </div>
     )
   }
 
