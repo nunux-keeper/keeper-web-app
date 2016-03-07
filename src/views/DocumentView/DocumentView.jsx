@@ -11,6 +11,7 @@ import RaisedButton from 'material-ui/lib/raised-button'
 import MenuItem from 'material-ui/lib/menus/menu-item'
 import IconMenu from 'material-ui/lib/menus/icon-menu'
 import Divider from 'material-ui/lib/divider'
+import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
 
 import FontIcon from 'material-ui/lib/font-icon'
 
@@ -46,14 +47,48 @@ export class DocumentView extends React.Component {
     }
   }
 
+  get contextMenu () {
+    return (
+      <IconMenu
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}>
+        <MenuItem
+          primaryText='Share'
+          leftIcon={<FontIcon className='material-icons'>share</FontIcon>}
+        />
+        <MenuItem
+          primaryText='Change labels'
+          leftIcon={<FontIcon className='material-icons'>label</FontIcon>}
+        />
+        <MenuItem
+          primaryText='Upload file'
+          leftIcon={<FontIcon className='material-icons'>file_upload</FontIcon>}
+        />
+        <Divider />
+        <MenuItem
+          primaryText='Edit mode'
+          leftIcon={<FontIcon className='material-icons'>mode_edit</FontIcon>}
+        />
+        <Divider />
+        <MenuItem
+          primaryText='Remove'
+          leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}
+        />
+      </IconMenu>
+    )
+  }
+
   get header () {
     if (!this.isModalDisplayed) {
       const { toggleNavigation } = this.props
       const doc = this.props.document
+
       return (
         <AppBar
           title={ doc.isFetching ? 'Document' : this.doc.title }
           className='appBar'
+          iconElementRight={this.contextMenu}
           onLeftIconButtonTouchTap={() => toggleNavigation()}
         />
       )
@@ -120,28 +155,6 @@ export class DocumentView extends React.Component {
   get toolbar () {
     return (
       <Toolbar className={ styles.toolbar }>
-        <ToolbarGroup>
-          <IconButton
-            iconClassName='material-icons'
-            tooltip='Edit document' tooltipPosition='bottom-center'>
-            edit
-          </IconButton>
-          <IconButton
-            iconClassName='material-icons'
-            tooltip='Share document' tooltipPosition='bottom-center'>
-            share
-          </IconButton>
-          <IconButton
-            iconClassName='material-icons'
-            tooltip='Edit labels' tooltipPosition='bottom-center'>
-            label
-          </IconButton>
-          <IconMenu iconButtonElement={this.moreButton}>
-            <MenuItem primaryText='Upload file' leftIcon={<FontIcon className='material-icons'>file_upload</FontIcon>}/>
-            <Divider />
-            <MenuItem primaryText='Remove' leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}/>
-          </IconMenu>
-        </ToolbarGroup>
         <ToolbarGroup float='right'>
           <RaisedButton label='Save' primary />
         </ToolbarGroup>
