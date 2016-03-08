@@ -11,6 +11,12 @@ export class AppNotification extends React.Component {
     discardNotification: PropTypes.func.isRequired
   };
 
+  constructor () {
+    super()
+    this.handleActionTouchTap = this.handleActionTouchTap.bind(this)
+    this.handleRequestClose = this.handleRequestClose.bind(this)
+  }
+
   handleActionTouchTap () {
     const { actionFn } = this.props.notification
     if (actionFn) {
@@ -27,12 +33,12 @@ export class AppNotification extends React.Component {
     const { message, actionLabel } = this.props.notification
     return (
       <Snackbar
-        open={ message !== null }
-        message={ message || '' }
-        action={ actionLabel }
-        autoHideDuration={ 4000 }
-        onRequestClose={ () => this.handleRequestClose() }
-        onActionTouchTap={ () => this.handleActionTouchTap() }
+        open={message !== null}
+        message={message || ''}
+        action={actionLabel}
+        autoHideDuration={4000}
+        onRequestClose={this.handleRequestClose}
+        onActionTouchTap={this.handleActionTouchTap}
       />
     )
   }

@@ -31,7 +31,7 @@ export const fetchDocuments = (params) => {
     const {user} = getState()
     dispatch(requestDocuments(params))
     return DocumentApi.getInstance(user).search(params)
-    .then(json => dispatch(receiveDocuments(json)))
+    .then((json) => dispatch(receiveDocuments(json)))
   }
 }
 
@@ -105,11 +105,11 @@ export default handleActions({
     return Object.assign({}, state, {isProcessing: true})
   },
   [REMOVED_FROM_DOCUMENTS]: (state, action) => {
-    const index = _.findIndex(state.items, item => item.id === action.payload.doc.id)
+    const index = _.findIndex(state.items, (item) => item.id === action.payload.doc.id)
     return Object.assign({}, state, {
       isProcessing: false,
 
-      items: state.items.filter(item => item.id !== action.payload.doc.id),
+      items: state.items.filter((item) => item.id !== action.payload.doc.id),
       removed: action.payload.doc,
       removedIndex: index,
       lastUpdated: action.payload.removedAt

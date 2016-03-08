@@ -9,21 +9,28 @@ export class LoginView extends React.Component {
     redirect: PropTypes.string
   };
 
+  loginWith (provider) {
+    console.log('loginWith', provider)
+    const { loginWith, redirect } = this.props
+    loginWith(provider, redirect)
+  }
+
   render () {
-    const { redirect, loginWith } = this.props
+    const loginWithGoogle = () => this.loginWith('google')
     return (
       <div>
         <RaisedButton
           primary
           label='Login with Google'
-          onTouchTap={() => loginWith('google', redirect)} />
+          onMouseUp={loginWithGoogle}
+          onTouchEnd={loginWithGoogle} />
       </div>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
-  redirect: state.routing.location.query.next || '/document'
+  redirect: state.router.locationBeforeTransitions.query.next || '/document'
 })
 
 export default connect(mapStateToProps, authActions)(LoginView)

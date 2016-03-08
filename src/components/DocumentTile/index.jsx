@@ -12,7 +12,6 @@ import IconButton from 'material-ui/lib/icon-button'
 import IconMenu from 'material-ui/lib/menus/icon-menu'
 import MenuItem from 'material-ui/lib/menus/menu-item'
 import FontIcon from 'material-ui/lib/font-icon'
-import Colors from 'material-ui/lib/styles/colors'
 import Divider from 'material-ui/lib/divider'
 
 function isInsideButton (el) {
@@ -70,7 +69,7 @@ export default class DocumentTile extends React.Component {
     const { baseUrl } = this.props
     const doc = this.props.value
     const iconButtonElement = <IconButton>
-      <FontIcon className='material-icons' color={Colors.white}>more_vert</FontIcon>
+      <FontIcon className='material-icons' color='#fff'>more_vert</FontIcon>
     </IconButton>
 
     return (
@@ -86,7 +85,7 @@ export default class DocumentTile extends React.Component {
         <MenuItem
           primaryText='Remove'
           leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}
-          onTouchTap={() => this.handleRemoveTouchTap()}
+          onTouchTap={this.handleRemoveTouchTap}
         />
       </IconMenu>
     )

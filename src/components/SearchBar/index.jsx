@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { routeActions } from 'react-router-redux'
+import { push } from 'react-router-redux'
 
 import Toolbar from 'material-ui/lib/toolbar/toolbar'
 import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group'
@@ -12,18 +11,24 @@ import FontIcon from 'material-ui/lib/font-icon'
 
 export default class SearchBar extends React.Component {
   static propTypes = {
-    location: PropTypes.object.isRequired,
-    push: PropTypes.func.isRequired
+    location: PropTypes.object.isRequired
   };
 
-  handleUpdateSearchQuery (q) {
-    const { push, location } = this.props
-    push({
-      pathname: location.pathname,
-      query: {
-        q: q
-      }
-    })
+  constructor () {
+    super()
+    this.handleUpdateSearchQuery = this.handleUpdateSearchQuery.bind(this)
+  }
+
+  handleUpdateSearchQuery (e) {
+    if (e.keyCode === 13) {
+      const { location } = this.props
+      push({
+        pathname: location.pathname,
+        query: {
+          q: e.target.value
+        }
+      })
+    }
   }
 
   render () {
@@ -34,8 +39,8 @@ export default class SearchBar extends React.Component {
         <ToolbarGroup>
           <TextField
             hintText='Search query...'
-            defaultValue={ query }
-            onEnterKeyDown={ (e) => this.handleUpdateSearchQuery(e.target.value) }
+            defaultValue={query}
+            onKeyDown={this.handleUpdateSearchQuery}
           />
           <FontIcon className='material-icons'>search</FontIcon>
         </ToolbarGroup>
@@ -45,11 +50,7 @@ export default class SearchBar extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  location: state.routing.location
+  location: state.router.locationBeforeTransitions
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, routeActions), dispatch)
-)
-
-export default connect(mapStateToProps, mapDispatchToProps)(SearchBar)
+export default connect(mapStateToProps)(SearchBar)

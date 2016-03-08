@@ -21,11 +21,16 @@ import styles from './DocumentsView.scss'
 
 export class DocumentsView extends React.Component {
   static propTypes = {
-    routing: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
     documents: PropTypes.object.isRequired,
     label: PropTypes.object.isRequired,
     toggleNavigation: PropTypes.func
   };
+
+  constructor () {
+    super()
+    this.handleNavBarTouch = this.handleNavBarTouch.bind(this)
+  }
 
   get label () {
     const { label } = this.props
@@ -37,10 +42,10 @@ export class DocumentsView extends React.Component {
   }
 
   get contextMenu () {
-    const { routing } = this.props
+    const { location } = this.props
     const labelSpecificMenu = this.label ? <div>
       <Divider />
-      <Link to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: routing.location.pathname, title: `Edit label: ${this.label.label}`} }}>
+      <Link to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: location.pathname, title: `Edit label: ${this.label.label}`} }}>
         <MenuItem primaryText='Edit Label' />
       </Link>
     </div> : null
@@ -50,23 +55,22 @@ export class DocumentsView extends React.Component {
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}>
         <MenuItem primaryText='Refresh' />
-        { labelSpecificMenu }
+        {labelSpecificMenu}
       </IconMenu>
     )
   }
 
   get header () {
-    const { toggleNavigation } = this.props
     const bg = this.label ? {backgroundColor: this.label.color} : {}
 
     return (
       <div>
         <AppBar
-          title={ this.title }
+          title={this.title}
           className='appBar'
-          style={ bg }
+          style={bg}
           iconElementRight={this.contextMenu}
-          onLeftIconButtonTouchTap={() => toggleNavigation()}
+          onLeftIconButtonTouchTap={this.handleNavBarTouch}
         />
         <SearchBar />
       </div>
@@ -103,6 +107,11 @@ export class DocumentsView extends React.Component {
     }
   }
 
+  handleNavBarTouch () {
+    const { toggleNavigation } = this.props
+    toggleNavigation()
+  }
+
   render () {
     return (
       <div>
@@ -115,7 +124,7 @@ export class DocumentsView extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  routing: state.routing,
+  location: state.router.locationBeforeTransitions,
   label: state.label,
   documents: state.documents
 })

@@ -31,7 +31,7 @@ export const fetchLabels = () => {
     const {user} = getState()
     dispatch(requestLabels())
     return LabelApi.getInstance(user).all()
-    .then(labels => dispatch(receiveLabels(labels)))
+    .then((labels) => dispatch(receiveLabels(labels)))
   }
 }
 
@@ -100,10 +100,10 @@ export default handleActions({
     return Object.assign({}, state, {isProcessing: true})
   },
   [REMOVED_FROM_LABELS]: (state, action) => {
-    const index = _.findIndex(state.items, item => item.id === action.payload.label.id)
+    const index = _.findIndex(state.items, (item) => item.id === action.payload.label.id)
     return Object.assign({}, state, {
       isProcessing: false,
-      items: state.items.filter(item => item.id !== action.payload.label.id),
+      items: state.items.filter((item) => item.id !== action.payload.label.id),
       removed: action.payload.label,
       removedIndex: index,
       lastUpdated: action.payload.removedAt

@@ -45,7 +45,7 @@ export default class ColorSwatch extends React.Component {
     const className = i === this.state.selected ? styles.selected : null
     return (
       <button
-        key={ 'clr-swatch-' + i }
+        key={'clr-swatch-' + i}
         className={className}
         style={{ backgroundColor: color }}
         onClick={this.handleClick(i)}
@@ -55,7 +55,7 @@ export default class ColorSwatch extends React.Component {
 
   render () {
     return (
-      <div className={ styles.swatch }>
+      <div className={styles.swatch}>
         {this.props.colors.map(this.buildSwatch, this)}
       </div>
     )

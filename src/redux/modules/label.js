@@ -28,7 +28,7 @@ export const fetchLabel = (id) => {
     const {user} = getState()
     dispatch(requestLabel())
     return LabelApi.getInstance(user).get(id)
-    .then(label => dispatch(receiveLabel(label)))
+    .then((label) => dispatch(receiveLabel(label)))
   }
 }
 

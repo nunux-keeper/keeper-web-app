@@ -32,7 +32,7 @@ export const fetchDocument = (id) => {
     const {user} = getState()
     dispatch(requestDocument())
     return DocumentApi.getInstance(user).get(id)
-    .then(doc => dispatch(receiveDocument(doc)))
+    .then((doc) => dispatch(receiveDocument(doc)))
   }
 }
 

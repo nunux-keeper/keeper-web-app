@@ -35,7 +35,7 @@ export function requireAuthentication (Component) {
   }
 
   const mapStateToProps = (state) => ({
-    location: state.router,
+    location: state.router.locationBeforeTransitions,
     isAuthenticated: state.auth.user !== null
   })
 

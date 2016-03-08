@@ -18,9 +18,9 @@ import {
   fetchLabel,
   fetchLabelAndDocument,
   fetchLabelAndDocuments
-}from 'middlewares/Fetch'
+} from 'middlewares/Fetch'
 
-export default (
+export default (store) => (
   <Route path='/' component={RootLayout}>
     <IndexRoute component={HomeView} />
     <Route component={MainLayout}>

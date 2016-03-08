@@ -1,5 +1,5 @@
 import { createAction, handleActions } from 'redux-actions'
-import { routeActions } from 'react-router-redux'
+import { push } from 'react-router-redux'
 import AuthApi from 'api/auth'
 import jwtDecode from 'jwt-decode'
 
@@ -41,9 +41,9 @@ export const loginWith = (provider, redirect) => {
     // Get token from login process
     dispatch(requestToken())
     return AuthApi.getInstance().login(provider)
-    .then(token => {
+    .then((token) => {
       dispatch(receiveToken(token))
-      dispatch(routeActions.push(redirect))
+      dispatch(push(redirect))
     })
   }
 }

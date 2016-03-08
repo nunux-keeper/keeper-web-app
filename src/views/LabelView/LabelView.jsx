@@ -21,7 +21,7 @@ export class LabelView extends React.Component {
     createLabel: PropTypes.func.isRequired,
     updateLabel: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
-    routing: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
     toggleNavigation: PropTypes.func,
     push: PropTypes.func
   };
@@ -36,26 +36,31 @@ export class LabelView extends React.Component {
     } else {
       this.state = {...props.label.value}
     }
+    this.handleNavBarTouch = this.handleNavBarTouch.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleCancel = this.handleCancel.bind(this)
+    this.handleLabelChange = this.handleLabelChange.bind(this)
+    this.handleColorChange = this.handleColorChange.bind(this)
   }
 
   get isCreateForm () {
-    const pathname = this.props.routing.location.pathname
+    const pathname = this.props.location.pathname
     return pathname === '/label/create'
   }
 
   get isModalDisplayed () {
-    const routerState = this.props.routing.location.state
+    const routerState = this.props.location.state
     return routerState && routerState.modal
   }
 
   get header () {
     if (!this.isModalDisplayed) {
-      const { label, toggleNavigation } = this.props
+      const { label } = this.props
       return (
         <AppBar
-          title={label.value ? label.value.label : 'New label' }
+          title={label.value ? label.value.label : 'New label'}
           className='appBar'
-          onLeftIconButtonTouchTap={() => toggleNavigation()}
+          onLeftIconButtonTouchTap={this.handleNavBarTouch}
         />
       )
     }
@@ -77,27 +82,27 @@ export class LabelView extends React.Component {
       errorText = 'This field is required'
     }
     return (
-      <form className={ styles.labelForm } onSubmit={e => this.handleSubmit(e)}>
+      <form className={styles.labelForm} onSubmit={this.handleSubmit}>
         <TextField
           floatingLabelText='Label'
-          value={ label }
-          errorText={ errorText }
-          onChange={ e => this.handleLabelChange(e.target.value) }
+          value={label}
+          errorText={errorText}
+          onChange={this.handleLabelChange}
         />
         <br />
-        <TextField disabled floatingLabelText='Color' value={ color }/>
-        <ColorSwatch value={ color } onColorChange={ c => this.handleColorChange(c) } />
+        <TextField disabled floatingLabelText='Color' value={color}/>
+        <ColorSwatch value={color} onColorChange={this.handleColorChange} />
         <Divider />
-        <div className={ styles.actionsForm}>
+        <div className={styles.actionsForm}>
           <FlatButton
             secondary
             label='Cancel'
-            onTouchTap={ () => this.handleCancel() }/>
+            onTouchTap={this.handleCancel}/>
           <FlatButton
             primary
             label='Submit'
             disabled={errorText !== null}
-            onTouchTap={ (e) => this.handleSubmit(e) }
+            onTouchTap={this.handleSubmit}
           />
         </div>
       </form>
@@ -129,7 +134,7 @@ export class LabelView extends React.Component {
   }
 
   handleCancel () {
-    const { state } = this.props.routing.location
+    const { state } = this.props.location
     if (state && state.returnTo) {
       this.props.push(state.returnTo)
     } else {
@@ -137,12 +142,17 @@ export class LabelView extends React.Component {
     }
   }
 
-  handleLabelChange (label) {
-    this.setState({label: label})
+  handleLabelChange (e) {
+    this.setState({label: e.target.value})
   }
 
   handleColorChange (color) {
     this.setState({color: color})
+  }
+
+  handleNavBarTouch () {
+    const { toggleNavigation } = this.props
+    toggleNavigation()
   }
 
   render () {
@@ -157,7 +167,7 @@ export class LabelView extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  routing: state.routing,
+  location: state.router.locationBeforeTransitions,
   label: state.label
 })
 

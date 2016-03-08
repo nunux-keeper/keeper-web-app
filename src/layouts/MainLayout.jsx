@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import Dialog from 'material-ui/lib/dialog'
 import AppNavigation from 'components/AppNavigation'
 import AppNotification from 'components/AppNotification'
-import { routeActions } from 'react-router-redux'
+import { routerActions } from 'react-router-redux'
 import { Sizes } from 'redux/modules/device'
 
 export class MainLayout extends React.Component {
@@ -14,6 +14,11 @@ export class MainLayout extends React.Component {
     push: PropTypes.func,
     device: PropTypes.object
   };
+
+  constructor () {
+    super()
+    this.handleClose = this.handleClose.bind(this)
+  }
 
   componentWillReceiveProps (nextProps) {
     // if we changed routes...
@@ -45,20 +50,20 @@ export class MainLayout extends React.Component {
 
     return (
       <div>
-        {isModal ? this.previousChildren : this.props.children }
+        {isModal ? this.previousChildren : this.props.children}
 
         {isModal && (
-        <Dialog
-          title={location.state.title}
-          modal={false}
-          open
-          autoScrollBodyContent
-          autoDetectWindowHeight={false}
-          bodyStyle={customBodyStyle}
-          contentStyle={customContentStyle}
-          onRequestClose={() => this.handleClose()}>
-          {this.props.children}
-        </Dialog>
+          <Dialog
+            title={location.state.title}
+            modal={false}
+            open
+            autoScrollBodyContent
+            autoDetectWindowHeight={false}
+            bodyStyle={customBodyStyle}
+            contentStyle={customContentStyle}
+            onRequestClose={this.handleClose}>
+            {this.props.children}
+          </Dialog>
         )}
         <AppNavigation />
         <AppNotification />
@@ -68,12 +73,12 @@ export class MainLayout extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  location: state.routing.location,
+  location: state.router.locationBeforeTransitions,
   device: state.device
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, routeActions), dispatch)
+  bindActionCreators(Object.assign({}, routerActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainLayout)

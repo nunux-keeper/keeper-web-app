@@ -23,24 +23,29 @@ import styles from './DocumentView.scss'
 export class DocumentView extends React.Component {
   static propTypes = {
     document: PropTypes.object.isRequired,
-    routing: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     toggleNavigation: PropTypes.func
   };
+
+  constructor () {
+    super()
+    this.handleNavBarTouch = this.handleNavBarTouch.bind(this)
+  }
 
   get doc () {
     return this.props.document.value
   }
 
   get isModalDisplayed () {
-    const routerState = this.props.routing.location.state
+    const routerState = this.props.location.state
     return routerState && routerState.modal
   }
 
   get originLink () {
     if (this.doc.origin) {
       return (
-        <span className={ styles.origin }>
+        <span className={styles.origin}>
           Origin: <a href={this.doc.origin} target='_blank'>{this.doc.origin}</a>
         </span>
       )
@@ -81,15 +86,14 @@ export class DocumentView extends React.Component {
 
   get header () {
     if (!this.isModalDisplayed) {
-      const { toggleNavigation } = this.props
       const doc = this.props.document
 
       return (
         <AppBar
-          title={ doc.isFetching ? 'Document' : this.doc.title }
+          title={doc.isFetching ? 'Document' : this.doc.title}
           className='appBar'
           iconElementRight={this.contextMenu}
-          onLeftIconButtonTouchTap={() => toggleNavigation()}
+          onLeftIconButtonTouchTap={this.handleNavBarTouch}
         />
       )
     }
@@ -116,7 +120,7 @@ export class DocumentView extends React.Component {
       return (
         <div>
           {this.toolbar}
-          <div className={ styles.document }>
+          <div className={styles.document}>
             {this.content}
           </div>
         </div>
@@ -132,10 +136,10 @@ export class DocumentView extends React.Component {
     return (
       <div>
         {this.originLink}
-        <div className={ styles.content }>
+        <div className={styles.content}>
           {this.doc.content}
         </div>
-        <span className={ styles.modificationDate }>
+        <span className={styles.modificationDate}>
           Last modification: {this.doc.date.toString()}
         </span>
       </div>
@@ -154,12 +158,17 @@ export class DocumentView extends React.Component {
 
   get toolbar () {
     return (
-      <Toolbar className={ styles.toolbar }>
+      <Toolbar className={styles.toolbar}>
         <ToolbarGroup float='right'>
           <RaisedButton label='Save' primary />
         </ToolbarGroup>
       </Toolbar>
     )
+  }
+
+  handleNavBarTouch () {
+    const { toggleNavigation } = this.props
+    toggleNavigation()
   }
 
   render () {
@@ -175,7 +184,7 @@ export class DocumentView extends React.Component {
 
 const mapStateToProps = (state) => ({
   document: state.document,
-  routing: state.routing
+  location: state.router.locationBeforeTransitions
 })
 
 const mapDispatchToProps = (dispatch) => (

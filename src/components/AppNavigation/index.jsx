@@ -30,8 +30,14 @@ export class AppNavigation extends React.Component {
     discardRemovedLabel: PropTypes.func.isRequired,
     isOpen: PropTypes.bool.isRequired,
     labels: PropTypes.object.isRequired,
-    routing: PropTypes.object.isRequired
+    location: PropTypes.object.isRequired
   };
+
+  constructor () {
+    super()
+    this.handleNavItemTouchTap = this.handleNavItemTouchTap.bind(this)
+    this.handleNavRequestChange = this.handleNavRequestChange.bind(this)
+  }
 
   componentDidMount () {
     const { fetchLabels } = this.props
@@ -54,12 +60,12 @@ export class AppNavigation extends React.Component {
   }
 
   get labels () {
-    const { labels, toggleNavigation } = this.props
+    const { labels } = this.props
     const items = this.props.labels.items.map(
       (label) => <Link
         key={`label-${label.id}`}
         to={{pathname: `/label/${label.id}`}}
-        onTouchTap={() => toggleNavigation(false)}
+        onTouchTap={this.handleNavItemTouchTap}
         >
         <MenuItem primaryText={label.label} leftIcon={<Label />} />
       </Link>
@@ -73,37 +79,46 @@ export class AppNavigation extends React.Component {
     }
   }
 
+  handleNavItemTouchTap () {
+    const { toggleNavigation } = this.props
+    toggleNavigation(false)
+  }
+
+  handleNavRequestChange (change) {
+    const { toggleNavigation } = this.props
+    toggleNavigation(change)
+  }
+
   render () {
     const {
-      toggleNavigation,
       isOpen,
-      routing
+      location
     } = this.props
 
     return (
-      <LeftNav open={isOpen} docked={false} onRequestChange={toggleNavigation} className={styles.navigation}>
+      <LeftNav open={isOpen} docked={false} onRequestChange={this.handleNavRequestChange} className={styles.navigation}>
         <Link to={{ pathname: '/' }}>
           <MenuItem primaryText='Profile'
             leftIcon={<AccountCircle />}
-            onTouchTap={() => toggleNavigation(false)}
+            onTouchTap={this.handleNavItemTouchTap}
           />
         </Link>
         <Divider />
         <Link to={{ pathname: '/document' }}>
           <MenuItem primaryText='Documents'
             leftIcon={<ViewModule />}
-            onTouchTap={() => toggleNavigation(false)}
+            onTouchTap={this.handleNavItemTouchTap}
           />
         </Link>
         <Divider />
         <span className={styles.label}>Labels</span>
-        { this.labels }
+        {this.labels}
         <Link
-          to={{ pathname: '/label/create', state: {modal: true, returnTo: routing.location.pathname, title: 'Create new label'} }}
+          to={{ pathname: '/label/create', state: {modal: true, returnTo: location.pathname, title: 'Create new label'} }}
           title='Create new label'>
           <MenuItem primaryText='Create label'
             leftIcon={<Add />}
-            onTouchTap={() => toggleNavigation(false)}
+            onTouchTap={this.handleNavItemTouchTap}
           />
         </Link>
         <Divider />
@@ -129,7 +144,7 @@ export class AppNavigation extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  routing: state.routing,
+  location: state.router.locationBeforeTransitions,
   isOpen: state.navigation.isOpen,
   labels: state.labels
 })
