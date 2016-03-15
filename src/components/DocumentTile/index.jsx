@@ -6,25 +6,7 @@ import { bindActionCreators } from 'redux'
 import { actions as documentsActions } from 'redux/modules/documents'
 import { actions as notificationActions } from 'redux/modules/notification'
 
-import GridTile from 'material-ui/lib/grid-list/grid-tile'
-import Paper from 'material-ui/lib/paper'
-import IconButton from 'material-ui/lib/icon-button'
-import IconMenu from 'material-ui/lib/menus/icon-menu'
-import MenuItem from 'material-ui/lib/menus/menu-item'
-import FontIcon from 'material-ui/lib/font-icon'
-import Divider from 'material-ui/lib/divider'
-
-function isInsideButton (el) {
-  if (el.type === 'button') {
-    return true
-  }
-  if (!el.parentNode) {
-    return false
-  }
-  return isInsideButton(el.parentNode)
-}
-
-export default class DocumentTile extends React.Component {
+export class DocumentTile extends React.Component {
   static propTypes = {
     value: PropTypes.object.isRequired,
     baseUrl: PropTypes.string.isRequired,
@@ -33,16 +15,11 @@ export default class DocumentTile extends React.Component {
     restoreFromDocuments: PropTypes.func.isRequired
   };
 
-  handleTouchTap (e) {
-    // Little hack to reject event if trigger by a button (aka: the secondary action)
-    if (isInsideButton(e.target)) {
-      e.preventDefault()
-      if (e.stopPropagation) {
-        e.stopPropagation()
-      } else {
-        e.cancelBubble = true
-      }
-    }
+  componentDidMount () {
+    const doc = this.props.value
+    window.jQuery(`#doc-${doc.id} .dropdown`).dropdown({
+      transition: 'drop'
+    })
   }
 
   handleUndoRemove () {
@@ -54,7 +31,7 @@ export default class DocumentTile extends React.Component {
     })
   }
 
-  handleRemoveTouchTap () {
+  handleRemove () {
     const {value, removeFromDocuments, showNotification} = this.props
     removeFromDocuments(value).then(() => {
       showNotification({
@@ -65,29 +42,31 @@ export default class DocumentTile extends React.Component {
     })
   }
 
-  renderMenu () {
+  get contextualMenu () {
     const { baseUrl } = this.props
     const doc = this.props.value
-    const iconButtonElement = <IconButton>
-      <FontIcon className='material-icons' color='#fff'>more_vert</FontIcon>
-    </IconButton>
-
     return (
-      <IconMenu iconButtonElement={iconButtonElement} touchTapCloseDelay={0} >
-        <MenuItem primaryText='Share' leftIcon={<FontIcon className='material-icons'>share</FontIcon>}/>
-        <Link to={{ pathname: `${baseUrl}/${doc.id}` }} title='View document'>
-          <MenuItem
-            primaryText='View'
-            leftIcon={<FontIcon className='material-icons'>zoom_in</FontIcon>}
-          />
-        </Link>
-        <Divider />
-        <MenuItem
-          primaryText='Remove'
-          leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}
-          onTouchTap={this.handleRemoveTouchTap}
-        />
-      </IconMenu>
+      <div className='ui icon top left pointing dropdown circular button'>
+        <i className='ellipsis vertical icon'></i>
+        <div className='menu'>
+          <Link
+            to={{ pathname: `${baseUrl}/${doc.id}` }}
+            title={doc.title}
+            className='item'>
+            <i className='zoom icon'></i>
+            View
+          </Link>
+          <div className='item'>
+            <i className='share icon'></i>
+            Share
+          </div>
+          <div className='ui divider'></div>
+          <div className='item' onClick={this.handleRemove}>
+            <i className='trash icon'></i>
+            Delete
+          </div>
+        </div>
+      </div>
     )
   }
 
@@ -96,20 +75,31 @@ export default class DocumentTile extends React.Component {
     const doc = this.props.value
     const state = { modal: true, returnTo: baseUrl, title: doc.title }
     return (
-      <Paper zDepth={1}>
+      <div className='ui card' id={`doc-${doc.id}`}>
         <Link
           to={{ pathname: `${baseUrl}/${doc.id}`, state: state }}
-          onClick={this.handleTouchTap}
-          title={doc.title}>
-          <GridTile
-            key={doc.id}
-            title={doc.title}
-            subtitle={<span>from <b>{doc.origin}</b></span>}
-            actionIcon={this.renderMenu()}>
-            <img src='http://placehold.it/320x200' />
-          </GridTile>
+          title={doc.title}
+          className='image'>
+          <img src='http://placehold.it/320x200' />
         </Link>
-      </Paper>
+        <div className='content'>
+          <Link
+            to={{ pathname: `${baseUrl}/${doc.id}`, state: state }}
+            title={doc.title}
+            className='header'>
+            {doc.title}
+          </Link>
+          <div clasName='meta'>
+            <span>from <b>{doc.origin}</b></span>
+          </div>
+        </div>
+        <div className='extra content'>
+
+          <span className='right floated'>
+            {this.contextualMenu}
+          </span>
+        </div>
+      </div>
     )
   }
 }

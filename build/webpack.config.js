@@ -18,6 +18,9 @@ const webpackConfig = {
     root: paths.base(config.dir_client),
     extensions: ['', '.js', '.jsx']
   },
+  externals: {
+    'jquery': 'jQuery'
+  },
   module: {}
 }
 // ------------------------------------

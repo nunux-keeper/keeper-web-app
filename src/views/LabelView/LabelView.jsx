@@ -3,17 +3,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { routeActions } from 'react-router-redux'
 import { actions as labelActions } from 'redux/modules/label'
-import { actions as navigationActions } from 'redux/modules/navigation'
 import { actions as notificationActions } from 'redux/modules/notification'
 import ColorSwatch from 'components/ColorSwatch'
-
-import AppBar from 'material-ui/lib/app-bar'
-import CircularProgress from 'material-ui/lib/circular-progress'
-import Divider from 'material-ui/lib/divider'
-import FlatButton from 'material-ui/lib/flat-button'
-import TextField from 'material-ui/lib/text-field'
-
-import styles from './styles.scss'
+import AppBar from 'components/AppBar'
 
 export class LabelView extends React.Component {
   static propTypes = {
@@ -22,7 +14,6 @@ export class LabelView extends React.Component {
     updateLabel: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
-    toggleNavigation: PropTypes.func,
     push: PropTypes.func
   };
 
@@ -30,16 +21,13 @@ export class LabelView extends React.Component {
     super(props)
     if (this.isCreateForm) {
       this.state = {
-        label: 'my new label',
         color: '#8E44AD'
       }
     } else {
       this.state = {...props.label.value}
     }
-    this.handleNavBarTouch = this.handleNavBarTouch.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
-    this.handleLabelChange = this.handleLabelChange.bind(this)
     this.handleColorChange = this.handleColorChange.bind(this)
   }
 
@@ -57,11 +45,7 @@ export class LabelView extends React.Component {
     if (!this.isModalDisplayed) {
       const { label } = this.props
       return (
-        <AppBar
-          title={label.value ? label.value.label : 'New label'}
-          className='appBar'
-          onLeftIconButtonTouchTap={this.handleNavBarTouch}
-        />
+        <AppBar title={label.value ? label.value.label : 'New label'} />
       )
     }
   }
@@ -70,40 +54,25 @@ export class LabelView extends React.Component {
     const { isProcessing } = this.props.label
     if (isProcessing) {
       return (
-        <div><CircularProgress /></div>
+        <div className='ui active dimmer'>
+          <div className='ui large text loader'>Loading</div>
+        </div>
       )
     }
   }
 
   get labelForm () {
-    const {label, color} = this.state
-    let errorText = null
-    if (label.trim() === '') {
-      errorText = 'This field is required'
-    }
+    const {color} = this.state
     return (
-      <form className={styles.labelForm} onSubmit={this.handleSubmit}>
-        <TextField
-          floatingLabelText='Label'
-          value={label}
-          errorText={errorText}
-          onChange={this.handleLabelChange}
-        />
-        <br />
-        <TextField disabled floatingLabelText='Color' value={color}/>
-        <ColorSwatch value={color} onColorChange={this.handleColorChange} />
-        <Divider />
-        <div className={styles.actionsForm}>
-          <FlatButton
-            secondary
-            label='Cancel'
-            onTouchTap={this.handleCancel}/>
-          <FlatButton
-            primary
-            label='Submit'
-            disabled={errorText !== null}
-            onTouchTap={this.handleSubmit}
-          />
+      <form className='ui form' onSubmit={this.handleSubmit}>
+        <div className='field'>
+          <label>Label name</label>
+          <input type='text' name='label-name' placeholder='Label Name' />
+        </div>
+        <div className='field'>
+          <label>Color value</label>
+          <input type='text' name='color-value' placeholder='Color value' value={color} disabled />
+          <ColorSwatch value={color} onColorChange={this.handleColorChange} />
         </div>
       </form>
     )
@@ -142,17 +111,8 @@ export class LabelView extends React.Component {
     }
   }
 
-  handleLabelChange (e) {
-    this.setState({label: e.target.value})
-  }
-
   handleColorChange (color) {
     this.setState({color: color})
-  }
-
-  handleNavBarTouch () {
-    const { toggleNavigation } = this.props
-    toggleNavigation()
   }
 
   render () {
@@ -174,7 +134,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => (
   bindActionCreators(Object.assign(
     {},
-    navigationActions,
     notificationActions,
     labelActions,
     routeActions

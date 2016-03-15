@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import RaisedButton from 'material-ui/lib/raised-button'
 import { actions as authActions } from 'redux/modules/auth'
 
 export class LoginView extends React.Component {
@@ -19,11 +18,10 @@ export class LoginView extends React.Component {
     const loginWithGoogle = () => this.loginWith('google')
     return (
       <div>
-        <RaisedButton
-          primary
-          label='Login with Google'
-          onMouseUp={loginWithGoogle}
-          onTouchEnd={loginWithGoogle} />
+        <button className='ui google plus button' onClick={loginWithGoogle}>
+          <i className='google plus icon'></i>
+          Login with Google
+        </button>
       </div>
     )
   }

@@ -1,22 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { actions as navigationActions } from 'redux/modules/navigation'
 
-import AppBar from 'material-ui/lib/app-bar'
-import CircularProgress from 'material-ui/lib/circular-progress'
-import LinearProgress from 'material-ui/lib/linear-progress'
-import IconButton from 'material-ui/lib/icon-button'
-import RaisedButton from 'material-ui/lib/raised-button'
-import MenuItem from 'material-ui/lib/menus/menu-item'
-import IconMenu from 'material-ui/lib/menus/icon-menu'
-import Divider from 'material-ui/lib/divider'
-import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
-
-import FontIcon from 'material-ui/lib/font-icon'
-
-import Toolbar from 'material-ui/lib/toolbar/toolbar'
-import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group'
+import AppBar from 'components/AppBar'
 
 import styles from './DocumentView.scss'
 
@@ -24,14 +9,8 @@ export class DocumentView extends React.Component {
   static propTypes = {
     document: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    params: PropTypes.object.isRequired,
-    toggleNavigation: PropTypes.func
+    params: PropTypes.object.isRequired
   };
-
-  constructor () {
-    super()
-    this.handleNavBarTouch = this.handleNavBarTouch.bind(this)
-  }
 
   get doc () {
     return this.props.document.value
@@ -54,33 +33,30 @@ export class DocumentView extends React.Component {
 
   get contextMenu () {
     return (
-      <IconMenu
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}>
-        <MenuItem
-          primaryText='Share'
-          leftIcon={<FontIcon className='material-icons'>share</FontIcon>}
-        />
-        <MenuItem
-          primaryText='Change labels'
-          leftIcon={<FontIcon className='material-icons'>label</FontIcon>}
-        />
-        <MenuItem
-          primaryText='Upload file'
-          leftIcon={<FontIcon className='material-icons'>file_upload</FontIcon>}
-        />
-        <Divider />
-        <MenuItem
-          primaryText='Edit mode'
-          leftIcon={<FontIcon className='material-icons'>mode_edit</FontIcon>}
-        />
-        <Divider />
-        <MenuItem
-          primaryText='Remove'
-          leftIcon={<FontIcon className='material-icons'>delete</FontIcon>}
-        />
-      </IconMenu>
+      <div className='menu'>
+        <div className='item'>
+          <i className='share alternate icon'></i>
+          Share
+        </div>
+        <div className='item'>
+          <i className='tags icon'></i>
+          Change labels
+        </div>
+        <div className='item'>
+          <i className='cloud upload icon'></i>
+          Upload file
+        </div>
+        <div className='divider'></div>
+        <div className='item'>
+          <i className='edit icon'></i>
+          Edit mode
+        </div>
+        <div className='divider'></div>
+        <div className='item'>
+          <i className='trash icon'></i>
+          Remove
+        </div>
+      </div>
     )
   }
 
@@ -91,9 +67,7 @@ export class DocumentView extends React.Component {
       return (
         <AppBar
           title={doc.isFetching ? 'Document' : this.doc.title}
-          className='appBar'
-          iconElementRight={this.contextMenu}
-          onLeftIconButtonTouchTap={this.handleNavBarTouch}
+          contextMenu={this.contextMenu}
         />
       )
     }
@@ -102,15 +76,11 @@ export class DocumentView extends React.Component {
   get spinner () {
     const { isFetching } = this.props.document
     if (isFetching) {
-      if (this.doc) {
-        return (
-          <LinearProgress mode='indeterminate'/>
-        )
-      } else {
-        return (
-          <div className={styles.inProgress}><CircularProgress /></div>
-        )
-      }
+      return (
+        <div className='ui active dimmer'>
+          <div className='ui large text loader'>Loading</div>
+        </div>
+      )
     }
   }
 
@@ -119,7 +89,6 @@ export class DocumentView extends React.Component {
     if (value) {
       return (
         <div>
-          {this.toolbar}
           <div className={styles.document}>
             {this.content}
           </div>
@@ -146,37 +115,14 @@ export class DocumentView extends React.Component {
     )
   }
 
-  get moreButton () {
-    return (
-      <IconButton
-        iconClassName='material-icons'
-        tooltip='More...' tooltipPosition='bottom-center'>
-        more_vert
-      </IconButton>
-    )
-  }
-
-  get toolbar () {
-    return (
-      <Toolbar className={styles.toolbar}>
-        <ToolbarGroup float='right'>
-          <RaisedButton label='Save' primary />
-        </ToolbarGroup>
-      </Toolbar>
-    )
-  }
-
-  handleNavBarTouch () {
-    const { toggleNavigation } = this.props
-    toggleNavigation()
-  }
-
   render () {
     return (
-      <div>
+      <div className='view'>
         {this.header}
-        {this.spinner}
-        {this.document}
+        <div className='ui main'>
+          {this.spinner}
+          {this.document}
+        </div>
       </div>
     )
   }
@@ -187,9 +133,5 @@ const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, navigationActions), dispatch)
-)
-
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentView)
+export default connect(mapStateToProps)(DocumentView)
 

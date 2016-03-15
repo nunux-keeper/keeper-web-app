@@ -1,21 +1,11 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
-import { actions as navigationActions } from 'redux/modules/navigation'
 
-import AppBar from 'material-ui/lib/app-bar'
-import CircularProgress from 'material-ui/lib/circular-progress'
-import LinearProgress from 'material-ui/lib/linear-progress'
-import Divider from 'material-ui/lib/divider'
-import IconButton from 'material-ui/lib/icon-button'
-import IconMenu from 'material-ui/lib/menus/icon-menu'
-import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
-import MenuItem from 'material-ui/lib/menus/menu-item'
-
-import InfiniteGrid from 'react-infinite-grid'
+// import InfiniteGrid from 'react-infinite-grid'
 import SearchBar from 'components/SearchBar'
 import DocumentTile from 'components/DocumentTile'
+import AppBar from 'components/AppBar'
 
 import styles from './DocumentsView.scss'
 
@@ -24,13 +14,8 @@ export class DocumentsView extends React.Component {
     location: PropTypes.object.isRequired,
     documents: PropTypes.object.isRequired,
     label: PropTypes.object.isRequired,
-    toggleNavigation: PropTypes.func
+    device: PropTypes.object.isRequired
   };
-
-  constructor () {
-    super()
-    this.handleNavBarTouch = this.handleNavBarTouch.bind(this)
-  }
 
   get label () {
     const { label } = this.props
@@ -43,20 +28,29 @@ export class DocumentsView extends React.Component {
 
   get contextMenu () {
     const { location } = this.props
-    const labelSpecificMenu = this.label ? <div>
-      <Divider />
-      <Link to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: location.pathname, title: `Edit label: ${this.label.label}`} }}>
-        <MenuItem primaryText='Edit Label' />
-      </Link>
-    </div> : null
+    if (this.label) {
+      return (
+        <div className='menu'>
+          <div className='item'>
+            <i className='refresh icon'></i>
+            Refresh
+          </div>
+          <div className='ui divider'></div>
+          <Link to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: location.pathname, title: `Edit label: ${this.label.label}`} }}
+            className='item'>
+            <i className='tag icon'></i>
+            Edit Label
+          </Link>
+        </div>
+      )
+    }
     return (
-      <IconMenu
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}>
-        <MenuItem primaryText='Refresh' />
-        {labelSpecificMenu}
-      </IconMenu>
+      <div className='menu'>
+        <div className='item'>
+          <i className='refresh icon'></i>
+          Refresh
+        </div>
+      </div>
     )
   }
 
@@ -64,41 +58,35 @@ export class DocumentsView extends React.Component {
     const bg = this.label ? {backgroundColor: this.label.color} : {}
 
     return (
-      <div>
-        <AppBar
-          title={this.title}
-          className='appBar'
-          style={bg}
-          iconElementRight={this.contextMenu}
-          onLeftIconButtonTouchTap={this.handleNavBarTouch}
-        />
-        <SearchBar />
-      </div>
+      <AppBar title={this.title} styles={bg} contextMenu={this.contextMenu}>
+        <div className='item'>
+          <SearchBar />
+        </div>
+      </AppBar>
     )
   }
 
   get spinner () {
-    const { isFetching, items } = this.props.documents
+    const { isFetching } = this.props.documents
     if (isFetching) {
-      if (items.length) {
-        return (
-          <LinearProgress mode='indeterminate'/>
-        )
-      } else {
-        return (
-          <div className={styles.inProgress}><CircularProgress /></div>
-        )
-      }
+      return (
+        <div className='ui active dimmer'>
+          <div className='ui large text loader'>Loading</div>
+        </div>
+      )
     }
   }
 
   get documents () {
     const { isFetching } = this.props.documents
     const baseUrl = this.label ? `/label/${this.label.id}` : '/document'
-    const items = this.props.documents.items.map((doc) => <DocumentTile value={doc} baseUrl={baseUrl} />)
+    const items = this.props.documents.items.map((doc) => <DocumentTile key={'doc-' + doc.id} value={doc} baseUrl={baseUrl} />)
+    const sizes = ['one', 'three', 'five']
+    const size = sizes[this.props.device.size - 1]
     if (items.length) {
       return (
-        <InfiniteGrid entries={items} wrapperHeight={400} height={200} />
+        <div className={`ui ${size} cards`}>{items}</div>
+        // <InfiniteGrid entries={items} wrapperHeight={400} height={200} />
       )
     } else if (!isFetching) {
       return (
@@ -107,17 +95,14 @@ export class DocumentsView extends React.Component {
     }
   }
 
-  handleNavBarTouch () {
-    const { toggleNavigation } = this.props
-    toggleNavigation()
-  }
-
   render () {
     return (
-      <div>
+      <div className='view'>
         {this.header}
-        {this.spinner}
-        {this.documents}
+        <div className='ui main'>
+          {this.spinner}
+          {this.documents}
+        </div>
       </div>
     )
   }
@@ -126,11 +111,8 @@ export class DocumentsView extends React.Component {
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
   label: state.label,
-  documents: state.documents
+  documents: state.documents,
+  device: state.device
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, navigationActions), dispatch)
-)
-
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentsView)
+export default connect(mapStateToProps)(DocumentsView)

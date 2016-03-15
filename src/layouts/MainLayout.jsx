@@ -1,24 +1,16 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import Dialog from 'material-ui/lib/dialog'
 import AppNavigation from 'components/AppNavigation'
+import AppModal from 'components/AppModal'
 import AppNotification from 'components/AppNotification'
-import { routerActions } from 'react-router-redux'
-import { Sizes } from 'redux/modules/device'
+
+import '../styles/main.scss'
 
 export class MainLayout extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-    location: PropTypes.object,
-    push: PropTypes.func,
-    device: PropTypes.object
+    location: PropTypes.object
   };
-
-  constructor () {
-    super()
-    this.handleClose = this.handleClose.bind(this)
-  }
 
   componentWillReceiveProps (nextProps) {
     // if we changed routes...
@@ -31,55 +23,33 @@ export class MainLayout extends React.Component {
     }
   }
 
-  handleClose () {
-    const { returnTo } = this.props.location.state
-    this.props.push(returnTo)
-  }
-
   render () {
-    const { location, device } = this.props
+    const { location, children } = this.props
     const isModal = (location.state && location.state.modal && this.previousChildren)
-    const customBodyStyle = {
-      maxHeight: 'inherit',
-      padding: 0
-    }
-    const customContentStyle = device.size < Sizes.MEDIUM ? {
-      width: 'none',
-      maxWidth: 'none'
-    } : {}
 
     return (
-      <div>
-        {isModal ? this.previousChildren : this.props.children}
+      <div id='main'>
+        <div className='ui sidebar large vertical menu'>
+          <AppNavigation />
+        </div>
+        <div className='pusher'>
+          {isModal ? this.previousChildren : this.props.children}
 
-        {isModal && (
-          <Dialog
-            title={location.state.title}
-            modal={false}
-            open
-            autoScrollBodyContent
-            autoDetectWindowHeight={false}
-            bodyStyle={customBodyStyle}
-            contentStyle={customContentStyle}
-            onRequestClose={this.handleClose}>
-            {this.props.children}
-          </Dialog>
-        )}
-        <AppNavigation />
-        <AppNotification />
+          {isModal && (
+            <AppModal title={location.state.title} returnTo={location.state.returnTo}>
+              {children}
+            </AppModal>
+          )}
+          <AppNotification />
+        </div>
       </div>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
-  location: state.router.locationBeforeTransitions,
-  device: state.device
+  location: state.router.locationBeforeTransitions
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, routerActions), dispatch)
-)
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainLayout)
+export default connect(mapStateToProps)(MainLayout)
 

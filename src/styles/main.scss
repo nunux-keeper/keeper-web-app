@@ -1,26 +1,41 @@
 :global {
-    @import 'base';
-    @import 'vendor/normalize';
+  @import 'base';
+  @import 'vendor/normalize';
 
-    // Some best-practice CSS that's useful for most apps
-    // Just remove them if they're not what you want
-    html {
-        box-sizing: border-box;
-        font-family: 'Roboto', sans-serif;
-    }
+  // Some best-practice CSS that's useful for most apps
+  // Just remove them if they're not what you want
+  html {
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+  }
 
-    html,
-    body {
-        margin: 0;
-        padding: 0;
-    }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
 
-    *, *:before, *:after {
-        box-sizing: inherit;
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  #root {
+    height: inherit;
+  }
+
+  #main {
+    height: inherit;
+    > .pusher {
+      height: inherit;
     }
-    .appBar {
-        position: fixed;
-        z-index: 99;
-        top: 0;
+    .view {
+      height: inherit;
+      overflow: auto;
+      > .main {
+        background: #ECECEC;
+        padding: 5em 2em 2em 2em;
+      }
     }
+  }
+
 }

@@ -2,60 +2,38 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
-import LeftNav from 'material-ui/lib/left-nav'
-import MenuItem from 'material-ui/lib/menus/menu-item'
-import Divider from 'material-ui/lib/divider'
-import { actions as navigationActions } from 'redux/modules/navigation'
 import { actions as labelsActions } from 'redux/modules/labels'
-
-import AccountCircle from 'material-ui/lib/svg-icons/action/account-circle'
-import ViewModule from 'material-ui/lib/svg-icons/action/view-module'
-import Label from 'material-ui/lib/svg-icons/action/label'
-import Delete from 'material-ui/lib/svg-icons/action/delete'
-import Settings from 'material-ui/lib/svg-icons/action/settings'
-import Add from 'material-ui/lib/svg-icons/content/add'
-import Share from 'material-ui/lib/svg-icons/social/share'
-import CircularProgress from 'material-ui/lib/circular-progress'
-import LinearProgress from 'material-ui/lib/linear-progress'
-
-import styles from './styles.scss'
 
 export class AppNavigation extends React.Component {
   static propTypes = {
-    toggleNavigation: PropTypes.func.isRequired,
     fetchLabels: PropTypes.func.isRequired,
     removeFromLabels: PropTypes.func.isRequired,
     restoreFromLabels: PropTypes.func.isRequired,
     discardRestoredLabel: PropTypes.func.isRequired,
     discardRemovedLabel: PropTypes.func.isRequired,
-    isOpen: PropTypes.bool.isRequired,
     labels: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired
   };
-
-  constructor () {
-    super()
-    this.handleNavItemTouchTap = this.handleNavItemTouchTap.bind(this)
-    this.handleNavRequestChange = this.handleNavRequestChange.bind(this)
-  }
 
   componentDidMount () {
     const { fetchLabels } = this.props
     fetchLabels()
   }
 
+  componentDidUpdate () {
+    window.$('.ui.sidebar a.item').click(() => {
+      window.$('.ui.sidebar').sidebar('hide')
+    })
+  }
+
   get spinner () {
-    const { isFetching, items } = this.props.labels
+    const { isFetching } = this.props.labels
     if (isFetching) {
-      if (items.length) {
-        return (
-          <LinearProgress mode='indeterminate'/>
-        )
-      } else {
-        return (
-          <CircularProgress />
-        )
-      }
+      return (
+        <div className='ui active dimmer'>
+          <div className='ui loader'></div>
+        </div>
+      )
     }
   }
 
@@ -65,9 +43,10 @@ export class AppNavigation extends React.Component {
       (label) => <Link
         key={`label-${label.id}`}
         to={{pathname: `/label/${label.id}`}}
-        onTouchTap={this.handleNavItemTouchTap}
+        className='item'
         >
-        <MenuItem primaryText={label.label} leftIcon={<Label />} />
+        {label.label}
+        <i className='tag icon'></i>
       </Link>
     )
     if (items.length) {
@@ -79,78 +58,57 @@ export class AppNavigation extends React.Component {
     }
   }
 
-  handleNavItemTouchTap () {
-    const { toggleNavigation } = this.props
-    toggleNavigation(false)
-  }
-
-  handleNavRequestChange (change) {
-    const { toggleNavigation } = this.props
-    toggleNavigation(change)
-  }
-
   render () {
     const {
-      isOpen,
       location
     } = this.props
 
     return (
-      <LeftNav open={isOpen} docked={false} onRequestChange={this.handleNavRequestChange} className={styles.navigation}>
-        <Link to={{ pathname: '/' }}>
-          <MenuItem primaryText='Profile'
-            leftIcon={<AccountCircle />}
-            onTouchTap={this.handleNavItemTouchTap}
-          />
+      <div>
+        <Link to={{ pathname: '/' }} className='item'>
+          Profile
+          <i className='user icon'></i>
         </Link>
-        <Divider />
-        <Link to={{ pathname: '/document' }}>
-          <MenuItem primaryText='Documents'
-            leftIcon={<ViewModule />}
-            onTouchTap={this.handleNavItemTouchTap}
-          />
+        <Link to={{ pathname: '/document' }} className='item'>
+          Documents
+          <i className='grid layout icon'></i>
         </Link>
-        <Divider />
-        <span className={styles.label}>Labels</span>
-        {this.labels}
-        <Link
-          to={{ pathname: '/label/create', state: {modal: true, returnTo: location.pathname, title: 'Create new label'} }}
-          title='Create new label'>
-          <MenuItem primaryText='Create label'
-            leftIcon={<Add />}
-            onTouchTap={this.handleNavItemTouchTap}
-          />
+        <div className='item'>
+          Labels
+          <div className='menu'>
+            {this.labels}
+            <Link
+              to={{ pathname: '/label/create', state: {modal: true, returnTo: location.pathname, title: 'Create new label'} }}
+              title='Create new label' className='item'>
+              Create a label
+              <i className='plus icon'></i>
+            </Link>
+          </div>
+        </div>
+        <Link to={{ pathname: '/' }} className='item'>
+          Trash
+          <i className='trash icon'></i>
         </Link>
-        <Divider />
-        <Link to={{ pathname: '/' }}>
-          <MenuItem primaryText='Trash'
-            leftIcon={<Delete />}
-          />
+        <Link to={{ pathname: '/' }} className='item'>
+          Shares
+          <i className='share alternate icon'></i>
         </Link>
-        <Link to={{ pathname: '/' }}>
-          <MenuItem primaryText='Shares'
-            leftIcon={<Share />}
-          />
+        <Link to={{ pathname: '/' }} className='item'>
+          Settings
+          <i className='settings icon'></i>
         </Link>
-        <Divider />
-        <Link to={{ pathname: '/' }}>
-          <MenuItem primaryText='Settings'
-            leftIcon={<Settings />}
-          />
-        </Link>
-      </LeftNav>
+      </div>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
-  isOpen: state.navigation.isOpen,
   labels: state.labels
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, labelsActions, navigationActions), dispatch)
+  bindActionCreators(Object.assign({}, labelsActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppNavigation)
