@@ -9,7 +9,7 @@ export const HIDE_NOTIFICATION = 'HIDE_NOTIFICATION'
 // ------------------------------------
 // Actions
 // ------------------------------------
-export const showNotification = createAction(SHOW_NOTIFICATION, (notification) => notification)
+export const showNotification = createAction(SHOW_NOTIFICATION, (notification = {level: 'info'}) => notification)
 export const discardNotification = createAction(HIDE_NOTIFICATION)
 
 export const actions = {
@@ -22,20 +22,24 @@ export const actions = {
 // ------------------------------------
 export default handleActions({
   [SHOW_NOTIFICATION]: (state, {payload}) => {
-    const {message, actionLabel, actionFn} = payload
+    const {header, message, level, actionLabel, actionFn} = payload
     return Object.assign({}, state, {
-      message, actionLabel, actionFn
+      header, message, level, actionLabel, actionFn
     })
   },
   [HIDE_NOTIFICATION]: (state) => {
     return Object.assign({}, state, {
+      header: null,
       message: null,
+      level: null,
       actionLabel: null,
       actionFn: null
     })
   }
 }, {
+  header: null,
   message: null,
+  level: null,
   actionLabel: null,
   actionFn: null
 })

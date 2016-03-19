@@ -15,6 +15,12 @@ export class DocumentTile extends React.Component {
     restoreFromDocuments: PropTypes.func.isRequired
   };
 
+  constructor () {
+    super()
+    this.handleRemove = this.handleRemove.bind(this)
+    this.handleUndoRemove = this.handleUndoRemove.bind(this)
+  }
+
   componentDidMount () {
     const doc = this.props.value
     window.jQuery(`#doc-${doc.id} .dropdown`).dropdown({
@@ -26,7 +32,8 @@ export class DocumentTile extends React.Component {
     const { restoreFromDocuments, showNotification } = this.props
     restoreFromDocuments().then(() => {
       showNotification({
-        message: 'Document restored'
+        level: 'info',
+        header: 'Document restored'
       })
     })
   }
@@ -35,7 +42,8 @@ export class DocumentTile extends React.Component {
     const {value, removeFromDocuments, showNotification} = this.props
     removeFromDocuments(value).then(() => {
       showNotification({
-        message: 'Document removed',
+        level: 'info',
+        header: 'Document removed',
         actionLabel: 'undo',
         actionFn: () => this.handleUndoRemove()
       })

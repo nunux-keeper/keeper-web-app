@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { actions as notificationActions } from 'redux/modules/notification'
 
-import Snackbar from 'material-ui/lib/snackbar'
-
 export class AppNotification extends React.Component {
   static propTypes = {
     notification: PropTypes.object.isRequired,
@@ -13,34 +11,73 @@ export class AppNotification extends React.Component {
 
   constructor () {
     super()
-    this.handleActionTouchTap = this.handleActionTouchTap.bind(this)
-    this.handleRequestClose = this.handleRequestClose.bind(this)
+    this.handleAction = this.handleAction.bind(this)
+    this.handleClose = this.handleClose.bind(this)
   }
 
-  handleActionTouchTap () {
-    const { actionFn } = this.props.notification
-    if (actionFn) {
-      actionFn()
-      this.props.discardNotification()
+  get header () {
+    const { header } = this.props.notification
+    if (header) {
+      return (
+        <div className='header'>
+          {header}
+        </div>
+      )
     }
   }
 
-  handleRequestClose () {
-    this.props.discardNotification()
+  get actionButton () {
+    const { actionLabel } = this.props.notification
+    if (actionLabel) {
+      return (
+        <button className='ui button' onClick={this.handleAction}>{actionLabel}</button>
+      )
+    }
+  }
+
+  get styles () {
+    return {
+      position: 'fixed',
+      bottom: 10,
+      left: '50%',
+      marginLeft: -200,
+      width: 400
+    }
+  }
+
+  handleAction (e) {
+    const { actionFn } = this.props.notification
+    if (actionFn) {
+      // this.handleClose(e)
+      actionFn()
+    }
+  }
+
+  handleClose (e) {
+    window.$(e.target).closest('.message').transition({
+      animation: 'fade',
+      onComplete: this.props.discardNotification
+    })
   }
 
   render () {
-    const { message, actionLabel } = this.props.notification
-    return (
-      <Snackbar
-        open={message !== null}
-        message={message || ''}
-        action={actionLabel}
-        autoHideDuration={4000}
-        onRequestClose={this.handleRequestClose}
-        onActionTouchTap={this.handleActionTouchTap}
-      />
-    )
+    const { header, message, level } = this.props.notification
+    if (header || message) {
+      return (
+        <div className={`ui floating ${level} message`} style={this.styles}>
+          <i className='close icon' onClick={this.handleClose}></i>
+          <div className='content'>
+            {this.header}
+            <p>
+              {message}
+            </p>
+          </div>
+          {this.actionButton}
+        </div>
+      )
+    } else {
+      return (<div></div>)
+    }
   }
 }
 
