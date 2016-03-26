@@ -37,17 +37,21 @@ export function fetchDocuments (Component) {
     };
 
     componentDidMount () {
+      console.debug('Mount documents aware component...')
       const { params, location, fetchDocuments, discardLabel } = this.props
-      fetchDocuments({
-        label: params.labelId,
-        ... location.query
-      })
-      if (!params.labelId) {
-        discardLabel()
+      if (!(location.state && location.state.backFromModal)) {
+        fetchDocuments({
+          label: params.labelId,
+          ... location.query
+        })
+        if (!params.labelId) {
+          discardLabel()
+        }
       }
     }
 
     componentWillReceiveProps (nextProps) {
+      console.debug('Updating documents aware component...')
       const { params, location, fetchDocuments } = this.props
       if (params.labelId !== nextProps.params.labelId) {
         fetchDocuments({

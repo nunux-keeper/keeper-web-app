@@ -22,9 +22,9 @@ function getRandomDocument (doc) {
   return {id, title, content, contentType, origin, labels, date, attachments}
 }
 
-function getRandomDocuments (nb = 20) {
+function getRandomDocuments (nb = 20, total) {
   const result = {
-    total: nb,
+    total: total,
     hits: []
   }
 
@@ -53,10 +53,15 @@ export default class DocumentMock {
     return instance
   }
 
-  search (/* params */) {
+  search (params) {
+    const {from, size} = params
     return new Promise((resolve) => {
       window.setTimeout(() => {
-        resolve(getRandomDocuments())
+        if (from) {
+          resolve(getRandomDocuments(7, size + 7))
+        } else {
+          resolve(getRandomDocuments(size, size + 7))
+        }
       }, 2000)
     })
   }

@@ -3,9 +3,6 @@ import AbstractApi from 'api/common/AbstractApi'
 let instance = null
 
 export default class DocumentApi extends AbstractApi {
-  constructor (user) {
-    super(user)
-  }
 
   static getInstance (user) {
     if (!instance) {

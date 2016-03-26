@@ -21,17 +21,30 @@ export const DISCARD_REMOVED_DOCUMENT = 'DISCARD_REMOVED_DOCUMENT'
 export const requestDocuments = createAction(REQUEST_DOCUMENTS)
 export const receiveDocuments = createAction(RECEIVE_DOCUMENTS, (json) => {
   return {
+    total: json.total,
     documents: json.hits,
     receivedAt: Date.now()
   }
 })
 
-export const fetchDocuments = (params) => {
+export const fetchDocuments = (params = {from: 0, size: 20}) => {
+  params = Object.assign({
+    from: 0,
+    size: 20
+  }, params)
   return (dispatch, getState) => {
-    const {user} = getState()
-    dispatch(requestDocuments(params))
-    return DocumentApi.getInstance(user).search(params)
-    .then((json) => dispatch(receiveDocuments(json)))
+    const {user, documents} = getState()
+    if (documents.isFetching || documents.isProcessing) {
+      console.warn('Unable to fetch documents. An action is pending...')
+      return Promise.resolve(null)
+    } else if (documents.hasMore || params.from === 0) {
+      dispatch(requestDocuments(params))
+      return DocumentApi.getInstance(user).search(params)
+      .then((json) => dispatch(receiveDocuments(json)))
+    } else {
+      console.warn('Unable to fetch documents. No more documents', params)
+      return Promise.resolve(null)
+    }
   }
 }
 
@@ -89,16 +102,26 @@ export default handleActions({
   [REQUEST_DOCUMENTS]: (state, action) => {
     console.debug('Fetching documents:', action.payload)
     return Object.assign({}, state, {
-      params: action.payload.params,
+      params: action.payload,
       isFetching: true
     })
   },
   [RECEIVE_DOCUMENTS]: (state, action) => {
-    console.debug('Documents fetched:', action.payload.documents.length)
+    const {documents, total, receivedAt} = action.payload
+    console.debug('Documents fetched:', documents.length)
+    let hasMore = total > documents.length
+    let items = documents
+    if (state.params && state.params.from) {
+      hasMore = total > state.items.length + documents.length
+      items = state.items.concat(documents)
+    }
+
     return Object.assign({}, state, {
       isFetching: false,
-      items: action.payload.documents,
-      lastUpdated: action.payload.receivedAt
+      hasMore: hasMore,
+      items: items,
+      total: total,
+      lastUpdated: receivedAt
     })
   },
   [REMOVING_FROM_DOCUMENTS]: (state) => {
@@ -108,8 +131,8 @@ export default handleActions({
     const index = _.findIndex(state.items, (item) => item.id === action.payload.doc.id)
     return Object.assign({}, state, {
       isProcessing: false,
-
       items: state.items.filter((item) => item.id !== action.payload.doc.id),
+      total: state.total - 1,
       removed: action.payload.doc,
       removedIndex: index,
       lastUpdated: action.payload.removedAt
@@ -124,6 +147,7 @@ export default handleActions({
     return Object.assign({}, state, {
       isProcessing: false,
       items: restoredItems,
+      total: state.total + 1,
       removed: null,
       removedIndex: null,
       restored: action.payload.doc,
@@ -139,9 +163,11 @@ export default handleActions({
 }, {
   isFetching: false,
   isProcessing: false,
+  hasMore: true,
   removed: null,
   removedIndex: null,
   restored: null,
   params: null,
-  items: []
+  items: [],
+  total: null
 })

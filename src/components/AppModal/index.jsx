@@ -28,7 +28,12 @@ export default class AppModal extends React.Component {
   handleClose () {
     const { returnTo } = this.props
     if (returnTo) {
-      this.props.push(returnTo)
+      this.props.push({
+        pathname: returnTo,
+        state: {
+          backFromModal: true
+        }
+      })
     }
   }
 
