@@ -1,21 +1,33 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { push } from 'react-router-redux'
+import { bindActionCreators } from 'redux'
+import { routerActions } from 'react-router-redux'
 
 export default class SearchBar extends React.Component {
   static propTypes = {
+    push: PropTypes.func,
     location: PropTypes.object.isRequired
   };
 
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
+    this.handleChange = this.handleChange.bind(this)
     this.handleUpdateSearchQuery = this.handleUpdateSearchQuery.bind(this)
+
+    const { query } = props.location
+    this.state = {
+      q: query ? query.q : ''
+    }
+  }
+
+  handleChange (event) {
+    this.setState({q: event.target.value})
   }
 
   handleUpdateSearchQuery (e) {
     if (e.keyCode === 13) {
       const { location } = this.props
-      push({
+      this.props.push({
         pathname: location.pathname,
         query: {
           q: e.target.value
@@ -25,14 +37,13 @@ export default class SearchBar extends React.Component {
   }
 
   render () {
-    const { location } = this.props
-    const query = location.query.q
     return (
       <div className='ui icon input'>
         <input
           type='text'
           placeholder='Search...'
-          value={query}
+          value={this.state.q}
+          onChange={this.handleChange}
           onKeyDown={this.handleUpdateSearchQuery}
         />
         <i className='search link icon'></i>
@@ -45,4 +56,8 @@ const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions
 })
 
-export default connect(mapStateToProps)(SearchBar)
+const mapDispatchToProps = (dispatch) => (
+  bindActionCreators(Object.assign({}, routerActions), dispatch)
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBar)

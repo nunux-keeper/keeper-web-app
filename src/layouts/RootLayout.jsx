@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import Events from 'material-ui/lib/utils/events'
 import { actions as deviceActions } from 'redux/modules/device'
 
 export class RootLayout extends React.Component {
@@ -11,12 +10,12 @@ export class RootLayout extends React.Component {
 
   componentDidMount () {
     const { resize } = this.props
-    Events.on(window, 'resize', resize)
+    window.addEventListener('resize', resize)
   }
 
   componentWillUnmount () {
     const { resize } = this.props
-    Events.off(window, 'resize', resize)
+    window.removeEventListener('resize', resize)
   }
 
   render () {

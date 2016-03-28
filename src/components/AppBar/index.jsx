@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 export class AppBar extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-    contextMenu: PropTypes.node.isRequired,
+    contextMenu: PropTypes.node,
     title: PropTypes.string.isRequired,
     styles: PropTypes.object
   };
@@ -29,7 +29,7 @@ export class AppBar extends React.Component {
   render () {
     const { children, contextMenu, styles, title } = this.props
     return (
-      <div className='ui top fixed inverted menu' style={styles}>
+      <div className='ui top inverted menu' style={styles}>
         <a className='item' onClick={this.handleMenuClick}>
           <i className='sidebar icon'></i>
         </a>

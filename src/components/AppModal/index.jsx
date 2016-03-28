@@ -8,7 +8,7 @@ export default class AppModal extends React.Component {
     push: PropTypes.func,
     children: PropTypes.node.isRequired,
     title: PropTypes.string.isRequired,
-    returnTo: PropTypes.string
+    returnTo: PropTypes.object
   };
 
   constructor () {
@@ -29,7 +29,8 @@ export default class AppModal extends React.Component {
     const { returnTo } = this.props
     if (returnTo) {
       this.props.push({
-        pathname: returnTo,
+        pathname: returnTo.pathname,
+        search: returnTo.search,
         state: {
           backFromModal: true
         }

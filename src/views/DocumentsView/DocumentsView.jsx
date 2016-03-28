@@ -25,6 +25,7 @@ export class DocumentsView extends React.Component {
   constructor () {
     super()
     this.fetchFollowingDocuments = this.fetchFollowingDocuments.bind(this)
+    this.refreshDocuments = this.refreshDocuments.bind(this)
   }
 
   get label () {
@@ -41,12 +42,12 @@ export class DocumentsView extends React.Component {
     if (this.label) {
       return (
         <div className='menu'>
-          <div className='item'>
+          <a className='item' onClick={this.refreshDocuments}>
             <i className='refresh icon'></i>
             Refresh
-          </div>
+          </a>
           <div className='ui divider'></div>
-          <Link to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: location.pathname, title: `Edit label: ${this.label.label}`} }}
+          <Link to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: location, title: `Edit label: ${this.label.label}`} }}
             className='item'>
             <i className='tag icon'></i>
             Edit Label
@@ -56,10 +57,10 @@ export class DocumentsView extends React.Component {
     }
     return (
       <div className='menu'>
-        <div className='item'>
+        <a className='item' onClick={this.refreshDocuments}>
           <i className='refresh icon'></i>
           Refresh
-        </div>
+        </a>
       </div>
     )
   }
@@ -89,8 +90,7 @@ export class DocumentsView extends React.Component {
 
   get documents () {
     const { isFetching, hasMore } = this.props.documents
-    const baseUrl = this.label ? `/label/${this.label.id}` : '/document'
-    const items = this.props.documents.items.map((doc) => <DocumentTile key={'doc-' + doc.id} value={doc} baseUrl={baseUrl} />)
+    const items = this.props.documents.items.map((doc) => <DocumentTile key={'doc-' + doc.id} value={doc} />)
     const sizes = ['one', 'three', 'five']
     const size = sizes[this.props.device.size - 1]
     if (items.length) {
@@ -121,6 +121,12 @@ export class DocumentsView extends React.Component {
   fetchFollowingDocuments () {
     const { params } = this.props.documents
     params.from++
+    this.props.fetchDocuments(params)
+  }
+
+  refreshDocuments () {
+    const { params } = this.props.documents
+    params.from = 0
     this.props.fetchDocuments(params)
   }
 }

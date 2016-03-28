@@ -78,7 +78,7 @@ export class AppNavigation extends React.Component {
           <div className='menu'>
             {this.labels}
             <Link
-              to={{ pathname: '/label/create', state: {modal: true, returnTo: location.pathname, title: 'Create new label'} }}
+              to={{ pathname: '/label/create', state: {modal: true, returnTo: location, title: 'Create new label'} }}
               title='Create new label' className='item'>
               Create a label
               <i className='plus icon'></i>

@@ -1,12 +1,5 @@
 import React, { PropTypes } from 'react'
 
-function topPosition ($el) {
-  if (!$el) {
-    return 0
-  }
-  return $el.offsetTop + topPosition($el.offsetParent)
-}
-
 export default class InfiniteGrid extends React.Component {
   static propTypes = {
     size: PropTypes.string,
@@ -19,7 +12,7 @@ export default class InfiniteGrid extends React.Component {
   static defaultProps = {
     size: 'five',
     hasMore: false,
-    threshold: 20
+    threshold: 50
   };
 
   constructor () {
@@ -53,8 +46,9 @@ export default class InfiniteGrid extends React.Component {
 
   scrollListener () {
     const $el = this.refs.grid
-    const scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop
-    if (topPosition($el) + $el.offsetHeight - scrollTop - window.innerHeight < Number(this.props.threshold)) {
+    const delta = $el.parentElement.scrollHeight - $el.parentElement.scrollTop - $el.parentElement.offsetHeight
+    // console.debug('scroll delta: ', delta)
+    if (delta < Number(this.props.threshold)) {
       this.detachScrollListener()
       this.props.loadMore()
     }
@@ -64,16 +58,18 @@ export default class InfiniteGrid extends React.Component {
     if (!this.state.listening && this.props.hasMore) {
       console.debug('attachScrollListener')
       this.setState({listening: true})
-      window.addEventListener('scroll', this.scrollListener)
-      window.addEventListener('resize', this.scrollListener)
+      const $el = this.refs.grid
+      $el.parentElement.addEventListener('scroll', this.scrollListener)
+      $el.parentElement.addEventListener('resize', this.scrollListener)
     }
   }
 
   detachScrollListener () {
     if (this.state.listening) {
       console.debug('detachScrollListener')
-      window.removeEventListener('scroll', this.scrollListener)
-      window.removeEventListener('resize', this.scrollListener)
+      const $el = this.refs.grid
+      $el.parentElement.removeEventListener('scroll', this.scrollListener)
+      $el.parentElement.removeEventListener('resize', this.scrollListener)
       this.setState({listening: false})
     }
   }

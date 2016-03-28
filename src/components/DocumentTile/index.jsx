@@ -6,10 +6,12 @@ import { bindActionCreators } from 'redux'
 import { actions as documentsActions } from 'redux/modules/documents'
 import { actions as notificationActions } from 'redux/modules/notification'
 
+import './styles.scss'
+
 export class DocumentTile extends React.Component {
   static propTypes = {
+    location: PropTypes.object.isRequired,
     value: PropTypes.object.isRequired,
-    baseUrl: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     removeFromDocuments: PropTypes.func.isRequired,
     restoreFromDocuments: PropTypes.func.isRequired
@@ -51,14 +53,14 @@ export class DocumentTile extends React.Component {
   }
 
   get contextualMenu () {
-    const { baseUrl } = this.props
+    const { pathname } = this.props.location
     const doc = this.props.value
     return (
       <div className='ui icon top left pointing dropdown circular button'>
         <i className='ellipsis vertical icon'></i>
         <div className='menu'>
           <Link
-            to={{ pathname: `${baseUrl}/${doc.id}` }}
+            to={{ pathname: `${pathname}/${doc.id}` }}
             title={doc.title}
             className='item'>
             <i className='zoom icon'></i>
@@ -79,27 +81,30 @@ export class DocumentTile extends React.Component {
   }
 
   render () {
-    const { baseUrl } = this.props
+    const { location } = this.props
     const doc = this.props.value
-    const state = { modal: true, returnTo: baseUrl, title: doc.title }
+    const state = { modal: true, returnTo: location, title: doc.title }
     return (
-      <div className='ui card' id={`doc-${doc.id}`}>
+      <div className='ui card doc' id={`doc-${doc.id}`}>
         <Link
-          to={{ pathname: `${baseUrl}/${doc.id}`, state: state }}
+          to={{ pathname: `${location.pathname}/${doc.id}`, state: state }}
           title={doc.title}
           className='image'>
           <img src='http://placehold.it/320x200' />
         </Link>
         <div className='content'>
           <Link
-            to={{ pathname: `${baseUrl}/${doc.id}`, state: state }}
+            to={{ pathname: `${location.pathname}/${doc.id}`, state: state }}
             title={doc.title}
             className='header'>
             {doc.title}
           </Link>
-          <div clasName='meta'>
-            <span>from <b>{doc.origin}</b></span>
-          </div>
+          <span className='meta'>
+            from&nbsp;
+            <a href={doc.origin} target='_blank' title={doc.origin}>
+              {doc.origin}
+            </a>
+          </span>
         </div>
         <div className='extra content'>
 
@@ -112,8 +117,12 @@ export class DocumentTile extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  location: state.router.locationBeforeTransitions
+})
+
 const mapDispatchToProps = (dispatch) => (
   bindActionCreators(Object.assign({}, notificationActions, documentsActions), dispatch)
 )
 
-export default connect(null, mapDispatchToProps)(DocumentTile)
+export default connect(mapStateToProps, mapDispatchToProps)(DocumentTile)
