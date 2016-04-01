@@ -73,6 +73,7 @@
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "react-infinite-grid": "^0.4.0",
+    "react-modal": "^0.6.1",
     "react-redux": "^4.0.0",
     "react-router": "^2.0.0",
     "react-router-redux": "^4.0.0",

@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { routerActions } from 'react-router-redux'
+import Modal from 'react-modal'
 
 export default class AppModal extends React.Component {
   static propTypes = {
@@ -11,18 +12,16 @@ export default class AppModal extends React.Component {
     returnTo: PropTypes.object
   };
 
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.handleClose = this.handleClose.bind(this)
+    this.state = {
+      isOpen: false
+    }
   }
 
   componentDidMount () {
-    window.$('#mainModal').modal({
-      detachable: false,
-      context: window.$('#main'),
-      onHidden: this.handleClose
-    })
-    .modal('show')
+    this.setState({isOpen: true})
   }
 
   handleClose () {
@@ -41,19 +40,20 @@ export default class AppModal extends React.Component {
   render () {
     const { children, title } = this.props
     return (
-      <div id='mainModal' className='ui modal scrolling' >
-        <i className='close icon'></i>
-        <div className='header'>
+      <Modal
+        isOpen={this.state.isOpen}
+        onRequestClose={this.handleClose}>
+        <h3 className='ui top attached header'>
           {title}
-        </div>
-        <div className='content'>
+        </h3>
+        <div className='ui attached segment'>
           {children}
         </div>
-        <div className='actions'>
+        <div className='ui attached segment actions'>
           <div className='ui button'>Cancel</div>
           <div className='ui green button'>Send</div>
         </div>
-      </div>
+      </Modal>
     )
   }
 }

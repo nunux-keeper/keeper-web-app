@@ -37,6 +37,7 @@
         border-radius: 0;
       }
       > .main {
+        position: relative;
         flex: 1;
         overflow: auto;
         background: #ECECEC;
