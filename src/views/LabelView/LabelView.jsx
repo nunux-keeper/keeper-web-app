@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { routeActions } from 'react-router-redux'
+import { routerActions } from 'react-router-redux'
 import { actions as labelActions } from 'redux/modules/label'
 import { actions as notificationActions } from 'redux/modules/notification'
 import ColorSwatch from 'components/ColorSwatch'
@@ -42,12 +42,13 @@ export class LabelView extends React.Component {
   }
 
   get header () {
-    if (!this.isModalDisplayed) {
-      const { label } = this.props
-      return (
-        <AppBar title={label.value ? label.value.label : 'New label'} />
-      )
-    }
+    const { value: label } = this.props.label
+    return (
+      <AppBar
+        modal={this.isModalDisplayed}
+        title={label ? `Edit label: ${label.label}` : 'New label'}
+      />
+    )
   }
 
   get spinner () {
@@ -62,9 +63,11 @@ export class LabelView extends React.Component {
   }
 
   get labelForm () {
-    const {color} = this.state
+    const { color } = this.state
+    const { isProcessing } = this.props.label
+    const loading = isProcessing ? 'loading' : ''
     return (
-      <form className='ui form' onSubmit={this.handleSubmit}>
+      <form className={`ui form ${loading}`} onSubmit={this.handleSubmit}>
         <div className='field'>
           <label>Label name</label>
           <input type='text' name='label-name' placeholder='Label Name' />
@@ -74,6 +77,12 @@ export class LabelView extends React.Component {
           <input type='text' name='color-value' placeholder='Color value' value={color} disabled />
           <ColorSwatch value={color} onColorChange={this.handleColorChange} />
         </div>
+        <button className='ui right floated primary button' type='submit'>
+          Submit
+        </button>
+        <button className='ui right floated button' onClick={this.handleCancel}>
+          Cancel
+        </button>
       </form>
     )
   }
@@ -117,10 +126,11 @@ export class LabelView extends React.Component {
 
   render () {
     return (
-      <div>
+      <div className='view'>
         {this.header}
-        {this.spinner}
-        {this.labelForm}
+        <div className='ui main'>
+          {this.labelForm}
+        </div>
       </div>
     )
   }
@@ -136,7 +146,7 @@ const mapDispatchToProps = (dispatch) => (
     {},
     notificationActions,
     labelActions,
-    routeActions
+    routerActions
   ), dispatch)
 )
 

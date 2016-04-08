@@ -34,7 +34,7 @@ function getRandomDocuments (nb = 20, total) {
       title: chance.sentence({words: 5}),
       contentType: 'text/plain',
       origin: chance.url(),
-      labels: ['test'],
+      labels: ['test', 'titi', 'toto', 'tata', 'pouette'],
       attachments: [{
         key: chance.hash({length: 10}),
         origin: chance.url({extensions: ['png']}),

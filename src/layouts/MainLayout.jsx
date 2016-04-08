@@ -36,7 +36,7 @@ export class MainLayout extends React.Component {
           {isModal ? this.previousChildren : this.props.children}
 
           {isModal && (
-            <AppModal title={location.state.title} returnTo={location.state.returnTo}>
+            <AppModal returnTo={location.state.returnTo}>
               {children}
             </AppModal>
           )}

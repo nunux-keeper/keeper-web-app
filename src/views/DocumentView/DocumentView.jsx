@@ -2,19 +2,17 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import AppBar from 'components/AppBar'
+import DocumentContextMenu from 'components/DocumentContextMenu'
+import DocumentLabels from 'components/DocumentLabels'
 
 import styles from './DocumentView.scss'
 
 export class DocumentView extends React.Component {
   static propTypes = {
     document: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    params: PropTypes.object.isRequired
+    labels: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired
   };
-
-  get doc () {
-    return this.props.document.value
-  }
 
   get isModalDisplayed () {
     const routerState = this.props.location.state
@@ -22,55 +20,32 @@ export class DocumentView extends React.Component {
   }
 
   get originLink () {
-    if (this.doc.origin) {
+    const { value: doc } = this.props.document
+    if (doc.origin) {
       return (
         <span className={styles.origin}>
-          Origin: <a href={this.doc.origin} target='_blank'>{this.doc.origin}</a>
+          Origin: <a href={doc.origin} target='_blank'>{doc.origin}</a>
         </span>
       )
     }
   }
 
   get contextMenu () {
+    const { value: doc } = this.props.document
     return (
-      <div className='menu'>
-        <div className='item'>
-          <i className='share alternate icon'></i>
-          Share
-        </div>
-        <div className='item'>
-          <i className='tags icon'></i>
-          Change labels
-        </div>
-        <div className='item'>
-          <i className='cloud upload icon'></i>
-          Upload file
-        </div>
-        <div className='divider'></div>
-        <div className='item'>
-          <i className='edit icon'></i>
-          Edit mode
-        </div>
-        <div className='divider'></div>
-        <div className='item'>
-          <i className='trash icon'></i>
-          Remove
-        </div>
-      </div>
+      <DocumentContextMenu doc={doc} items='edit,share,labels,delete' direction='left' />
     )
   }
 
   get header () {
-    if (!this.isModalDisplayed) {
-      const doc = this.props.document
-
-      return (
-        <AppBar
-          title={doc.isFetching ? 'Document' : this.doc.title}
-          contextMenu={this.contextMenu}
-        />
-      )
-    }
+    const { isFetching, value: doc } = this.props.document
+    return (
+      <AppBar
+        modal={this.isModalDisplayed}
+        title={isFetching || !doc ? 'Document' : doc.title}
+        contextMenu={isFetching || !doc ? null : this.contextMenu}
+      />
+    )
   }
 
   get spinner () {
@@ -85,13 +60,11 @@ export class DocumentView extends React.Component {
   }
 
   get document () {
-    const { isFetching, value } = this.props.document
-    if (value) {
+    const { isFetching, value: doc } = this.props.document
+    if (doc) {
       return (
         <div>
-          <div className={styles.document}>
-            {this.content}
-          </div>
+          {this.content}
         </div>
       )
     } else if (!isFetching) {
@@ -102,14 +75,16 @@ export class DocumentView extends React.Component {
   }
 
   get content () {
+    const { value: doc } = this.props.document
     return (
       <div>
         {this.originLink}
+        <DocumentLabels doc={doc} />
         <div className={styles.content}>
-          {this.doc.content}
+          {doc.content}
         </div>
         <span className={styles.modificationDate}>
-          Last modification: {this.doc.date.toString()}
+          Last modification: {doc.date.toString()}
         </span>
       </div>
     )
@@ -130,7 +105,8 @@ export class DocumentView extends React.Component {
 
 const mapStateToProps = (state) => ({
   document: state.document,
-  location: state.router.locationBeforeTransitions
+  location: state.router.locationBeforeTransitions,
+  labels: state.labels
 })
 
 export default connect(mapStateToProps)(DocumentView)

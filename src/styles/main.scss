@@ -28,20 +28,25 @@
     > .pusher {
       height: 100%;
     }
+  }
+  #main, .ReactModalPortal {
     .view {
       display: flex;
       flex-direction: column;
       height: 100%;
+      position: relative;
       > .top.menu {
         margin-bottom: 0;
         border-radius: 0;
       }
       > .main {
-        position: relative;
         flex: 1;
         overflow: auto;
-        background: #ECECEC;
         padding: 2em;
+        background: #fff;
+        &.documents {
+          background: #ECECEC;
+        }
       }
     }
   }

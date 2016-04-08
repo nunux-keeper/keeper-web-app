@@ -6,6 +6,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .extra.content {
+      display: flex;
+      .labels {
+        flex: 1
+      }
+    }
   }
 }
 

@@ -110,7 +110,7 @@ export class DocumentsView extends React.Component {
     return (
       <div className='view'>
         {this.header}
-        <div className='ui main'>
+        <div className='ui main documents'>
           {this.spinner}
           {this.documents}
         </div>
