@@ -10,7 +10,6 @@ export class DocumentContextMenu extends React.Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
     doc: PropTypes.object.isRequired,
-    labels: PropTypes.object,
     items: PropTypes.string,
     direction: PropTypes.string,
     showNotification: PropTypes.func.isRequired,
@@ -78,36 +77,12 @@ export class DocumentContextMenu extends React.Component {
     }
   }
 
-  get labelsMenuItem () {
-    const { direction } = this.props
-    if (this.state.menuItems.has('labels')) {
-      const { doc, labels } = this.props
-      const items = labels.items.map(
-        (label) => <div className='item' key={`menu-${doc.id}-${label.id}`}>
-          <i className='square icon'></i>
-          {label.label}
-        </div>
-      )
-
-      return (
-        <div className='item'>
-          <i className={`${direction} dropdown icon`}></i>
-          Labels
-          <div className={`${direction} menu`}>
-            {items}
-          </div>
-        </div>
-      )
-    }
-  }
-
   render () {
     return (
       <div className='menu'>
         {this.detailMenuItem}
         {this.editMenuItem}
         {this.shareMenuItem}
-        {this.labelsMenuItem}
         <div className='ui divider'></div>
         {this.deleteMenuItem}
       </div>
@@ -138,8 +113,7 @@ export class DocumentContextMenu extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  location: state.router.locationBeforeTransitions,
-  labels: state.labels
+  location: state.router.locationBeforeTransitions
 })
 
 const mapDispatchToProps = (dispatch) => (

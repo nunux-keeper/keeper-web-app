@@ -79,7 +79,7 @@ export class DocumentView extends React.Component {
     return (
       <div>
         {this.originLink}
-        <DocumentLabels doc={doc} />
+        <DocumentLabels doc={doc} editable/>
         <div className={styles.content}>
           {doc.content}
         </div>
