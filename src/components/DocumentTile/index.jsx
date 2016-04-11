@@ -24,7 +24,7 @@ export class DocumentTile extends React.Component {
   get contextualMenu () {
     const {value: doc, labels} = this.props
     return (
-      <div className='ui icon top left pointing dropdown circular button'>
+      <div className='ui icon top right pointing dropdown circular button'>
         <i className='ellipsis vertical icon'></i>
         <DocumentContextMenu doc={doc} labels={labels} items='detail,share,labels,delete' />
       </div>
@@ -37,15 +37,15 @@ export class DocumentTile extends React.Component {
     const state = { modal: true, returnTo: location, title: doc.title }
     return (
       <div className='ui card doc' id={`doc-${doc.id}`} ref='doc'>
-        <Link
-          to={{ pathname: `${location.pathname}/${doc.id}`, state: state }}
-          title={doc.title}
-          className='ui fluid image'>
-          <div className='ui blue ribbon label'>
-            <i className='share alternate icon'></i> Shared
-          </div>
-          <img src='http://placehold.it/320x200' />
-        </Link>
+        <div title={doc.title}>
+          <Link to={{ pathname: `${location.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
+            <div className='ui blue ribbon label'>
+              <i className='share alternate icon'></i> Shared
+            </div>
+            <img src='http://placehold.it/320x200' />
+          </Link>
+          <div className='contextual-menu'>{this.contextualMenu}</div>
+        </div>
         <div className='content'>
           <Link
             to={{ pathname: `${location.pathname}/${doc.id}`, state: state }}
@@ -59,12 +59,7 @@ export class DocumentTile extends React.Component {
               {doc.origin}
             </a>
           </span>
-        </div>
-        <div className='extra content'>
-          <DocumentLabels doc={doc} />
-          <div>
-            {this.contextualMenu}
-          </div>
+          <DocumentLabels doc={doc} editable={false} />
         </div>
       </div>
     )
