@@ -2,7 +2,6 @@ import { combineReducers } from 'redux'
 import { routerReducer as router } from 'react-router-redux'
 import auth from './modules/auth'
 import device from './modules/device'
-import navigation from './modules/navigation'
 import notification from './modules/notification'
 import label from './modules/label'
 import labels from './modules/labels'
@@ -17,6 +16,5 @@ export default combineReducers({
   labels,
   document,
   documents,
-  navigation,
   notification
 })

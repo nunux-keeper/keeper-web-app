@@ -3,24 +3,43 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
 
-import { actions as documentsActions } from 'redux/modules/documents'
+import { actions as documentActions } from 'redux/modules/document'
 
 export class DocumentLabels extends React.Component {
   static propTypes = {
     doc: PropTypes.object.isRequired,
     editable: PropTypes.bool,
-    labels: PropTypes.object.isRequired
+    labels: PropTypes.object.isRequired,
+    updateDocument: PropTypes.func.isRequired
   };
 
   static defaultProps = {
     editable: false
   };
 
+  constructor (props) {
+    super(props)
+    this.onChange = this.onChange.bind(this)
+  }
+
   componentDidMount () {
     const $el = this.refs.labels
-    window.$($el).dropdown({
+    const { editable } = this.props
+    const params = {
       transition: 'drop'
-    })
+    }
+    if (editable) {
+      params.onChange = this.onChange
+    }
+    window.$($el).dropdown(params)
+  }
+
+  onChange (value, text, $selectedItem) {
+    const { updateDocument } = this.props
+    const payload = {
+      labels: value.split(',')
+    }
+    updateDocument(payload)
   }
 
   renderViewMode () {
@@ -88,7 +107,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, documentsActions), dispatch)
+  bindActionCreators(Object.assign({}, documentActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentLabels)
