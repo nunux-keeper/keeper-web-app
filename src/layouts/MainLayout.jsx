@@ -14,10 +14,10 @@ export class MainLayout extends React.Component {
 
   componentWillReceiveProps (nextProps) {
     // if we changed routes...
-    if ((
+    if (
       nextProps.location.state &&
       nextProps.location.state.modal
-    )) {
+    ) {
       // save the old children (just like animation)
       this.previousChildren = this.props.children
     }

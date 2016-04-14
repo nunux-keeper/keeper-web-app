@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
 
-import { actions as documentActions } from 'redux/modules/document'
+import { actions as documentsActions } from 'redux/modules/documents'
 
 export class DocumentLabels extends React.Component {
   static propTypes = {
@@ -35,11 +35,11 @@ export class DocumentLabels extends React.Component {
   }
 
   onChange (value, text, $selectedItem) {
-    const { updateDocument } = this.props
+    const { updateDocument, doc } = this.props
     const payload = {
       labels: value.split(',')
     }
-    updateDocument(payload)
+    updateDocument(doc, payload)
   }
 
   renderViewMode () {
@@ -107,7 +107,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, documentActions), dispatch)
+  bindActionCreators(Object.assign({}, documentsActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentLabels)

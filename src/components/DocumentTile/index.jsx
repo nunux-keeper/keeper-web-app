@@ -38,7 +38,7 @@ export class DocumentTile extends React.Component {
     return (
       <div className='ui card doc' id={`doc-${doc.id}`} ref='doc'>
         <div title={doc.title}>
-          <Link to={{ pathname: `${location.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
+          <Link to={{ pathname: `${location.pathname}${doc.id}`, state: state }} className='ui fluid image'>
             <div className='ui blue ribbon label'>
               <i className='share alternate icon'></i> Shared
             </div>
@@ -48,7 +48,7 @@ export class DocumentTile extends React.Component {
         </div>
         <div className='content'>
           <Link
-            to={{ pathname: `${location.pathname}/${doc.id}`, state: state }}
+            to={{ pathname: `${location.pathname}${doc.id}`, state: state }}
             title={doc.title}
             className='header'>
             {doc.title}

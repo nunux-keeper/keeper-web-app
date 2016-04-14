@@ -13,8 +13,8 @@ export class DocumentContextMenu extends React.Component {
     items: PropTypes.string,
     direction: PropTypes.string,
     showNotification: PropTypes.func.isRequired,
-    removeFromDocuments: PropTypes.func.isRequired,
-    restoreFromDocuments: PropTypes.func.isRequired
+    removeDocument: PropTypes.func.isRequired,
+    restoreRemovedDocument: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -90,8 +90,8 @@ export class DocumentContextMenu extends React.Component {
   }
 
   handleUndoRemove () {
-    const { restoreFromDocuments, showNotification } = this.props
-    restoreFromDocuments().then(() => {
+    const { restoreRemovedDocument, showNotification } = this.props
+    restoreRemovedDocument().then(() => {
       showNotification({
         level: 'info',
         header: 'Document restored'
@@ -100,8 +100,8 @@ export class DocumentContextMenu extends React.Component {
   }
 
   handleRemove () {
-    const {doc, removeFromDocuments, showNotification} = this.props
-    removeFromDocuments(doc).then(() => {
+    const {doc, removeDocument, showNotification} = this.props
+    removeDocument(doc).then(() => {
       showNotification({
         level: 'info',
         header: 'Document removed',

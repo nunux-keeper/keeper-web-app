@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { actions as labelActions } from 'redux/modules/label'
-import { actions as documentActions } from 'redux/modules/document'
 import { actions as documentsActions } from 'redux/modules/documents'
 
 export function fetchDocument (Component) {
@@ -24,7 +23,7 @@ export function fetchDocument (Component) {
     }
   }
 
-  return connect(null, documentActions)(DocumentAwareComponent)
+  return connect(null, documentsActions)(DocumentAwareComponent)
 }
 
 export function fetchDocuments (Component) {

@@ -5,7 +5,6 @@ import device from './modules/device'
 import notification from './modules/notification'
 import label from './modules/label'
 import labels from './modules/labels'
-import document from './modules/document'
 import documents from './modules/documents'
 
 export default combineReducers({
@@ -14,7 +13,6 @@ export default combineReducers({
   device,
   label,
   labels,
-  document,
   documents,
   notification
 })
