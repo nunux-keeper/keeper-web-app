@@ -10,7 +10,6 @@ import './styles.scss'
 export class DocumentTile extends React.Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
-    labels: PropTypes.object.isRequired,
     value: PropTypes.object.isRequired
   };
 
@@ -22,11 +21,11 @@ export class DocumentTile extends React.Component {
   }
 
   get contextualMenu () {
-    const {value: doc, labels} = this.props
+    const {value: doc} = this.props
     return (
       <div className='ui icon top right pointing dropdown circular button'>
         <i className='ellipsis vertical icon'></i>
-        <DocumentContextMenu doc={doc} labels={labels} items='detail,share,labels,delete' />
+        <DocumentContextMenu doc={doc} items='detail,editTitle,share,delete' />
       </div>
     )
   }
@@ -38,7 +37,7 @@ export class DocumentTile extends React.Component {
     return (
       <div className='ui card doc' id={`doc-${doc.id}`} ref='doc'>
         <div title={doc.title}>
-          <Link to={{ pathname: `${location.pathname}${doc.id}`, state: state }} className='ui fluid image'>
+          <Link to={{ pathname: `${location.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
             <div className='ui blue ribbon label'>
               <i className='share alternate icon'></i> Shared
             </div>
@@ -48,7 +47,7 @@ export class DocumentTile extends React.Component {
         </div>
         <div className='content'>
           <Link
-            to={{ pathname: `${location.pathname}${doc.id}`, state: state }}
+            to={{ pathname: `${location.pathname}/${doc.id}`, state: state }}
             title={doc.title}
             className='header'>
             {doc.title}
@@ -67,8 +66,7 @@ export class DocumentTile extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  location: state.router.locationBeforeTransitions,
-  labels: state.labels
+  location: state.router.locationBeforeTransitions
 })
 
 export default connect(mapStateToProps)(DocumentTile)

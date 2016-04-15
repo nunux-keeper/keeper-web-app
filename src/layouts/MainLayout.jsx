@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import AppNavigation from 'components/AppNavigation'
 import AppModal from 'components/AppModal'
 import AppNotification from 'components/AppNotification'
+import DocumentTitleModal from 'components/DocumentTitleModal'
 
 import '../styles/main.scss'
 
@@ -41,6 +42,7 @@ export class MainLayout extends React.Component {
             </AppModal>
           )}
           <AppNotification />
+          <DocumentTitleModal />
         </div>
       </div>
     )

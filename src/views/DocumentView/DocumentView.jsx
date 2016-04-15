@@ -37,7 +37,7 @@ export class DocumentView extends React.Component {
         })
       } else {
         const url = location.pathname
-        const to = url.substr(0, url.lastIndexOf('/') + 1)
+        const to = url.substr(0, url.lastIndexOf('/'))
         push(to)
       }
     }
@@ -62,7 +62,7 @@ export class DocumentView extends React.Component {
   get contextMenu () {
     const { current: doc } = this.props.documents
     return (
-      <DocumentContextMenu doc={doc} items='edit,share,labels,delete' direction='left' />
+      <DocumentContextMenu doc={doc} items='edit,editTitle,share,delete' direction='left' />
     )
   }
 

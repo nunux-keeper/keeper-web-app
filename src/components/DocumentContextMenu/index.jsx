@@ -5,6 +5,7 @@ import { Link } from 'react-router'
 
 import { actions as documentsActions } from 'redux/modules/documents'
 import { actions as notificationActions } from 'redux/modules/notification'
+import { actions as titleModalActions } from 'redux/modules/titleModal'
 
 export class DocumentContextMenu extends React.Component {
   static propTypes = {
@@ -14,7 +15,8 @@ export class DocumentContextMenu extends React.Component {
     direction: PropTypes.string,
     showNotification: PropTypes.func.isRequired,
     removeDocument: PropTypes.func.isRequired,
-    restoreRemovedDocument: PropTypes.func.isRequired
+    restoreRemovedDocument: PropTypes.func.isRequired,
+    showTitleModal: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -28,6 +30,7 @@ export class DocumentContextMenu extends React.Component {
     }
     this.handleRemove = this.handleRemove.bind(this)
     this.handleUndoRemove = this.handleUndoRemove.bind(this)
+    this.handleEditTitle = this.handleEditTitle.bind(this)
   }
 
   get detailMenuItem () {
@@ -46,12 +49,25 @@ export class DocumentContextMenu extends React.Component {
     }
   }
 
+  get editTitleMenuItem () {
+    if (this.state.menuItems.has('editTitle')) {
+      return (
+        <div className='item' onClick={this.handleEditTitle}>
+          <i className='edit icon'></i>
+          Edit title
+        </div>
+      )
+    }
+  }
+
   get editMenuItem () {
     if (this.state.menuItems.has('edit')) {
-      <div className='item'>
-        <i className='edit icon'></i>
-        Edit mode
-      </div>
+      return (
+        <div className='item'>
+          <i className='edit icon'></i>
+          Edit mode
+        </div>
+      )
     }
   }
 
@@ -81,6 +97,7 @@ export class DocumentContextMenu extends React.Component {
     return (
       <div className='menu'>
         {this.detailMenuItem}
+        {this.editTitleMenuItem}
         {this.editMenuItem}
         {this.shareMenuItem}
         <div className='ui divider'></div>
@@ -110,6 +127,11 @@ export class DocumentContextMenu extends React.Component {
       })
     })
   }
+
+  handleEditTitle () {
+    const { showTitleModal, doc } = this.props
+    showTitleModal(doc)
+  }
 }
 
 const mapStateToProps = (state) => ({
@@ -117,7 +139,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, notificationActions, documentsActions), dispatch)
+  bindActionCreators(Object.assign({}, notificationActions, documentsActions, titleModalActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentContextMenu)
