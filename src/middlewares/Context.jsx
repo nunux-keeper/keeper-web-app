@@ -5,6 +5,26 @@ import { bindActionCreators } from 'redux'
 import { actions as labelActions } from 'redux/modules/label'
 import { actions as documentsActions } from 'redux/modules/documents'
 
+export function createDocument (Component) {
+  class NewDocumentAwareComponent extends React.Component {
+    static propTypes = {
+      location: PropTypes.object.isRequired,
+      createDocument: PropTypes.func.isRequired
+    };
+
+    componentDidMount () {
+      const { createDocument, location } = this.props
+      createDocument(location.query)
+    }
+
+    render () {
+      return (<Component {...this.props}/>)
+    }
+  }
+
+  return connect(null, documentsActions)(NewDocumentAwareComponent)
+}
+
 export function fetchDocument (Component) {
   class DocumentAwareComponent extends React.Component {
     static propTypes = {

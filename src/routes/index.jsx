@@ -10,15 +10,16 @@ import LabelView from 'views/LabelView/LabelView'
 import DocumentsView from 'views/DocumentsView/DocumentsView'
 import DocumentView from 'views/DocumentView/DocumentView'
 
-import { requireAuthentication } from 'middlewares/RequireAuthentication'
+import { requireAuthentication } from 'middlewares/Authentication'
 
 import {
+  createDocument,
   fetchDocument,
   fetchDocuments,
   fetchLabel,
   fetchLabelAndDocument,
   fetchLabelAndDocuments
-} from 'middlewares/Fetch'
+} from 'middlewares/Context'
 
 export default (store) => (
   <Route path='/' component={RootLayout}>
@@ -28,6 +29,7 @@ export default (store) => (
     </Route>
     <Route component={requireAuthentication(MainLayout)}>
       <Route path='document' component={fetchDocuments(DocumentsView)} />
+      <Route path='document/create' component={createDocument(DocumentView)} />
       <Route path='document/:docId' component={fetchDocument(DocumentView)} />
       <Route path='label/create' component={LabelView} />
       <Route path='label/:labelId' component={fetchLabelAndDocuments(DocumentsView)} />

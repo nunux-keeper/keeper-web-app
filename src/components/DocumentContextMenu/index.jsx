@@ -93,6 +93,12 @@ export class DocumentContextMenu extends React.Component {
     }
   }
 
+  get deleteMenuDivider () {
+    if (this.state.menuItems.has('delete')) {
+      return (<div className='ui divider'></div>)
+    }
+  }
+
   render () {
     return (
       <div className='menu'>
@@ -100,7 +106,7 @@ export class DocumentContextMenu extends React.Component {
         {this.editTitleMenuItem}
         {this.editMenuItem}
         {this.shareMenuItem}
-        <div className='ui divider'></div>
+        {this.deleteMenuDivider}
         {this.deleteMenuItem}
       </div>
     )

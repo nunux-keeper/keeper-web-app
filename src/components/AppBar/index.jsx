@@ -7,7 +7,7 @@ export class AppBar extends React.Component {
   static propTypes = {
     children: PropTypes.node,
     contextMenu: PropTypes.node,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.node.isRequired,
     modal: PropTypes.bool,
     styles: PropTypes.object,
     push: PropTypes.func,

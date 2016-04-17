@@ -7,6 +7,7 @@ import label from './modules/label'
 import labels from './modules/labels'
 import documents from './modules/documents'
 import titleModal from './modules/titleModal'
+import urlModal from './modules/urlModal'
 
 export default combineReducers({
   router,
@@ -16,5 +17,6 @@ export default combineReducers({
   labels,
   documents,
   notification,
-  titleModal
+  titleModal,
+  urlModal
 })

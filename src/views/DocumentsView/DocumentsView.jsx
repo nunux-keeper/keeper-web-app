@@ -4,8 +4,8 @@ import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 
 import { actions as documentsActions } from 'redux/modules/documents'
+import { actions as urlModalActions } from 'redux/modules/urlModal'
 
-// import InfiniteGrid from 'react-infinite-grid'
 import SearchBar from 'components/SearchBar'
 import InfiniteGrid from 'components/InfiniteGrid'
 import DocumentTile from 'components/DocumentTile'
@@ -19,7 +19,8 @@ export class DocumentsView extends React.Component {
     documents: PropTypes.object.isRequired,
     label: PropTypes.object.isRequired,
     device: PropTypes.object.isRequired,
-    fetchDocuments: PropTypes.func.isRequired
+    fetchDocuments: PropTypes.func.isRequired,
+    showUrlModal: PropTypes.func.isRequired
   };
 
   constructor () {
@@ -34,7 +35,15 @@ export class DocumentsView extends React.Component {
   }
 
   get title () {
-    return this.label ? `Documents - ${this.label.label}` : 'Documents'
+    const { total } = this.props.documents
+    const title = this.label ? `Documents - ${this.label.label}` : 'Documents'
+    // return this.label ? `Documents - ${this.label.label}` : 'Documents'
+    return (
+      <div>
+        <div className='ui tiny horizontal label'>{total}</div>
+        <span>{title}</span>
+      </div>
+    )
   }
 
   get contextMenu () {
@@ -66,12 +75,28 @@ export class DocumentsView extends React.Component {
   }
 
   get header () {
+    const { location, showUrlModal } = this.props
     const bg = this.label ? {backgroundColor: this.label.color} : {}
+    const createLink = {
+      pathname: '/document/create',
+      state: { modal: true, returnTo: location }
+    }
 
     return (
       <AppBar title={this.title} styles={bg} contextMenu={this.contextMenu}>
         <div className='item'>
           <SearchBar />
+        </div>
+        <div className='ui dropdown icon right item'>
+          <i className='plus vertical icon'></i>
+          <div className='menu'>
+            <Link to={createLink} className='item'>
+              <i className='file outline icon'></i>New document...
+            </Link>
+            <a className='item' onClick={showUrlModal}>
+              <i className='cloud download icon'></i>From URL...
+            </a>
+          </div>
         </div>
       </AppBar>
     )
@@ -139,7 +164,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, documentsActions), dispatch)
+  bindActionCreators(Object.assign({}, documentsActions, urlModalActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentsView)

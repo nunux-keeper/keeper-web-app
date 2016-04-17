@@ -11,7 +11,7 @@ function getRandomDocument (doc) {
     content = chance.paragraph({sentences: 50}),
     contentType = 'text/plain',
     origin = chance.url(),
-    labels = ['test'],
+    labels = ['test', 'badLabel'],
     date = chance.date(),
     attachments = [{
       key: chance.hash({length: 10}),
@@ -34,7 +34,7 @@ function getRandomDocuments (nb = 20, total) {
       title: chance.sentence({words: 5}),
       contentType: 'text/plain',
       origin: chance.url(),
-      labels: ['test', 'titi', 'toto', 'tata', 'pouette'],
+      labels: ['test', 'badLabel'],
       attachments: [{
         key: chance.hash({length: 10}),
         origin: chance.url({extensions: ['png']}),
@@ -71,11 +71,19 @@ export default class DocumentMock {
   }
 
   create (doc) {
-    return Promise.resolve(getRandomDocument(doc))
+    return new Promise((resolve) => {
+      window.setTimeout(() => {
+        resolve(getRandomDocument(doc))
+      }, 2000)
+    })
   }
 
   update (doc, update) {
-    return Promise.resolve(Object.assign(doc, update))
+    return new Promise((resolve) => {
+      window.setTimeout(() => {
+        resolve(Object.assign(doc, update))
+      }, 1000)
+    })
   }
 
   remove (doc) {

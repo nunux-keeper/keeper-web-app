@@ -22,6 +22,7 @@ export class DocumentView extends React.Component {
     // if no document found then redirect...
     if (
       !nextProps.documents.isFetching &&
+      !nextProps.documents.isProcessing &&
       !nextProps.documents.current
     ) {
       console.debug('No more document. Redirecting...')
@@ -48,6 +49,10 @@ export class DocumentView extends React.Component {
     return routerState && routerState.modal
   }
 
+  get isCreateMode () {
+    return this.props.documents.current.id == null
+  }
+
   get originLink () {
     const { current: doc } = this.props.documents
     if (doc.origin) {
@@ -61,9 +66,20 @@ export class DocumentView extends React.Component {
 
   get contextMenu () {
     const { current: doc } = this.props.documents
+    const menuItems = this.isCreateMode ? 'editTitle' : 'editTitle,share,delete'
     return (
-      <DocumentContextMenu doc={doc} items='edit,editTitle,share,delete' direction='left' />
+      <DocumentContextMenu doc={doc} items={menuItems} direction='left' />
     )
+  }
+
+  get saveButton () {
+    if (this.isCreateMode) {
+      return (
+        <div className='item'>
+          <div className='ui primary button'>Save</div>
+        </div>
+      )
+    }
   }
 
   get header () {
@@ -72,14 +88,15 @@ export class DocumentView extends React.Component {
       <AppBar
         modal={this.isModalDisplayed}
         title={isFetching || !doc ? 'Document' : doc.title}
-        contextMenu={isFetching || !doc ? null : this.contextMenu}
-      />
+        contextMenu={isFetching || !doc ? null : this.contextMenu}>
+        {this.saveButton}
+      </AppBar>
     )
   }
 
   get spinner () {
-    const { isFetching } = this.props.documents
-    if (isFetching) {
+    const { isFetching, isProcessing } = this.props.documents
+    if (isFetching || isProcessing) {
       return (
         <div className='ui active dimmer'>
           <div className='ui large text loader'>Loading</div>
@@ -103,18 +120,26 @@ export class DocumentView extends React.Component {
     }
   }
 
+  get modificationDate () {
+    const { current: doc } = this.props.documents
+    if (doc.date) {
+      const date = String(doc.date)
+      return (
+        <span className={styles.modificationDate}>
+          Last modification: {date}
+        </span>
+      )
+    }
+  }
+
   get content () {
     const { current: doc } = this.props.documents
     return (
       <div>
         {this.originLink}
         <DocumentLabels doc={doc} editable/>
-        <div className={styles.content}>
-          {doc.content}
-        </div>
-        <span className={styles.modificationDate}>
-          Last modification: {doc.date.toString()}
-        </span>
+        <div className={styles.content} dangerouslySetInnerHTML={{__html: doc.content}} />
+        {this.modificationDate}
       </div>
     )
   }

@@ -4,6 +4,7 @@ import AppNavigation from 'components/AppNavigation'
 import AppModal from 'components/AppModal'
 import AppNotification from 'components/AppNotification'
 import DocumentTitleModal from 'components/DocumentTitleModal'
+import DocumentUrlModal from 'components/DocumentUrlModal'
 
 import '../styles/main.scss'
 
@@ -43,6 +44,7 @@ export class MainLayout extends React.Component {
           )}
           <AppNotification />
           <DocumentTitleModal />
+          <DocumentUrlModal />
         </div>
       </div>
     )

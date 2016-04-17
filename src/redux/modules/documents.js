@@ -6,6 +6,8 @@ import _ from 'lodash'
 // ------------------------------------
 // Constants
 // ------------------------------------
+export const CREATING_DOCUMENT = 'CREATING_DOCUMENT'
+export const CREATED_DOCUMENT = 'CREATED_DOCUMENT'
 export const REQUEST_DOCUMENT = 'REQUEST_DOCUMENT'
 export const RECEIVE_DOCUMENT = 'RECEIVE_DOCUMENT'
 export const UPDATING_DOCUMENT = 'UPDATING_DOCUMENT'
@@ -21,6 +23,12 @@ export const RECEIVE_DOCUMENTS = 'RECEIVE_DOCUMENTS'
 // ------------------------------------
 // Actions
 // ------------------------------------
+export const creatingDocument = createAction(CREATING_DOCUMENT)
+export const createdDocument = createAction(CREATED_DOCUMENT, (doc) => {
+  console.debug('Document created:', doc.id)
+  return doc
+})
+
 export const requestDocument = createAction(REQUEST_DOCUMENT)
 export const receiveDocument = createAction(RECEIVE_DOCUMENT, (doc) => {
   console.debug('Document fetched:', doc.id)
@@ -54,6 +62,20 @@ export const receiveDocuments = createAction(RECEIVE_DOCUMENTS, (res) => {
   }
 })
 
+export const createDocument = (doc) => {
+  return (dispatch, getState) => {
+    const {user} = getState()
+    console.debug('Creating document:', doc)
+    dispatch(creatingDocument())
+    if (doc.url) {
+      return DocumentApi.getInstance(user).create(doc)
+      .then((_doc) => dispatch(createdDocument(_doc)))
+    } else {
+      return dispatch(createdDocument(doc))
+    }
+  }
+}
+
 export const fetchDocument = (id) => {
   return (dispatch, getState) => {
     const {user} = getState()
@@ -69,8 +91,12 @@ export const updateDocument = (doc, payload) => {
     const {user} = getState()
     console.debug('Updating document:', doc.id, payload)
     dispatch(updatingDocument())
-    return DocumentApi.getInstance(user).update(doc, payload)
-    .then((_doc) => dispatch(updatedDocument(_doc)))
+    if (doc.id) {
+      return DocumentApi.getInstance(user).update(doc, payload)
+      .then((_doc) => dispatch(updatedDocument(_doc)))
+    } else {
+      return dispatch(updatedDocument(Object.assign({}, doc, payload)))
+    }
   }
 }
 
@@ -120,6 +146,7 @@ export const fetchDocuments = (params = {from: 0, size: 20}) => {
 }
 
 export const actions = {
+  createDocument,
   fetchDocument,
   updateDocument,
   removeDocument,
@@ -131,6 +158,28 @@ export const actions = {
 // Reducer
 // ------------------------------------
 export default handleActions({
+  [CREATING_DOCUMENT]: (state) => {
+    return Object.assign({}, state, {
+      isProcessing: true
+    })
+  },
+  [CREATED_DOCUMENT]: (state, action) => {
+    let doc = action.payload
+    if (!doc || !doc.id) {
+      const defaultDoc = {
+        id: null,
+        title: 'New document',
+        content: '<p>What\'s up ?</p>',
+        contentType: 'text/html',
+        labels: []
+      }
+      doc = Object.assign({}, defaultDoc, doc || {})
+    }
+    return Object.assign({}, state, {
+      current: doc,
+      isProcessing: false
+    })
+  },
   [REQUEST_DOCUMENT]: (state) => {
     return Object.assign({}, state, {
       isFetching: true
@@ -148,10 +197,22 @@ export default handleActions({
     })
   },
   [UPDATED_DOCUMENT]: (state, action) => {
-    return Object.assign({}, state, {
+    const update = {
       isProcessing: false,
-      value: action.payload
-    })
+      current: action.payload
+    }
+    const exists = state.items.find((item) => item.id === update.current.id)
+    if (exists) {
+      // Update item into the list
+      update.items = state.items.map((item) => {
+        if (item.id === update.current.id) {
+          item.title = update.current.title
+          item.labels = update.current.labels
+        }
+        return item
+      })
+    }
+    return Object.assign({}, state, update)
   },
   [REQUEST_DOCUMENTS]: (state, action) => {
     return Object.assign({}, state, {
