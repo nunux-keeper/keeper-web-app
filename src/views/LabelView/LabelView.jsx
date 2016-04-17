@@ -21,6 +21,7 @@ export class LabelView extends React.Component {
     super(props)
     if (this.isCreateForm) {
       this.state = {
+        label: '',
         color: '#8E44AD'
       }
     } else {
@@ -29,6 +30,7 @@ export class LabelView extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
     this.handleColorChange = this.handleColorChange.bind(this)
+    this.handleLabelChange = this.handleLabelChange.bind(this)
   }
 
   get isCreateForm () {
@@ -46,44 +48,48 @@ export class LabelView extends React.Component {
     return (
       <AppBar
         modal={this.isModalDisplayed}
-        title={label ? `Edit label: ${label.label}` : 'New label'}
+        title={this.isCreateForm ? 'New label' : `Edit label: ${label.label}`}
       />
     )
   }
 
-  get spinner () {
-    const { isProcessing } = this.props.label
-    if (isProcessing) {
-      return (
-        <div className='ui active dimmer'>
-          <div className='ui large text loader'>Loading</div>
-        </div>
-      )
-    }
-  }
-
   get labelForm () {
-    const { color } = this.state
+    const { color, label } = this.state
     const { isProcessing } = this.props.label
     const loading = isProcessing ? 'loading' : ''
     return (
-      <form className={`ui form ${loading}`} onSubmit={this.handleSubmit}>
-        <div className='field'>
-          <label>Label name</label>
-          <input type='text' name='label-name' placeholder='Label Name' />
-        </div>
-        <div className='field'>
-          <label>Color value</label>
-          <input type='text' name='color-value' placeholder='Color value' value={color} disabled />
-          <ColorSwatch value={color} onColorChange={this.handleColorChange} />
-        </div>
-        <button className='ui right floated primary button' type='submit'>
+      <div>
+        <form className={`ui form ${loading}`} onSubmit={this.handleSubmit}>
+          <div className='field'>
+            <label>Label name</label>
+            <input
+              required
+              type='text'
+              name='label-value'
+              placeholder='Label Name'
+              value={label}
+              onChange={this.handleLabelChange}
+            />
+          </div>
+          <div className='field'>
+            <label>Color value</label>
+            <input
+              disabled
+              type='text'
+              name='color-value'
+              placeholder='Color value'
+              value={color}
+            />
+            <ColorSwatch value={color} onColorChange={this.handleColorChange} />
+          </div>
+        </form>
+        <button className='ui right floated primary button' onClick={this.handleSubmit}>
           Submit
         </button>
         <button className='ui right floated button' onClick={this.handleCancel}>
           Cancel
         </button>
-      </form>
+      </div>
     )
   }
 
@@ -91,22 +97,16 @@ export class LabelView extends React.Component {
     e.preventDefault()
     const { createLabel, updateLabel, showNotification } = this.props
     if (this.isCreateForm) {
-      createLabel(this.state).then((debug) => {
-        const { label } = this.props
-        setTimeout(() => {
-          this.props.push(`/label/${label.value.id}`)
-        }, 100)
-        showNotification({
-          message: 'Label created'
-        })
-      })
-    } else {
-      updateLabel(this.state).then((debug) => {
+      createLabel(this.state).then(() => {
         const { label } = this.props
         this.props.push(`/label/${label.value.id}`)
-        showNotification({
-          message: 'Label updated'
-        })
+        showNotification({message: 'Label created'})
+      })
+    } else {
+      updateLabel(this.state).then(() => {
+        const { label } = this.props
+        this.props.push(`/label/${label.value.id}`)
+        showNotification({message: 'Label updated'})
       })
     }
   }
@@ -118,6 +118,10 @@ export class LabelView extends React.Component {
     } else {
       this.props.push('/document')
     }
+  }
+
+  handleLabelChange (event) {
+    this.setState({label: event.target.value})
   }
 
   handleColorChange (color) {

@@ -25,7 +25,12 @@ export const receiveLabel = createAction(RECEIVE_LABEL, (label) => {
 
 export const fetchLabel = (id) => {
   return (dispatch, getState) => {
-    const {user} = getState()
+    const {user, label: l} = getState()
+    if (l.isFetching || l.isProcessing) {
+      console.warn('Unable to fetch label. An action is pending...')
+      return Promise.resolve(null)
+    }
+    console.debug('Fetching label:', id)
     dispatch(requestLabel())
     return LabelApi.getInstance(user).get(id)
     .then((label) => dispatch(receiveLabel(label)))
@@ -46,6 +51,7 @@ export const createdLabel = createAction(CREATED_LABEL, (label) => {
 export const createLabel = (label) => {
   return (dispatch, getState) => {
     const {user} = getState()
+    console.debug('Creating label:', label)
     dispatch(creatingLabel())
     return LabelApi.getInstance(user).create(label)
     .then((_label) => dispatch(createdLabel(_label)))
@@ -63,7 +69,12 @@ export const updatedLabel = createAction(UPDATED_LABEL, (label) => {
 
 export const updateLabel = (label) => {
   return (dispatch, getState) => {
-    const {user} = getState()
+    const {user, label: l} = getState()
+    if (l.isFetching || l.isProcessing) {
+      console.warn('Unable to update label. An action is pending...')
+      return Promise.resolve(null)
+    }
+    console.debug('Updating label:', label)
     dispatch(updatingLabel())
     return LabelApi.getInstance(user).update(label, label)
     .then((_label) => dispatch(updatedLabel(_label)))
