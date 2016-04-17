@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux'
 import { routerActions } from 'react-router-redux'
 import Modal from 'react-modal'
 
+import './styles.scss'
+
 const customStyles = {
   content: {
     padding: 0

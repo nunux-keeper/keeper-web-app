@@ -6,7 +6,7 @@ import { actions as notificationActions } from 'redux/modules/notification'
 export class AppNotification extends React.Component {
   static propTypes = {
     notification: PropTypes.object.isRequired,
-    discardNotification: PropTypes.func.isRequired
+    hideNotification: PropTypes.func.isRequired
   };
 
   constructor () {
@@ -30,7 +30,7 @@ export class AppNotification extends React.Component {
     const { actionLabel } = this.props.notification
     if (actionLabel) {
       return (
-        <button className='ui button' onClick={this.handleAction}>{actionLabel}</button>
+        <button className='ui compact button' onClick={this.handleAction}>{actionLabel}</button>
       )
     }
   }
@@ -56,7 +56,7 @@ export class AppNotification extends React.Component {
   handleClose (e) {
     window.$(e.target).closest('.message').transition({
       animation: 'fade',
-      onComplete: this.props.discardNotification
+      onComplete: this.props.hideNotification
     })
   }
 
@@ -64,7 +64,7 @@ export class AppNotification extends React.Component {
     const { header, message, level } = this.props.notification
     if (header || message) {
       return (
-        <div className={`ui floating ${level} message`} style={this.styles}>
+        <div className={`ui floating attached ${level} message`} style={this.styles}>
           <i className='close icon' onClick={this.handleClose}></i>
           <div className='content'>
             {this.header}

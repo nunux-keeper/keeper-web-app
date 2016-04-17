@@ -58,8 +58,8 @@ export class DocumentUrlModal extends React.Component {
           </form>
         </div>
         <div className='actions'>
-          <div className={`ui positive approve button ${disabled}`}>Submit</div>
-          <div className='ui black cancel button'>Cancel</div>
+          <div className='ui cancel button'>Cancel</div>
+          <div className={`ui primary approve button ${disabled}`}>Submit</div>
         </div>
       </div>
     )

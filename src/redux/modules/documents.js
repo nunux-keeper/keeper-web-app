@@ -214,12 +214,6 @@ export default handleActions({
     }
     return Object.assign({}, state, update)
   },
-  [REQUEST_DOCUMENTS]: (state, action) => {
-    return Object.assign({}, state, {
-      params: action.payload,
-      isFetching: true
-    })
-  },
   [REMOVING_DOCUMENT]: (state) => {
     return Object.assign({}, state, {
       isProcessing: true
@@ -254,6 +248,18 @@ export default handleActions({
       removedIndex: null,
       current: doc
     })
+  },
+  [REQUEST_DOCUMENTS]: (state, action) => {
+    const update = {
+      params: action.payload,
+      isFetching: true
+    }
+    if (state.params && state.params.from === 0) {
+      update.items = []
+      update.total = 0
+      update.hasMore = false
+    }
+    return Object.assign({}, state, update)
   },
   [RECEIVE_DOCUMENTS]: (state, action) => {
     let {items, total} = action.payload

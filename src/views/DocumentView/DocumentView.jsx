@@ -50,7 +50,8 @@ export class DocumentView extends React.Component {
   }
 
   get isCreateMode () {
-    return this.props.documents.current.id == null
+    const { current: doc } = this.props.documents
+    return doc !== null && doc.id == null
   }
 
   get originLink () {
@@ -98,7 +99,7 @@ export class DocumentView extends React.Component {
     const { isFetching, isProcessing } = this.props.documents
     if (isFetching || isProcessing) {
       return (
-        <div className='ui active dimmer'>
+        <div className='ui active inverted dimmer'>
           <div className='ui large text loader'>Loading</div>
         </div>
       )

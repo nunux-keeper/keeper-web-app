@@ -10,11 +10,11 @@ export const HIDE_NOTIFICATION = 'HIDE_NOTIFICATION'
 // Actions
 // ------------------------------------
 export const showNotification = createAction(SHOW_NOTIFICATION, (notification = {level: 'info'}) => notification)
-export const discardNotification = createAction(HIDE_NOTIFICATION)
+export const hideNotification = createAction(HIDE_NOTIFICATION)
 
 export const actions = {
   showNotification,
-  discardNotification
+  hideNotification
 }
 
 // ------------------------------------

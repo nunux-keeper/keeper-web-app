@@ -37,10 +37,10 @@ export class DocumentsView extends React.Component {
   get title () {
     const { total } = this.props.documents
     const title = this.label ? `Documents - ${this.label.label}` : 'Documents'
-    // return this.label ? `Documents - ${this.label.label}` : 'Documents'
+    const totalLabel = total ? <div className='ui tiny horizontal label'>{total}</div> : null
     return (
       <div>
-        <div className='ui tiny horizontal label'>{total}</div>
+        {totalLabel}
         <span>{title}</span>
       </div>
     )
@@ -102,13 +102,11 @@ export class DocumentsView extends React.Component {
     )
   }
 
-  get spinner () {
+  get loader () {
     const { isFetching } = this.props.documents
     if (isFetching) {
       return (
-        <div className='ui active dimmer'>
-          <div className='ui large text loader'>Loading</div>
-        </div>
+        <div className='ui active centered inline loader' />
       )
     }
   }
@@ -136,8 +134,8 @@ export class DocumentsView extends React.Component {
       <div className='view'>
         {this.header}
         <div className='ui main documents'>
-          {this.spinner}
           {this.documents}
+          {this.loader}
         </div>
       </div>
     )

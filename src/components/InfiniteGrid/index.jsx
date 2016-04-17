@@ -24,15 +24,20 @@ export default class InfiniteGrid extends React.Component {
   }
 
   componentDidMount () {
+    // console.debug('InfiniteGrid::componentDidMount', this.state)
     this.attachScrollListener()
   }
 
   componentWillUnmount () {
+    // console.debug('InfiniteGrid::componentWillUnmount', this.state)
     this.detachScrollListener()
   }
 
-  componentDidUpdate () {
-    this.attachScrollListener()
+  componentDidUpdate (prevProps) {
+    if (prevProps.hasMore !== this.props.hasMore) {
+      // console.debug('InfiniteGrid::componentDidUpdate', this.state)
+      this.attachScrollListener()
+    }
   }
 
   render () {
@@ -56,7 +61,7 @@ export default class InfiniteGrid extends React.Component {
 
   attachScrollListener () {
     if (!this.state.listening && this.props.hasMore) {
-      console.debug('attachScrollListener')
+      console.debug('InfiniteGrid::attachScrollListener', this.state)
       this.setState({listening: true})
       const $el = this.refs.grid
       $el.parentElement.addEventListener('scroll', this.scrollListener)
@@ -65,13 +70,11 @@ export default class InfiniteGrid extends React.Component {
   }
 
   detachScrollListener () {
-    if (this.state.listening) {
-      console.debug('detachScrollListener')
-      const $el = this.refs.grid
-      $el.parentElement.removeEventListener('scroll', this.scrollListener)
-      $el.parentElement.removeEventListener('resize', this.scrollListener)
-      this.setState({listening: false})
-    }
+    console.debug('InfiniteGrid::detachScrollListener', this.state)
+    const $el = this.refs.grid
+    $el.parentElement.removeEventListener('scroll', this.scrollListener)
+    $el.parentElement.removeEventListener('resize', this.scrollListener)
+    this.setState({listening: false})
   }
 }
 
