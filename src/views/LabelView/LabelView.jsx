@@ -2,14 +2,14 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { routerActions } from 'react-router-redux'
-import { actions as labelActions } from 'redux/modules/label'
+import { actions as labelsActions } from 'redux/modules/labels'
 import { actions as notificationActions } from 'redux/modules/notification'
 import ColorSwatch from 'components/ColorSwatch'
 import AppBar from 'components/AppBar'
 
 export class LabelView extends React.Component {
   static propTypes = {
-    label: PropTypes.object,
+    labels: PropTypes.object,
     createLabel: PropTypes.func.isRequired,
     updateLabel: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
@@ -25,7 +25,7 @@ export class LabelView extends React.Component {
         color: '#8E44AD'
       }
     } else {
-      this.state = {...props.label.value}
+      this.state = {...props.labels.current}
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
@@ -44,18 +44,18 @@ export class LabelView extends React.Component {
   }
 
   get header () {
-    const { value: label } = this.props.label
+    const { current } = this.props.labels
     return (
       <AppBar
         modal={this.isModalDisplayed}
-        title={this.isCreateForm ? 'New label' : `Edit label: ${label.label}`}
+        title={this.isCreateForm ? 'New label' : `Edit label: ${current.label}`}
       />
     )
   }
 
   get labelForm () {
     const { color, label } = this.state
-    const { isProcessing } = this.props.label
+    const { isProcessing } = this.props.labels
     const loading = isProcessing ? 'loading' : ''
     return (
       <div>
@@ -98,14 +98,14 @@ export class LabelView extends React.Component {
     const { createLabel, updateLabel, showNotification } = this.props
     if (this.isCreateForm) {
       createLabel(this.state).then(() => {
-        const { label } = this.props
-        this.props.push(`/label/${label.value.id}`)
+        const { current } = this.props.labels
+        this.props.push(`/label/${current.id}`)
         showNotification({message: 'Label created'})
       })
     } else {
       updateLabel(this.state).then(() => {
-        const { label } = this.props
-        this.props.push(`/label/${label.value.id}`)
+        const { current } = this.props.labels
+        this.props.push(`/label/${current.id}`)
         showNotification({message: 'Label updated'})
       })
     }
@@ -142,14 +142,14 @@ export class LabelView extends React.Component {
 
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
-  label: state.label
+  labels: state.labels
 })
 
 const mapDispatchToProps = (dispatch) => (
   bindActionCreators(Object.assign(
     {},
     notificationActions,
-    labelActions,
+    labelsActions,
     routerActions
   ), dispatch)
 )

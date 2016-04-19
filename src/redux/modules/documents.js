@@ -3,123 +3,81 @@ import DocumentApi from 'api/document'
 
 import _ from 'lodash'
 
+const errorHandler = function (err) {
+  return {error: err}
+}
+
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const CREATING_DOCUMENT = 'CREATING_DOCUMENT'
-export const CREATED_DOCUMENT = 'CREATED_DOCUMENT'
-export const REQUEST_DOCUMENT = 'REQUEST_DOCUMENT'
-export const RECEIVE_DOCUMENT = 'RECEIVE_DOCUMENT'
-export const UPDATING_DOCUMENT = 'UPDATING_DOCUMENT'
-export const UPDATED_DOCUMENT = 'UPDATED_DOCUMENT'
-export const REMOVING_DOCUMENT = 'REMOVING_DOCUMENT'
-export const REMOVED_DOCUMENT = 'REMOVED_DOCUMENT'
-export const RESTORING_DOCUMENT = 'RESTORING_DOCUMENT'
-export const RESTORED_DOCUMENT = 'RESTORED_DOCUMENT'
-
-export const REQUEST_DOCUMENTS = 'REQUEST_DOCUMENTS'
-export const RECEIVE_DOCUMENTS = 'RECEIVE_DOCUMENTS'
+export const NEW_DOCUMENT = 'NEW_DOCUMENT'
+export const FETCH_DOCUMENT = 'FETCH_DOCUMENT'
+export const FETCH_DOCUMENTS = 'FETCH_DOCUMENTS'
+export const CREATE_DOCUMENT = 'CREATE_DOCUMENT'
+export const UPDATE_DOCUMENT = 'UPDATE_DOCUMENT'
+export const REMOVE_DOCUMENT = 'REMOVE_DOCUMENT'
+export const RESTORE_DOCUMENT = 'RESTORE_DOCUMENT'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
-export const creatingDocument = createAction(CREATING_DOCUMENT)
-export const createdDocument = createAction(CREATED_DOCUMENT, (doc) => {
-  console.debug('Document created:', doc.id)
-  return doc
+export const newDocument = createAction(NEW_DOCUMENT, (doc) => {
+  console.debug('Init. new document:', doc)
+  return {response: doc}
 })
 
-export const requestDocument = createAction(REQUEST_DOCUMENT)
-export const receiveDocument = createAction(RECEIVE_DOCUMENT, (doc) => {
+export const fetchDocumentRequest = createAction(FETCH_DOCUMENT)
+export const fetchDocumentFailure = createAction(FETCH_DOCUMENT, errorHandler)
+export const fetchDocumentSuccess = createAction(FETCH_DOCUMENT, (doc) => {
   console.debug('Document fetched:', doc.id)
-  return doc
+  return {response: doc}
 })
 
-export const updatingDocument = createAction(UPDATING_DOCUMENT)
-export const updatedDocument = createAction(UPDATED_DOCUMENT, (doc) => {
+export const fetchDocumentsRequest = createAction(FETCH_DOCUMENTS, (params) => {
+  return {params}
+})
+export const fetchDocumentsFailure = createAction(FETCH_DOCUMENTS, errorHandler)
+export const fetchDocumentsSuccess = createAction(FETCH_DOCUMENTS, (res) => {
+  console.debug('Documents fetched:', res.total)
+  return {response: {total: res.total, items: res.hits}}
+})
+
+export const createDocumentRequest = createAction(CREATE_DOCUMENT)
+export const createDocumentFailure = createAction(CREATE_DOCUMENT, errorHandler)
+export const createDocumentSuccess = createAction(CREATE_DOCUMENT, (doc) => {
+  console.debug('Document created:', doc.id)
+  return {response: doc}
+})
+
+export const updateDocumentRequest = createAction(UPDATE_DOCUMENT)
+export const updateDocumentFailure = createAction(UPDATE_DOCUMENT, errorHandler)
+export const updateDocumentSuccess = createAction(UPDATE_DOCUMENT, (doc) => {
   console.debug('Document updated:', doc.id)
-  return doc
+  return {response: doc}
 })
 
-export const removingDocument = createAction(REMOVING_DOCUMENT)
-export const removedDocument = createAction(REMOVED_DOCUMENT, (doc) => {
-  console.debug('Document deleted:', doc.id)
-  return doc
+export const removeDocumentRequest = createAction(REMOVE_DOCUMENT)
+export const removeDocumentFailure = createAction(REMOVE_DOCUMENT, errorHandler)
+export const removeDocumentSuccess = createAction(REMOVE_DOCUMENT, (doc) => {
+  console.debug('Document removed:', doc.id)
+  return {response: doc}
 })
 
-export const restoringDocument = createAction(RESTORING_DOCUMENT)
-export const restoredDocument = createAction(RESTORED_DOCUMENT, (doc) => {
+export const restoreDocumentRequest = createAction(RESTORE_DOCUMENT)
+export const restoreDocumentFailure = createAction(RESTORE_DOCUMENT, errorHandler)
+export const restoreDocumentSuccess = createAction(RESTORE_DOCUMENT, (doc) => {
   console.debug('Document restored:', doc.id)
-  return doc
+  return {response: doc}
 })
-
-export const requestDocuments = createAction(REQUEST_DOCUMENTS)
-export const receiveDocuments = createAction(RECEIVE_DOCUMENTS, (res) => {
-  console.debug('Document(s) fetched:', res.total)
-  return {
-    total: res.total,
-    items: res.hits
-  }
-})
-
-export const createDocument = (doc) => {
-  return (dispatch, getState) => {
-    const {user} = getState()
-    console.debug('Creating document:', doc)
-    dispatch(creatingDocument())
-    if (doc.url) {
-      return DocumentApi.getInstance(user).create(doc)
-      .then((_doc) => dispatch(createdDocument(_doc)))
-    } else {
-      return dispatch(createdDocument(doc))
-    }
-  }
-}
 
 export const fetchDocument = (id) => {
   return (dispatch, getState) => {
     const {user} = getState()
     console.debug('Fetching document:', id)
-    dispatch(requestDocument())
+    dispatch(fetchDocumentRequest())
     return DocumentApi.getInstance(user).get(id)
-    .then((doc) => dispatch(receiveDocument(doc)))
-  }
-}
-
-export const updateDocument = (doc, payload) => {
-  return (dispatch, getState) => {
-    const {user} = getState()
-    console.debug('Updating document:', doc.id, payload)
-    dispatch(updatingDocument())
-    if (doc.id) {
-      return DocumentApi.getInstance(user).update(doc, payload)
-      .then((_doc) => dispatch(updatedDocument(_doc)))
-    } else {
-      return dispatch(updatedDocument(Object.assign({}, doc, payload)))
-    }
-  }
-}
-
-export const removeDocument = (doc) => {
-  return (dispatch, getState) => {
-    const {user} = getState()
-    console.debug('Removing document:', doc.id)
-    dispatch(removingDocument())
-    return DocumentApi.getInstance(user).remove(doc)
-    .then(() => dispatch(removedDocument(doc)))
-  }
-}
-
-export const restoreRemovedDocument = () => {
-  return (dispatch, getState) => {
-    const {user, documents} = getState()
-    if (!documents.removed) {
-      return Promise.reject('No document to restore.')
-    }
-    console.debug('Restoring document:', documents.removed.id)
-    dispatch(restoringDocument())
-    return DocumentApi.getInstance(user).restore(documents.removed)
-    .then((_doc) => dispatch(restoredDocument(_doc)))
+    .then((doc) => dispatch(fetchDocumentSuccess(doc)))
+    .catch((err) => dispatch(fetchDocumentFailure(err)))
   }
 }
 
@@ -135,9 +93,10 @@ export const fetchDocuments = (params = {from: 0, size: 20}) => {
       return Promise.resolve(null)
     } else if (documents.hasMore || params.from === 0) {
       console.debug('Fetching documents:', params)
-      dispatch(requestDocuments(params))
+      dispatch(fetchDocumentsRequest(params))
       return DocumentApi.getInstance(user).search(params)
-      .then((res) => dispatch(receiveDocuments(res)))
+      .then((res) => dispatch(fetchDocumentsSuccess(res)))
+      .catch((err) => dispatch(fetchDocumentsFailure(err)))
     } else {
       console.warn('Unable to fetch documents. No more documents', params)
       return Promise.resolve(null)
@@ -145,136 +104,197 @@ export const fetchDocuments = (params = {from: 0, size: 20}) => {
   }
 }
 
+export const createDocument = (doc) => {
+  return (dispatch, getState) => {
+    const {user} = getState()
+    console.debug('Creating document:', doc)
+    dispatch(createDocumentRequest())
+    return DocumentApi.getInstance(user).create(doc)
+    .then((_doc) => dispatch(createDocumentSuccess(_doc)))
+    .catch((err) => dispatch(createDocumentFailure(err)))
+  }
+}
+
+export const updateDocument = (doc, payload) => {
+  return (dispatch, getState) => {
+    const {user} = getState()
+    if (doc.id) {
+      console.debug('Updating document:', doc.id, payload)
+      dispatch(updateDocumentRequest())
+      return DocumentApi.getInstance(user).update(doc, payload)
+      .then((_doc) => dispatch(updateDocumentSuccess(_doc)))
+      .catch((err) => dispatch(updateDocumentFailure(err)))
+    } else {
+      console.debug('Updating new document:', payload)
+      return dispatch(updateDocumentSuccess(Object.assign({}, doc, payload)))
+    }
+  }
+}
+
+export const removeDocument = (doc) => {
+  return (dispatch, getState) => {
+    const {user} = getState()
+    console.debug('Removing document:', doc.id)
+    dispatch(removeDocumentRequest())
+    return DocumentApi.getInstance(user).remove(doc)
+    .then(() => dispatch(removeDocumentSuccess(doc)))
+    .catch((err) => dispatch(removeDocumentFailure(err)))
+  }
+}
+
+export const restoreRemovedDocument = () => {
+  return (dispatch, getState) => {
+    const {user, documents} = getState()
+    if (!documents.removed) {
+      return Promise.reject('No document to restore.')
+    }
+    console.debug('Restoring document:', documents.removed.id)
+    dispatch(restoreDocumentRequest())
+    return DocumentApi.getInstance(user).restore(documents.removed)
+    .then((_doc) => dispatch(restoreDocumentSuccess(_doc)))
+    .catch((err) => dispatch(restoreDocumentFailure(err)))
+  }
+}
+
 export const actions = {
-  createDocument,
+  newDocument,
   fetchDocument,
+  fetchDocuments,
+  createDocument,
   updateDocument,
   removeDocument,
-  restoreRemovedDocument,
-  fetchDocuments
+  restoreRemovedDocument
 }
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 export default handleActions({
-  [CREATING_DOCUMENT]: (state) => {
-    return Object.assign({}, state, {
-      isProcessing: true
-    })
-  },
-  [CREATED_DOCUMENT]: (state, action) => {
-    let doc = action.payload
-    if (!doc || !doc.id) {
-      const defaultDoc = {
-        id: null,
-        title: 'New document',
-        content: '<p>What\'s up ?</p>',
-        contentType: 'text/html',
-        labels: []
-      }
-      doc = Object.assign({}, defaultDoc, doc || {})
-    }
-    return Object.assign({}, state, {
-      current: doc,
+  [NEW_DOCUMENT]: (state, action) => {
+    const update = {
+      current: action.payload || {},
       isProcessing: false
-    })
-  },
-  [REQUEST_DOCUMENT]: (state) => {
-    return Object.assign({}, state, {
-      isFetching: true
-    })
-  },
-  [RECEIVE_DOCUMENT]: (state, action) => {
-    return Object.assign({}, state, {
-      isFetching: false,
-      current: action.payload
-    })
-  },
-  [UPDATING_DOCUMENT]: (state) => {
-    return Object.assign({}, state, {
-      isProcessing: true
-    })
-  },
-  [UPDATED_DOCUMENT]: (state, action) => {
-    const update = {
-      isProcessing: false,
-      current: action.payload
     }
-    const exists = state.items.find((item) => item.id === update.current.id)
-    if (exists) {
-      // Update item into the list
-      update.items = state.items.map((item) => {
-        if (item.id === update.current.id) {
-          item.title = update.current.title
-          item.labels = update.current.labels
-        }
-        return item
-      })
+    update.current = Object.assign({
+      id: null,
+      title: 'New document',
+      content: '<p>What\'s up ?</p>',
+      contentType: 'text/html',
+      labels: []
+    }, update.current)
+    return Object.assign({}, state, update)
+  },
+  [FETCH_DOCUMENT]: (state, action) => {
+    const update = {
+      isProcessing: action.payload == null,
+      isFetching: action.payload == null
+    }
+    const {error, response} = action.payload || {}
+    if (error) {
+      update.error = error
+    } else if (response) {
+      update.current = response
     }
     return Object.assign({}, state, update)
   },
-  [REMOVING_DOCUMENT]: (state) => {
-    return Object.assign({}, state, {
-      isProcessing: true
-    })
-  },
-  [REMOVED_DOCUMENT]: (state, action) => {
-    const doc = action.payload
-    const index = _.findIndex(state.items, (item) => item.id === doc.id)
-    return Object.assign({}, state, {
-      isProcessing: false,
-      items: state.items.filter((item) => item.id !== doc.id),
-      total: state.total - 1,
-      removed: doc,
-      removedIndex: index,
-      current: null
-    })
-  },
-  [RESTORING_DOCUMENT]: (state) => {
-    return Object.assign({}, state, {
-      isProcessing: true
-    })
-  },
-  [RESTORED_DOCUMENT]: (state, action) => {
-    const doc = action.payload
-    const restoredItems = state.items.slice()
-    restoredItems.splice(state.removedIndex, 0, doc)
-    return Object.assign({}, state, {
-      isProcessing: false,
-      items: restoredItems,
-      total: state.total + 1,
-      removed: null,
-      removedIndex: null,
-      current: doc
-    })
-  },
-  [REQUEST_DOCUMENTS]: (state, action) => {
+  [FETCH_DOCUMENTS]: (state, action) => {
     const update = {
-      params: action.payload,
-      isFetching: true
+      isProcessing: action.payload.params != null,
+      isFetching: action.payload.params != null
     }
-    if (state.params && state.params.from === 0) {
-      update.items = []
-      update.total = 0
-      update.hasMore = false
+    const {error, response, params} = action.payload
+    if (error) {
+      update.error = error
+    } else if (response) {
+      let {items, total} = response
+      update.hasMore = total > items.length
+      if (state.params && state.params.from) {
+        update.hasMore = total > state.items.length + items.length
+        items = state.items.concat(items)
+      }
+      update.items = items
+      update.total = total
+    } else if (params) {
+      update.params = params
+      if (params.from === 0) {
+        update.items = []
+        update.total = 0
+        update.hasMore = false
+      }
     }
     return Object.assign({}, state, update)
   },
-  [RECEIVE_DOCUMENTS]: (state, action) => {
-    let {items, total} = action.payload
-    let hasMore = total > items.length
-    if (state.params && state.params.from) {
-      hasMore = total > state.items.length + items.length
-      items = state.items.concat(items)
+  [CREATE_DOCUMENT]: (state, action) => {
+    const update = {
+      isProcessing: action.payload == null
     }
-
-    return Object.assign({}, state, {
-      isFetching: false,
-      hasMore: hasMore,
-      items: items,
-      total: total
-    })
+    const {error, response} = action.payload || {}
+    if (error) {
+      update.error = error
+    } else if (response) {
+      update.current = response
+    }
+    return Object.assign({}, state, update)
+  },
+  [UPDATE_DOCUMENT]: (state, action) => {
+    const update = {
+      isProcessing: action.payload == null
+    }
+    const {error, response} = action.payload || {}
+    if (error) {
+      update.error = error
+    } else if (response) {
+      update.current = response
+      const exists = state.items.find((item) => item.id === update.current.id)
+      if (exists) {
+        // Update item into the list
+        update.items = state.items.map((item) => {
+          if (item.id === update.current.id) {
+            item.title = update.current.title
+            item.labels = update.current.labels
+          }
+          return item
+        })
+      }
+    }
+    return Object.assign({}, state, update)
+  },
+  [REMOVE_DOCUMENT]: (state, action) => {
+    const update = {
+      isProcessing: action.payload == null
+    }
+    const {error, response} = action.payload || {}
+    if (error) {
+      update.error = error
+    } else if (response) {
+      update.current = null
+      const doc = response
+      const index = _.findIndex(state.items, (item) => item.id === doc.id)
+      if (index >= 0) {
+        update.items = state.items.filter((item) => item.id !== doc.id)
+        update.total = state.total - 1
+        update.removed = doc
+        update.removedIndex = index
+      }
+    }
+    return Object.assign({}, state, update)
+  },
+  [RESTORE_DOCUMENT]: (state, action) => {
+    const update = {
+      isProcessing: action.payload == null
+    }
+    const {error, response} = action.payload || {}
+    if (error) {
+      update.error = error
+    } else if (response) {
+      update.current = response
+      update.items = state.items.slice()
+      update.items.splice(state.removedIndex, 0, update.current)
+      update.total = state.total + 1
+      update.removed = null
+      update.removedIndex = null
+    }
+    return Object.assign({}, state, update)
   }
 }, {
   isFetching: false,
@@ -285,5 +305,6 @@ export default handleActions({
   params: null,
   items: [],
   current: null,
-  total: null
+  total: null,
+  error: null
 })

@@ -7,10 +7,6 @@ import { actions as labelsActions } from 'redux/modules/labels'
 export class AppNavigation extends React.Component {
   static propTypes = {
     fetchLabels: PropTypes.func.isRequired,
-    removeFromLabels: PropTypes.func.isRequired,
-    restoreFromLabels: PropTypes.func.isRequired,
-    discardRestoredLabel: PropTypes.func.isRequired,
-    discardRemovedLabel: PropTypes.func.isRequired,
     labels: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired
   };

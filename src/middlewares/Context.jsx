@@ -2,19 +2,24 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { actions as labelActions } from 'redux/modules/label'
+import { actions as labelsActions } from 'redux/modules/labels'
 import { actions as documentsActions } from 'redux/modules/documents'
 
 export function createDocument (Component) {
   class NewDocumentAwareComponent extends React.Component {
     static propTypes = {
       location: PropTypes.object.isRequired,
+      newDocument: PropTypes.func.isRequired,
       createDocument: PropTypes.func.isRequired
     };
 
     componentDidMount () {
-      const { createDocument, location } = this.props
-      createDocument(location.query)
+      const { newDocument, createDocument, location } = this.props
+      if (location.query && location.query.url) {
+        createDocument(location.query)
+      } else {
+        newDocument(location.query)
+      }
     }
 
     render () {
@@ -91,7 +96,7 @@ export function fetchDocuments (Component) {
   }
 
   const mapDispatchToProps = (dispatch) => (
-    bindActionCreators(Object.assign({}, documentsActions, labelActions), dispatch)
+    bindActionCreators(Object.assign({}, documentsActions, labelsActions), dispatch)
   )
 
   return connect(null, mapDispatchToProps)(DocumentsAwareComponent)
@@ -122,7 +127,7 @@ export function fetchLabel (Component) {
     }
   }
 
-  return connect(null, labelActions)(LabelAwareComponent)
+  return connect(null, labelsActions)(LabelAwareComponent)
 }
 
 export function fetchLabelAndDocument (Component) {

@@ -17,18 +17,17 @@ function decodeToken (token) {
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const REQUEST_TOKEN = 'REQUEST_TOKEN'
-export const RECEIVE_TOKEN = 'RECEIVE_TOKEN'
+export const FETCH_TOKEN = 'FETCH_TOKEN'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
-export const requestToken = createAction(REQUEST_TOKEN)
-export const receiveToken = createAction(RECEIVE_TOKEN, (token) => {
-  return {
-    token: token,
-    receivedAt: Date.now()
-  }
+export const fetchTokenRequest = createAction(FETCH_TOKEN)
+export const fetchTokenFailure = createAction(FETCH_TOKEN, (err) => {
+  return { error: err }
+})
+export const fetchTokenSuccess = createAction(FETCH_TOKEN, (token) => {
+  return { token }
 })
 
 export const loginWith = (provider, redirect) => {
@@ -36,15 +35,16 @@ export const loginWith = (provider, redirect) => {
     // Get token from state
     const {token} = getState()
     if (token) {
-      return dispatch(receiveToken(token))
+      return dispatch(fetchTokenSuccess(token))
     }
     // Get token from login process
-    dispatch(requestToken())
+    dispatch(fetchTokenRequest())
     return AuthApi.getInstance().login(provider)
     .then((token) => {
-      dispatch(receiveToken(token))
+      dispatch(fetchTokenSuccess(token))
       dispatch(push(redirect))
     })
+    .catch((err) => dispatch(fetchTokenFailure(err)))
   }
 }
 
@@ -56,19 +56,20 @@ export const actions = {
 // Reducer
 // ------------------------------------
 export default handleActions({
-  [REQUEST_TOKEN]: (state) => {
-    return Object.assign({}, state, {
-      isFetching: true
-    })
-  },
-  [RECEIVE_TOKEN]: (state, action) => {
-    localStorage.token = action.payload.token
-    return Object.assign({}, state, {
-      isFetching: false,
-      token: action.payload.token,
-      user: decodeToken(action.payload.token),
-      receivedAt: action.payload.receivedAt
-    })
+  [FETCH_TOKEN]: (state, action) => {
+    const update = {
+      isFetching: false
+    }
+    const {token, error} = action.payload || {}
+    if (error) {
+      update.error = error
+    } else if (token) {
+      update.token = token
+      update.user = decodeToken(token)
+    } else {
+      update.isFetching = true
+    }
+    return Object.assign({}, state, update)
   }
 }, {
   isFetching: false,

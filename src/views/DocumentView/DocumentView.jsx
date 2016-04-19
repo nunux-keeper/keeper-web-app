@@ -13,7 +13,6 @@ import styles from './DocumentView.scss'
 export class DocumentView extends React.Component {
   static propTypes = {
     documents: PropTypes.object.isRequired,
-    labels: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     push: PropTypes.func
   };
@@ -160,8 +159,7 @@ export class DocumentView extends React.Component {
 
 const mapStateToProps = (state) => ({
   documents: state.documents,
-  location: state.router.locationBeforeTransitions,
-  labels: state.labels
+  location: state.router.locationBeforeTransitions
 })
 
 const mapDispatchToProps = (dispatch) => (

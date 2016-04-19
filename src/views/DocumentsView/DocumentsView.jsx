@@ -17,7 +17,7 @@ export class DocumentsView extends React.Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
     documents: PropTypes.object.isRequired,
-    label: PropTypes.object.isRequired,
+    labels: PropTypes.object.isRequired,
     device: PropTypes.object.isRequired,
     fetchDocuments: PropTypes.func.isRequired,
     showUrlModal: PropTypes.func.isRequired
@@ -30,8 +30,8 @@ export class DocumentsView extends React.Component {
   }
 
   get label () {
-    const { label } = this.props
-    return label.value
+    const { labels } = this.props
+    return labels.current
   }
 
   get title () {
@@ -156,7 +156,7 @@ export class DocumentsView extends React.Component {
 
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
-  label: state.label,
+  labels: state.labels,
   documents: state.documents,
   device: state.device
 })
