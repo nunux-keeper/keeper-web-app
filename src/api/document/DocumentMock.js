@@ -12,6 +12,7 @@ function getRandomDocument (doc) {
     contentType = 'text/plain',
     origin = chance.url(),
     labels = ['test', 'badLabel'],
+    share = chance.bool(),
     date = chance.date(),
     attachments = [{
       key: chance.hash({length: 10}),
@@ -19,7 +20,7 @@ function getRandomDocument (doc) {
       type: 'image/png'
     }]
   } = doc
-  return {id, title, content, contentType, origin, labels, date, attachments}
+  return {id, title, content, contentType, origin, share, labels, date, attachments}
 }
 
 function getRandomDocuments (nb = 20, total) {
@@ -35,6 +36,7 @@ function getRandomDocuments (nb = 20, total) {
       contentType: 'text/plain',
       origin: chance.url(),
       labels: ['test', 'badLabel'],
+      share: chance.bool(),
       attachments: [{
         key: chance.hash({length: 10}),
         origin: chance.url({extensions: ['png']}),

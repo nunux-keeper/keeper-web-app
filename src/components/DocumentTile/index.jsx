@@ -30,6 +30,17 @@ export class DocumentTile extends React.Component {
     )
   }
 
+  get shareLink () {
+    const {value: doc} = this.props
+    if (doc.share) {
+      return (
+        <div className='ui blue ribbon label'>
+          <i className='share alternate icon'></i> Shared
+        </div>
+      )
+    }
+  }
+
   render () {
     const { location } = this.props
     const doc = this.props.value
@@ -38,9 +49,7 @@ export class DocumentTile extends React.Component {
       <div className='ui card doc' id={`doc-${doc.id}`} ref='doc'>
         <div title={doc.title}>
           <Link to={{ pathname: `${location.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
-            <div className='ui blue ribbon label'>
-              <i className='share alternate icon'></i> Shared
-            </div>
+            {this.shareLink}
             <img src='http://placehold.it/320x200' />
           </Link>
           <div className='contextual-menu'>{this.contextualMenu}</div>
