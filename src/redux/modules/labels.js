@@ -179,7 +179,7 @@ export default handleActions({
       isProcessing: action.payload == null,
       isFetching: action.payload == null
     }
-    const {error, response} = action.payload || {}
+    const {error, response} = action.payload || {}
     if (error) {
       update.error = error
     } else if (response) {

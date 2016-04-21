@@ -8,6 +8,8 @@ import AppBar from 'components/AppBar'
 import DocumentContextMenu from 'components/DocumentContextMenu'
 import DocumentLabels from 'components/DocumentLabels'
 
+import * as NProgress from 'nprogress'
+
 import styles from './DocumentView.scss'
 
 export class DocumentView extends React.Component {
@@ -39,6 +41,18 @@ export class DocumentView extends React.Component {
         const url = location.pathname
         const to = url.substr(0, url.lastIndexOf('/'))
         push(to)
+      }
+    }
+  }
+
+  componentDidUpdate (prevProps) {
+    if (!this.isModalDisplayed) {
+      const {isProcessing} = this.props.documents
+      const {isProcessing: wasProcessing} = prevProps.documents
+      if (!wasProcessing && isProcessing) {
+        NProgress.start()
+      } else if (wasProcessing && !isProcessing) {
+        NProgress.done()
       }
     }
   }
@@ -95,8 +109,8 @@ export class DocumentView extends React.Component {
   }
 
   get spinner () {
-    const { isFetching, isProcessing } = this.props.documents
-    if (isFetching || isProcessing) {
+    const { isFetching } = this.props.documents
+    if (isFetching) {
       return (
         <div className='ui active inverted dimmer'>
           <div className='ui large text loader'>Loading</div>

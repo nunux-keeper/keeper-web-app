@@ -11,6 +11,8 @@ import InfiniteGrid from 'components/InfiniteGrid'
 import DocumentTile from 'components/DocumentTile'
 import AppBar from 'components/AppBar'
 
+import * as NProgress from 'nprogress'
+
 import styles from './DocumentsView.scss'
 
 export class DocumentsView extends React.Component {
@@ -27,6 +29,16 @@ export class DocumentsView extends React.Component {
     super()
     this.fetchFollowingDocuments = this.fetchFollowingDocuments.bind(this)
     this.refreshDocuments = this.refreshDocuments.bind(this)
+  }
+
+  componentDidUpdate (prevProps) {
+    const {isProcessing} = this.props.documents
+    const {isProcessing: wasProcessing} = prevProps.documents
+    if (!wasProcessing && isProcessing) {
+      NProgress.start()
+    } else if (wasProcessing && !isProcessing) {
+      NProgress.done()
+    }
   }
 
   get label () {
