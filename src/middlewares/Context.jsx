@@ -3,7 +3,27 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { actions as labelsActions } from 'redux/modules/labels'
+import { actions as profileActions } from 'redux/modules/profile'
 import { actions as documentsActions } from 'redux/modules/documents'
+
+export function fetchProfile (Component) {
+  class ProfileAwareComponent extends React.Component {
+    static propTypes = {
+      fetchProfile: PropTypes.func.isRequired
+    };
+
+    componentDidMount () {
+      const { fetchProfile } = this.props
+      fetchProfile()
+    }
+
+    render () {
+      return (<Component {...this.props}/>)
+    }
+  }
+
+  return connect(null, profileActions)(ProfileAwareComponent)
+}
 
 export function createDocument (Component) {
   class NewDocumentAwareComponent extends React.Component {

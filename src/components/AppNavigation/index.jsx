@@ -61,7 +61,7 @@ export class AppNavigation extends React.Component {
 
     return (
       <div>
-        <Link to={{ pathname: '/' }} className='item'>
+        <Link to={{ pathname: '/profile' }} className='item'>
           Profile
           <i className='user icon'></i>
         </Link>

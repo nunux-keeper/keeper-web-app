@@ -6,6 +6,7 @@ import MainLayout from 'layouts/MainLayout'
 import NotFoundView from 'views/NotFoundView/NotFoundView'
 import HomeView from 'views/HomeView/HomeView'
 import LoginView from 'views/LoginView/LoginView'
+import ProfileView from 'views/ProfileView/ProfileView'
 import LabelView from 'views/LabelView/LabelView'
 import DocumentsView from 'views/DocumentsView/DocumentsView'
 import DocumentView from 'views/DocumentView/DocumentView'
@@ -13,6 +14,7 @@ import DocumentView from 'views/DocumentView/DocumentView'
 import { requireAuthentication } from 'middlewares/Authentication'
 
 import {
+  fetchProfile,
   createDocument,
   fetchDocument,
   fetchDocuments,
@@ -28,6 +30,7 @@ export default (store) => (
       <Route path='login' component={LoginView} />
     </Route>
     <Route component={requireAuthentication(MainLayout)}>
+      <Route path='profile' component={fetchProfile(ProfileView)} />
       <Route path='document' component={fetchDocuments(DocumentsView)} />
       <Route path='document/create' component={createDocument(DocumentView)} />
       <Route path='document/:docId' component={fetchDocument(DocumentView)} />

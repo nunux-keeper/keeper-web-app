@@ -1,6 +1,6 @@
 let instance = null
 
-const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmb29AYmFyIiwibmFtZSI6IkpvaG4gRG9lIn0.J0_mwi1v5lqd9smur4SOI6CP1QuZ5_so9hpjPQBLcsA'
+const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ'
 
 export default class AuthMock {
   static getInstance () {
