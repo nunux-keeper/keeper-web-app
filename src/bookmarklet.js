@@ -1,0 +1,82 @@
+window.kBookmarklet = function () {
+  const cid = 'KPR_K__CONTAINER'
+  const frameId = 'KPR_K__FRAME'
+  let $c = document.getElementById(cid)
+
+  let popup
+
+  if (!$c) {
+    $c = document.createElement('div')
+    $c.id = cid
+    $c.style.position = 'fixed'
+    $c.style.background = '#fff'
+    $c.style.bottom = '20px'
+    $c.style.left = '20px'
+    $c.style.width = '200px'
+    $c.style.height = '200px'
+    $c.style.zIndex = 999999999
+    $c.style['box-shadow'] = '#000 4px 4px 20px'
+    $c.style['border-radius'] = '4px'
+    var $o = document.createElement('div')
+    $o.style.position = 'absolute'
+    $o.style.height = '160px'
+    $o.style.top = '40px'
+    $o.style.right = 0
+    $o.style.width = '200px'
+    $o.style.background = 'transparent'
+    $o.style.cursor = 'pointer'
+    $o.addEventListener('dragenter', function (e) {
+      popup.postMessage('onDragEnter', window.K_REALM)
+    }, false)
+    $o.addEventListener('dragover', function (e) {
+      if (e.preventDefault) {
+        e.preventDefault()
+      }
+      return false
+    }, false)
+    $o.addEventListener('dragleave', function (e) {
+      popup.postMessage('onDragLeave', window.K_REALM)
+    }, false)
+    $o.addEventListener('drop', function (e) {
+      if (e.preventDefault) {
+        e.preventDefault()
+      }
+      var data = e.dataTransfer.getData('text/html')
+      popup.postMessage(data, window.K_REALM)
+      return false
+    }, false)
+    $o.addEventListener('click', function (e) {
+      popup.postMessage('onClick', window.K_REALM)
+    }, false)
+    $c.appendChild($o)
+    document.body.appendChild($c)
+  }
+
+  var $ifrm = document.createElement('iframe')
+  $ifrm.setAttribute('id', frameId)
+  $ifrm.setAttribute('name', frameId)
+  $ifrm.style.width = '100%'
+  $ifrm.style.height = '100%'
+  $ifrm.style.border = 'none'
+
+  $c.appendChild($ifrm)
+
+  var url = window.K_REALM + '/bookmarklet?url=' +
+    encodeURIComponent(window.location.href) +
+    '&title=' + encodeURIComponent(window.document.title)
+
+  popup = window.open(url, frameId)
+  if (!popup) alert('Unable to load bookmarklet.')
+
+  var receiveMessage = function (e) {
+    if (e.data === 'close' && window.K_REALM === e.origin) {
+      $c.parentNode.removeChild($c)
+    }
+  }
+  window.addEventListener('message', receiveMessage, false)
+  setInterval(function () {
+    popup.postMessage('ping', window.K_REALM)
+  }, 2000)
+}
+
+window.kBookmarklet()

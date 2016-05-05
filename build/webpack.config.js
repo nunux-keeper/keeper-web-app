@@ -9,7 +9,7 @@ const debug = _debug('app:webpack:config')
 const paths = config.utils_paths
 const {__DEV__, __PROD__, __TEST__} = config.globals
 
-debug('Create configuration.')
+debug('Create main configuration.')
 const webpackConfig = {
   name: 'client',
   target: 'web',

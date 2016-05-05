@@ -10,6 +10,7 @@ import ProfileView from 'views/ProfileView/ProfileView'
 import LabelView from 'views/LabelView/LabelView'
 import DocumentsView from 'views/DocumentsView/DocumentsView'
 import DocumentView from 'views/DocumentView/DocumentView'
+import BookmarkletView from 'views/BookmarkletView/BookmarkletView'
 
 import { requireAuthentication } from 'middlewares/Authentication'
 
@@ -26,6 +27,7 @@ import {
 export default (store) => (
   <Route path='/' component={RootLayout}>
     <IndexRoute component={HomeView} />
+    <Route path='bookmarklet' component={BookmarkletView} />
     <Route component={MainLayout}>
       <Route path='login' component={LoginView} />
     </Route>

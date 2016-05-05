@@ -2,6 +2,7 @@ import Koa from 'koa'
 import convert from 'koa-convert'
 import webpack from 'webpack'
 import webpackConfig from '../build/webpack.config'
+import bookmarkletConfig from '../build/bookmarklet.config'
 import historyApiFallback from 'koa-connect-history-api-fallback'
 import serve from 'koa-static'
 import _debug from 'debug'
@@ -22,7 +23,10 @@ app.use(convert(historyApiFallback({
 // Apply Webpack HMR Middleware
 // ------------------------------------
 if (config.env === 'development') {
-  const compiler = webpack(webpackConfig)
+  const compiler = webpack([
+    webpackConfig,
+    bookmarkletConfig
+  ])
 
   // Enable webpack-dev and webpack-hot middleware
   const { publicPath } = webpackConfig.output

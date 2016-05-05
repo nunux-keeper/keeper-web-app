@@ -1,0 +1,17 @@
+:global {
+  .bookmarklet {
+    .ui.top.menu {
+      border-radius: 0;
+      margin: 0;
+    }
+    .dropzone {
+      height: 160px;
+      text-align: center;
+      padding: 2em;
+      &.over {
+        background-color: blue;
+      }
+    }
+  }
+}
+
