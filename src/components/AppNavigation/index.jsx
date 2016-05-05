@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
 import { actions as labelsActions } from 'redux/modules/labels'
 
+import './styles.scss'
+
 export class AppNavigation extends React.Component {
   static propTypes = {
     fetchLabels: PropTypes.func.isRequired,
@@ -17,8 +19,9 @@ export class AppNavigation extends React.Component {
   }
 
   componentDidUpdate () {
-    window.$('.ui.sidebar a.item').click(() => {
-      window.$('.ui.sidebar').sidebar('hide')
+    const $el = window.$(this.refs.nav)
+    $el.find('a.item').click(() => {
+      $el.sidebar('hide')
     })
   }
 
@@ -60,7 +63,11 @@ export class AppNavigation extends React.Component {
     } = this.props
 
     return (
-      <div>
+      <div className='ui sidebar large vertical menu' id='nav' ref='nav'>
+        <h2 className='ui header'>
+          <i className='cloud icon'></i>
+          <div className='content'>Keeper</div>
+        </h2>
         <Link to={{ pathname: '/profile' }} className='item'>
           Profile
           <i className='user icon'></i>
@@ -88,10 +95,6 @@ export class AppNavigation extends React.Component {
         <Link to={{ pathname: '/' }} className='item'>
           Shares
           <i className='share alternate icon'></i>
-        </Link>
-        <Link to={{ pathname: '/' }} className='item'>
-          Settings
-          <i className='settings icon'></i>
         </Link>
       </div>
     )

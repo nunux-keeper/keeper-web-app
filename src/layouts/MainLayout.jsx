@@ -31,9 +31,7 @@ export class MainLayout extends React.Component {
 
     return (
       <div id='main'>
-        <div className='ui sidebar large vertical menu'>
-          <AppNavigation />
-        </div>
+        <AppNavigation />
         <div className='pusher'>
           {isModal ? this.previousChildren : this.props.children}
 
