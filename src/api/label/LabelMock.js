@@ -15,7 +15,7 @@ function getRandomLabel (_label) {
 
 function getRandomLabels (nb = 5) {
   const result = [
-    {id: 'test', label: 'test', color: '#f00'}
+    {id: 'test', label: 'test', color: '#F2711C'}
   ]
 
   for (let i = 0; i < nb; i++) {

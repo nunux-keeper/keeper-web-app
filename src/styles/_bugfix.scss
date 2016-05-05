@@ -1,0 +1,12 @@
+/*
+Sematic UI bugfix:
+https://github.com/Semantic-Org/Semantic-UI/issues/2851
+*/
+body.dimmable.undetached.dimmed {
+  .pushable {
+    transform: none;
+  }
+  .pusher {
+    position: static;
+  }
+}
