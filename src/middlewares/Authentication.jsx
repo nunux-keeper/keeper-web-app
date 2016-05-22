@@ -1,41 +1,36 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { routeActions } from 'react-router-redux'
+import { bindActionCreators } from 'redux'
+
+import { actions as authActions } from 'redux/modules/auth'
 
 export function requireAuthentication (Component) {
   class AuthenticatedComponent extends React.Component {
     static propTypes = {
-      dispatch: PropTypes.func,
-      location: PropTypes.object,
-      isAuthenticated: PropTypes.bool
+      initAuthentication: PropTypes.func,
+      authenticated: PropTypes.bool
     };
 
     componentWillMount () {
-      this.checkAuth()
-    }
-
-    componentWillReceiveProps (nextProps) {
-      this.checkAuth()
-    }
-
-    checkAuth () {
-      if (!this.props.isAuthenticated) {
-        let redirectAfterLogin = this.props.location.path
-        this.props.dispatch(routeActions.push(`/login?redirect=${redirectAfterLogin}`))
+      const {authenticated, initAuthentication} = this.props
+      if (!authenticated) {
+        initAuthentication()
       }
     }
 
     render () {
-      if (this.props.isAuthenticated) {
-        return (<Component {...this.props}/>)
-      }
+      const {authenticated} = this.props
+      return authenticated ? <Component {...this.props}/> : null
     }
   }
 
   const mapStateToProps = (state) => ({
-    location: state.router,
-    isAuthenticated: state.auth.user !== null
+    authenticated: state.auth.authenticated
   })
 
-  return connect(mapStateToProps)(AuthenticatedComponent)
+  const mapDispatchToProps = (dispatch) => (
+    bindActionCreators(Object.assign({}, authActions), dispatch)
+  )
+
+  return connect(mapStateToProps, mapDispatchToProps)(AuthenticatedComponent)
 }

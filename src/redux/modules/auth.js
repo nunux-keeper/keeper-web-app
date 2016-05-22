@@ -1,78 +1,59 @@
 import { createAction, handleActions } from 'redux-actions'
-import { push } from 'react-router-redux'
-import AuthApi from 'api/auth'
-import jwtDecode from 'jwt-decode'
-
-function decodeToken (token) {
-  if (token) {
-    const t = jwtDecode(token)
-    return {
-      uid: t.sub
-    }
-  } else {
-    return null
-  }
-}
 
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const FETCH_TOKEN = 'FETCH_TOKEN'
+export const INIT_AUTH = 'INIT_AUTH'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
-export const fetchTokenRequest = createAction(FETCH_TOKEN)
-export const fetchTokenFailure = createAction(FETCH_TOKEN, (err) => {
+export const initAuthenticationRequest = createAction(INIT_AUTH)
+export const initAuthenticationFailure = createAction(INIT_AUTH, (err) => {
   return { error: err }
 })
-export const fetchTokenSuccess = createAction(FETCH_TOKEN, (token) => {
-  return { token }
+export const initAuthenticationSuccess = createAction(INIT_AUTH, (authenticated) => {
+  return { authenticated }
 })
 
-export const loginWith = (provider, redirect) => {
+export const initAuthentication = () => {
   return (dispatch, getState) => {
-    // Get token from state
-    const {token} = getState()
-    if (token) {
-      return dispatch(fetchTokenSuccess(token))
-    }
-    // Get token from login process
-    dispatch(fetchTokenRequest())
-    return AuthApi.getInstance().login(provider)
-    .then((token) => {
-      dispatch(fetchTokenSuccess(token))
-      dispatch(push(redirect))
+    const {auth} = getState()
+    dispatch(initAuthenticationRequest())
+    return new Promise(function (resolve, reject) {
+      auth.keycloak.init({ onLoad: 'login-required' }).success((authenticated) => {
+        resolve(dispatch(initAuthenticationSuccess(authenticated)))
+      }).error((e) => {
+        reject(dispatch(initAuthenticationFailure(e)))
+      })
     })
-    .catch((err) => dispatch(fetchTokenFailure(err)))
   }
 }
 
 export const actions = {
-  loginWith
+  initAuthentication
 }
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 export default handleActions({
-  [FETCH_TOKEN]: (state, action) => {
+  [INIT_AUTH]: (state, action) => {
     const update = {
-      isFetching: false
+      isProcessing: false
     }
-    const {token, error} = action.payload || {}
+    const {authenticated, error} = action.payload || {}
     if (error) {
       update.error = error
-    } else if (token) {
-      update.token = token
-      update.user = decodeToken(token)
+    } else if (authenticated) {
+      update.authenticated = authenticated
     } else {
-      update.isFetching = true
+      update.isProcessing = true
     }
     return Object.assign({}, state, update)
   }
 }, {
-  isFetching: false,
-  token: localStorage.token,
-  user: decodeToken(localStorage.token)
+  keycloak: new window.Keycloak('/keycloak.json'),
+  isProcessing: false,
+  authenticated: false
 })

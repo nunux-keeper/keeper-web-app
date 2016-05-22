@@ -14,14 +14,20 @@ export class LoginView extends React.Component {
     loginWith(provider, redirect)
   }
 
+  login () {
+    keycloak.login()
+  }
+
   render () {
     const loginWithGoogle = () => this.loginWith('google')
+    const login = () => this.login()
     return (
       <div>
         <button className='ui google plus button' onClick={loginWithGoogle}>
           <i className='google plus icon'></i>
           Login with Google
         </button>
+        <button onClick={login}>Login</button>
       </div>
     )
   }
