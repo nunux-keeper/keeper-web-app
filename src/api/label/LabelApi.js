@@ -1,19 +1,6 @@
 import AbstractApi from 'api/common/AbstractApi'
 
-let instance = null
-
-export default class LabelApi extends AbstractApi {
-  constructor (user) {
-    super(user)
-  }
-
-  static getInstance (user) {
-    if (!instance) {
-      instance = new this(user)
-    }
-    return instance
-  }
-
+export class LabelApi extends AbstractApi {
   all (params) {
     return this.fetch('/label')
   }
@@ -48,3 +35,6 @@ export default class LabelApi extends AbstractApi {
     })
   }
 }
+
+const instance = new LabelApi()
+export default instance

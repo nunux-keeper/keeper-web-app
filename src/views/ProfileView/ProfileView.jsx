@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 
 import AppBar from 'components/AppBar'
 
-import GrantedAppsTab from 'views/ProfileView/GrantedAppsTab/GrantedAppsTab'
 import BookmarkletTab from 'views/ProfileView/BookmarkletTab/BookmarkletTab'
 
 import moment from 'moment'
@@ -54,14 +53,10 @@ export default class ProfileView extends React.Component {
       <div>
         {this.userHeader}
         <div className='ui pointing secondary menu' ref='menu'>
-          <a className='item active' data-tab='apps'>Granted Apps</a>
-          <a className='item' data-tab='bookmarklet'>Bookmarklet</a>
+          <a className='item active' data-tab='bookmarklet'>Bookmarklet</a>
         </div>
-        <div className='ui bottom attached tab active' data-tab='apps'>
-          <GrantedAppsTab active />
-        </div>
-        <div className='ui bottom attached tab' data-tab='bookmarklet'>
-          <BookmarkletTab />
+        <div className='ui bottom attached tab active' data-tab='bookmarklet'>
+          <BookmarkletTab active />
         </div>
       </div>
     )

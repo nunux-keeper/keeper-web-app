@@ -7,11 +7,7 @@ export default class HomeView extends React.Component {
       <div>
         <h1>Welcome to Nunux Keeper</h1>
         <hr />
-        <Link to={{ pathname: '/login', state: { modal: true, returnTo: '/', title: 'login' } }}>Login</Link>
-        <hr />
-        <Link to='/404'>Go to 404 Page</Link>
-        <hr />
-        <Link to='/document'>Go to documents Page</Link>
+        <Link to='/document'>View my documents</Link>
       </div>
     )
   }

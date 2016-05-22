@@ -2,8 +2,6 @@ import Chance from 'chance'
 
 const chance = new Chance()
 
-let instance = null
-
 function getRandomDocument (doc) {
   const {
     id = chance.hash({length: 15}),
@@ -47,14 +45,7 @@ function getRandomDocuments (nb = 20, total) {
   return result
 }
 
-export default class DocumentMock {
-  static getInstance (user) {
-    if (!instance) {
-      instance = new this(user)
-    }
-    return instance
-  }
-
+export class DocumentMock {
   search (params) {
     const {from, size} = params
     return new Promise((resolve) => {
@@ -96,3 +87,6 @@ export default class DocumentMock {
     return Promise.resolve(doc)
   }
 }
+
+const instance = new DocumentMock()
+export default instance

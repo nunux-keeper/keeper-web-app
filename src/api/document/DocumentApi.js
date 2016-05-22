@@ -1,16 +1,6 @@
 import AbstractApi from 'api/common/AbstractApi'
 
-let instance = null
-
-export default class DocumentApi extends AbstractApi {
-
-  static getInstance (user) {
-    if (!instance) {
-      instance = new this(user)
-    }
-    return instance
-  }
-
+export class DocumentApi extends AbstractApi {
   search (params) {
     const {q, from, size, order} = params
     return this.fetch(this.getUrl('/document', {q, from, size, order}))
@@ -46,3 +36,6 @@ export default class DocumentApi extends AbstractApi {
     })
   }
 }
+
+const instance = new DocumentApi()
+export default instance

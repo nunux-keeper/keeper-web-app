@@ -22,14 +22,14 @@ export const fetchAppsSuccess = createAction(FETCH_APPS, (apps) => {
 
 export const fetchApps = () => {
   return (dispatch, getState) => {
-    const {user, apps} = getState()
+    const {apps} = getState()
     if (apps.isFetching) {
       console.warn('Unable to fetch apps. An action is pending...')
       return Promise.resolve(null)
     }
     console.debug('Fetching apps...')
     dispatch(fetchAppsRequest())
-    return AppsApi.getInstance(user).get()
+    return AppsApi.get()
     .then((apps) => dispatch(fetchAppsSuccess(apps)))
     .catch((err) => dispatch(fetchAppsFailure(err)))
   }

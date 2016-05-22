@@ -2,8 +2,6 @@ import Chance from 'chance'
 
 const chance = new Chance()
 
-let instance = null
-
 function getRandomLabel (_label) {
   const {
     id = chance.hash({length: 15}),
@@ -24,15 +22,7 @@ function getRandomLabels (nb = 5) {
   return result
 }
 
-export default class LabelMock {
-
-  static getInstance (user) {
-    if (!instance) {
-      instance = new this(user)
-    }
-    return instance
-  }
-
+export class LabelMock {
   constructor () {
     this.db = []
   }
@@ -86,3 +76,6 @@ export default class LabelMock {
     return Promise.resolve(label)
   }
 }
+
+const instance = new LabelMock()
+export default instance

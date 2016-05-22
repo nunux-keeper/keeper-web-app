@@ -2,8 +2,6 @@ import Chance from 'chance'
 
 const chance = new Chance()
 
-let instance = null
-
 function getRandomProfile (_profile = {}) {
   return Object.assign(_profile, {
     hash: chance.hash({length: 15}),
@@ -24,15 +22,7 @@ function getRandomApps () {
   }
 }
 
-export default class ProfileMock {
-
-  static getInstance (user) {
-    if (!instance) {
-      instance = new this(user)
-    }
-    return instance
-  }
-
+export class ProfileMock {
   get () {
     return Promise.resolve(getRandomProfile())
   }
@@ -41,3 +31,6 @@ export default class ProfileMock {
     return Promise.resolve(getRandomApps())
   }
 }
+
+const instance = new ProfileMock()
+export default instance

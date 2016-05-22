@@ -22,14 +22,14 @@ export const fetchProfileSuccess = createAction(FETCH_PROFILE, (profile) => {
 
 export const fetchProfile = () => {
   return (dispatch, getState) => {
-    const {user, profile} = getState()
+    const {profile} = getState()
     if (profile.isFetching) {
       console.warn('Unable to fetch profile. An action is pending...')
       return Promise.resolve(null)
     }
     console.debug('Fetching profile...')
     dispatch(fetchProfileRequest())
-    return ProfileApi.getInstance(user).get()
+    return ProfileApi.get()
     .then((profile) => dispatch(fetchProfileSuccess(profile)))
     .catch((err) => dispatch(fetchProfileFailure(err)))
   }

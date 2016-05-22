@@ -5,7 +5,6 @@ import RootLayout from 'layouts/RootLayout'
 import MainLayout from 'layouts/MainLayout'
 import NotFoundView from 'views/NotFoundView/NotFoundView'
 import HomeView from 'views/HomeView/HomeView'
-import LoginView from 'views/LoginView/LoginView'
 import ProfileView from 'views/ProfileView/ProfileView'
 import LabelView from 'views/LabelView/LabelView'
 import DocumentsView from 'views/DocumentsView/DocumentsView'
@@ -28,9 +27,6 @@ export default (store) => (
   <Route path='/' component={RootLayout}>
     <IndexRoute component={HomeView} />
     <Route path='bookmarklet' component={BookmarkletView} />
-    <Route component={MainLayout}>
-      <Route path='login' component={LoginView} />
-    </Route>
     <Route component={requireAuthentication(MainLayout)}>
       <Route path='profile' component={fetchProfile(ProfileView)} />
       <Route path='document' component={fetchDocuments(DocumentsView)} />

@@ -65,14 +65,14 @@ export const restoreLabelSuccess = createAction(RESTORE_LABEL, (label) => {
 
 export const fetchLabel = (id) => {
   return (dispatch, getState) => {
-    const {user, labels: l} = getState()
+    const {labels: l} = getState()
     if (l.isFetching || l.isProcessing) {
       console.warn('Unable to fetch label. An action is pending...')
       return Promise.resolve(null)
     }
     console.debug('Fetching label:', id)
     dispatch(fetchLabelRequest())
-    return LabelApi.getInstance(user).get(id)
+    return LabelApi.get(id)
     .then((label) => dispatch(fetchLabelSuccess(label)))
     .catch((err) => dispatch(fetchLabelFailure(err)))
   }
@@ -80,14 +80,14 @@ export const fetchLabel = (id) => {
 
 export const fetchLabels = () => {
   return (dispatch, getState) => {
-    const {user, labels} = getState()
+    const {labels} = getState()
     if (labels.isFetching || labels.isProcessing) {
       console.warn('Unable to fetch labels. An action is pending...')
       return Promise.resolve(null)
     } else {
       console.debug('Fetching labels')
       dispatch(fetchLabelsRequest())
-      return LabelApi.getInstance(user).all()
+      return LabelApi.all()
       .then((labels) => dispatch(fetchLabelsSuccess(labels)))
       .catch((err) => dispatch(fetchLabelsFailure(err)))
     }
@@ -96,10 +96,9 @@ export const fetchLabels = () => {
 
 export const createLabel = (label) => {
   return (dispatch, getState) => {
-    const {user} = getState()
     console.debug('Creating label:', label)
     dispatch(createLabelRequest())
-    return LabelApi.getInstance(user).create(label)
+    return LabelApi.create(label)
     .then((_label) => dispatch(createLabelSuccess(_label)))
     .catch((err) => dispatch(createLabelFailure(err)))
   }
@@ -107,14 +106,14 @@ export const createLabel = (label) => {
 
 export const updateLabel = (label, payload) => {
   return (dispatch, getState) => {
-    const {user, labels: l} = getState()
+    const {labels: l} = getState()
     if (l.isFetching || l.isProcessing) {
       console.warn('Unable to update label. An action is pending...')
       return Promise.resolve(null)
     }
     console.debug('Updating label:', label)
     dispatch(updateLabelRequest())
-    return LabelApi.getInstance(user).update(label, payload)
+    return LabelApi.update(label, payload)
     .then((_label) => dispatch(updateLabelSuccess(_label)))
     .catch((err) => dispatch(updateLabelFailure(err)))
   }
@@ -122,10 +121,9 @@ export const updateLabel = (label, payload) => {
 
 export const removeLabel = (label) => {
   return (dispatch, getState) => {
-    const {user} = getState()
     console.debug('Removing label:', label.id)
     dispatch(removeLabelRequest())
-    return LabelApi.getInstance(user).remove(label)
+    return LabelApi.remove(label)
     .then(() => dispatch(removeLabelSuccess(label)))
     .catch((err) => dispatch(removeLabelFailure(err)))
   }
@@ -133,13 +131,13 @@ export const removeLabel = (label) => {
 
 export const restoreRemovedLabel = () => {
   return (dispatch, getState) => {
-    const {user, labels} = getState()
+    const {labels} = getState()
     if (!labels.removed) {
       return Promise.reject('No label to restore.')
     }
     console.debug('Restoring label:', labels.removed.id)
     dispatch(restoreLabelRequest())
-    return LabelApi.getInstance(user).restore(labels.removed)
+    return LabelApi.restore(labels.removed)
     .then((_label) => dispatch(restoreLabelSuccess(_label)))
     .catch((err) => dispatch(restoreLabelFailure(err)))
   }

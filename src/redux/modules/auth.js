@@ -18,10 +18,9 @@ export const initAuthenticationSuccess = createAction(INIT_AUTH, (authenticated)
 
 export const initAuthentication = () => {
   return (dispatch, getState) => {
-    const {auth} = getState()
     dispatch(initAuthenticationRequest())
     return new Promise(function (resolve, reject) {
-      auth.keycloak.init({ onLoad: 'login-required' }).success((authenticated) => {
+      window._keycloak.init({ onLoad: 'login-required' }).success((authenticated) => {
         resolve(dispatch(initAuthenticationSuccess(authenticated)))
       }).error((e) => {
         reject(dispatch(initAuthenticationFailure(e)))
@@ -53,7 +52,9 @@ export default handleActions({
     return Object.assign({}, state, update)
   }
 }, {
-  keycloak: new window.Keycloak('/keycloak.json'),
   isProcessing: false,
   authenticated: false
 })
+
+// Put keycloak to window scope
+window._keycloak = new window.Keycloak('/keycloak.json')

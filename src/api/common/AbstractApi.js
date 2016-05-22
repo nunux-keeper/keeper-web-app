@@ -1,9 +1,6 @@
 import fetch from 'isomorphic-fetch'
 
 export default class AbstractApi {
-  constructor (user) {
-    this.user = user
-  }
 
   getUrl (url, params) {
     return url + '?' +
@@ -17,11 +14,13 @@ export default class AbstractApi {
     const {method, body, headers} = params
     headers.Accept = 'application/json'
     headers['Content-Type'] = 'application/json'
-    if (this.user && this.user.token) {
-      headers['X-Api-Token'] = this.user.token
-    }
 
-    return fetch(url, {method, body, headers})
-    .then(response => response.json())
+    return new Promise((resolve, reject) => {
+      window._keycloak.updateToken(30).success(resolve).error(reject)
+    }).then(() => {
+      headers['Authorization'] = `Bearer ${window._keycloak.token}`
+      return fetch(url, {method, body, headers})
+      .then(response => response.json())
+    })
   }
 }

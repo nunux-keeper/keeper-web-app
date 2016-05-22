@@ -72,10 +72,9 @@ export const restoreDocumentSuccess = createAction(RESTORE_DOCUMENT, (doc) => {
 
 export const fetchDocument = (id) => {
   return (dispatch, getState) => {
-    const {user} = getState()
     console.debug('Fetching document:', id)
     dispatch(fetchDocumentRequest())
-    return DocumentApi.getInstance(user).get(id)
+    return DocumentApi.get(id)
     .then((doc) => dispatch(fetchDocumentSuccess(doc)))
     .catch((err) => dispatch(fetchDocumentFailure(err)))
   }
@@ -87,14 +86,14 @@ export const fetchDocuments = (params = {from: 0, size: 20}) => {
     size: 20
   }, params)
   return (dispatch, getState) => {
-    const {user, documents} = getState()
+    const {documents} = getState()
     if (documents.isFetching || documents.isProcessing) {
       console.warn('Unable to fetch documents. An action is pending...')
       return Promise.resolve(null)
     } else if (documents.hasMore || params.from === 0) {
       console.debug('Fetching documents:', params)
       dispatch(fetchDocumentsRequest(params))
-      return DocumentApi.getInstance(user).search(params)
+      return DocumentApi.search(params)
       .then((res) => dispatch(fetchDocumentsSuccess(res)))
       .catch((err) => dispatch(fetchDocumentsFailure(err)))
     } else {
@@ -106,10 +105,9 @@ export const fetchDocuments = (params = {from: 0, size: 20}) => {
 
 export const createDocument = (doc) => {
   return (dispatch, getState) => {
-    const {user} = getState()
     console.debug('Creating document:', doc)
     dispatch(createDocumentRequest())
-    return DocumentApi.getInstance(user).create(doc)
+    return DocumentApi.create(doc)
     .then((_doc) => dispatch(createDocumentSuccess(_doc)))
     .catch((err) => dispatch(createDocumentFailure(err)))
   }
@@ -117,11 +115,10 @@ export const createDocument = (doc) => {
 
 export const updateDocument = (doc, payload) => {
   return (dispatch, getState) => {
-    const {user} = getState()
     if (doc.id) {
       console.debug('Updating document:', doc.id, payload)
       dispatch(updateDocumentRequest())
-      return DocumentApi.getInstance(user).update(doc, payload)
+      return DocumentApi.update(doc, payload)
       .then((_doc) => dispatch(updateDocumentSuccess(_doc)))
       .catch((err) => dispatch(updateDocumentFailure(err)))
     } else {
@@ -133,10 +130,9 @@ export const updateDocument = (doc, payload) => {
 
 export const removeDocument = (doc) => {
   return (dispatch, getState) => {
-    const {user} = getState()
     console.debug('Removing document:', doc.id)
     dispatch(removeDocumentRequest())
-    return DocumentApi.getInstance(user).remove(doc)
+    return DocumentApi.remove(doc)
     .then(() => dispatch(removeDocumentSuccess(doc)))
     .catch((err) => dispatch(removeDocumentFailure(err)))
   }
@@ -144,13 +140,13 @@ export const removeDocument = (doc) => {
 
 export const restoreRemovedDocument = () => {
   return (dispatch, getState) => {
-    const {user, documents} = getState()
+    const {documents} = getState()
     if (!documents.removed) {
       return Promise.reject('No document to restore.')
     }
     console.debug('Restoring document:', documents.removed.id)
     dispatch(restoreDocumentRequest())
-    return DocumentApi.getInstance(user).restore(documents.removed)
+    return DocumentApi.restore(documents.removed)
     .then((_doc) => dispatch(restoreDocumentSuccess(_doc)))
     .catch((err) => dispatch(restoreDocumentFailure(err)))
   }
