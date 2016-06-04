@@ -1,0 +1,125 @@
+.SILENT :
+.PHONY : help volume mount update build clean cleanup start stop rm shell logs
+
+# Docker configuartion regarding the system architecture
+DOCKER=docker
+DOCKERFILE=Dockerfile
+BASEIMAGE?=debian:jessie
+BASEIMAGE_?=$(BASEIMAGE)
+VOLUME_IMAGE?=busybox
+UNAME_M := $(shell uname -m)
+ifeq ($(UNAME_M),armv7l)
+	DOCKERFILE=Dockerfile.arm
+	APPNAME=$(APPNAME)-arm
+	BASEIMAGE=armbuild/debian:jessie
+	VOLUME_IMAGE=armbuild/busybox
+endif
+
+# Get IP of the running container
+IP:=`sudo docker inspect --format '{{ .NetworkSettings.IPAddress }}' $(APPNAME)`
+
+# Default username
+USERNAME?=ncarlier
+
+# Default image name
+IMAGE?=$(USERNAME)/$(APPNAME)
+
+# Custom flags
+RUN_CUSTOM_FLAGS?=-P
+# Default Docker run flags
+RUN_FLAGS?=-d -h $(APPNAME) --name $(APPNAME) $(RUN_CUSTOM_FLAGS)
+# Default Docker run command
+RUN_CMD?=
+
+# Custom flags
+SHELL_CUSTOM_FLAGS?=$(RUN_CUSTOM_FLAGS)
+# Default Docker run flags for shell access
+SHELL_FLAGS?=--rm -it -h $(APPNAME) --entrypoint="/bin/bash" $(SHELL_CUSTOM_FLAGS)
+# Default Docker run command for shell access
+SHELL_CMD?=-c /bin/bash
+
+# Volume base directory on the host
+VOLUME_HOST_PATH?=$(PWD)
+# Volume base directory into the container
+VOLUME_CONTAINER_PATH?=/usr/src/app
+# Volume flags
+VOLUME_FLAGS:=
+
+# Default action
+all: help
+
+## This help screen
+help:
+	printf "Available targets:\n\n"
+	awk '/^[a-zA-Z\-\_0-9]+:/ { \
+		helpMessage = match(lastLine, /^## (.*)/); \
+		if (helpMessage) { \
+			helpCommand = substr($$1, 0, index($$1, ":")); \
+			helpMessage = substr(lastLine, RSTART + 3, RLENGTH); \
+			printf "%-15s %s\n", helpCommand, helpMessage; \
+		} \
+	} \
+	{ lastLine = $$0 }' $(MAKEFILE_LIST)
+
+Dockerfile.arm:
+ifeq ($(UNAME_M),armv7l)
+	echo "Building $(APPNAME) ARM dockerfile..."
+	sed -e 's|$(BASEIMAGE_)|$(BASEIMAGE)|' Dockerfile > Dockerfile.arm
+endif
+
+## Build the volume image
+volume:
+	echo "Building volumes: $(VOLUME_HOST_BASE)/$(APPNAME) -> $(VOLUME_CONTAINER_BASE)/$(APPNAME) ..."
+	$(DOCKER) run -v $(VOLUME_HOST_PATH):$(VOLUME_CONTAINER_PATH) --name $(APPNAME)_volumes $(VOLUME_IMAGE) true
+
+## Mount volume
+mount:
+	$(eval VOLUME_FLAGS += --volumes-from $(APPNAME)_volumes)
+	echo "Using volumes from $(APPNAME)_volumes"
+
+## Update base image
+update:
+	echo "Updating base image..."
+	-$(DOCKER) pull $(BASEIMAGE)
+
+## Build the image
+build: update Dockerfile.arm
+	echo "Building $(IMAGE) docker image..."
+	$(DOCKER) build --rm -t $(IMAGE) -f $(DOCKERFILE) .
+	$(MAKE) cleanup
+
+## Remove the image (also stop and delete the container)
+clean: stop rm
+	echo "Removing $(IMAGE) docker image..."
+	-$(DOCKER) rmi $(IMAGE)
+
+## Remove dangling images
+cleanup:
+	echo "Removing dangling docker images..."
+	-$(DOCKER) images -q --filter 'dangling=true' | xargs $(DOCKER) rmi
+
+## Start the container
+start:
+	echo "Starting $(IMAGE) docker image..."
+	$(DOCKER) run $(RUN_FLAGS) $(VOLUME_FLAGS) $(IMAGE) $(RUN_CMD)
+
+## Stop the container
+stop:
+	echo "Stopping container $(APPNAME) ..."
+	-$(DOCKER) stop $(APPNAME)
+
+## Delete the container
+rm:
+	echo "Deleting container $(APPNAME) ..."
+	-$(DOCKER) rm $(APPNAME)
+
+## Run the container with shell access
+shell:
+	echo "Running $(IMAGE) docker image with shell access..."
+	$(DOCKER) run $(SHELL_FLAGS) $(VOLUME_FLAGS) $(IMAGE) $(SHELL_CMD)
+
+## Show container logs
+logs:
+	echo "Logs of the $(APPNAME) container..."
+	$(DOCKER) logs -f $(APPNAME)
+
