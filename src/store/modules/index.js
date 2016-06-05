@@ -1,5 +1,6 @@
 import auth from './auth'
 import device from './device'
+import document from './document'
 import documents from './documents'
 import labels from './labels'
 import notification from './notification'
@@ -10,6 +11,7 @@ import urlModal from './urlModal'
 export default {
   auth,
   device,
+  document,
   documents,
   labels,
   notification,

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { actions as documentsActions } from 'store/modules/documents'
+import { actions as documentActions } from 'store/modules/document'
 
 import './BookmarkletView.scss'
 
@@ -214,7 +214,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, documentsActions), dispatch)
+  bindActionCreators(Object.assign({}, documentActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(BookmarkletView)

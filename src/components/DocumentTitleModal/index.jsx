@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { actions as documentsActions } from 'store/modules/documents'
+import { actions as documentActions } from 'store/modules/document'
 import { actions as titleModalActions } from 'store/modules/titleModal'
 
 export class DocumentTitleModal extends React.Component {
@@ -84,7 +84,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, documentsActions, titleModalActions), dispatch)
+  bindActionCreators(Object.assign({}, documentActions, titleModalActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentTitleModal)

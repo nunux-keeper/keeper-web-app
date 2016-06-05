@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { actions as documentsActions } from 'store/modules/documents'
+import { actions as documentActions } from 'store/modules/document'
 
 import styles from './styles.scss'
 
@@ -51,7 +51,7 @@ export class DocumentContent extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, documentsActions), dispatch)
+  bindActionCreators(Object.assign({}, documentActions), dispatch)
 )
 
 export default connect(null, mapDispatchToProps)(DocumentContent)

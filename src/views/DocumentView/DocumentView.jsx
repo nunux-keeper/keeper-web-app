@@ -15,7 +15,7 @@ import styles from './DocumentView.scss'
 
 export class DocumentView extends React.Component {
   static propTypes = {
-    documents: PropTypes.object.isRequired,
+    document: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     push: PropTypes.func
   };
@@ -23,9 +23,9 @@ export class DocumentView extends React.Component {
   componentWillReceiveProps (nextProps) {
     // if no document found then redirect...
     if (
-      !nextProps.documents.isFetching &&
-      !nextProps.documents.isProcessing &&
-      !nextProps.documents.current
+      !nextProps.document.isFetching &&
+      !nextProps.document.isProcessing &&
+      !nextProps.document.current
     ) {
       console.debug('No more document. Redirecting...')
       const {push, location} = this.props
@@ -48,8 +48,9 @@ export class DocumentView extends React.Component {
 
   componentDidUpdate (prevProps) {
     if (!this.isModalDisplayed) {
-      const {isProcessing} = this.props.documents
-      const {isProcessing: wasProcessing} = prevProps.documents
+      // Display progress bar if main view
+      const {isProcessing} = this.props.document
+      const {isProcessing: wasProcessing} = prevProps.document
       if (!wasProcessing && isProcessing) {
         NProgress.start()
       } else if (wasProcessing && !isProcessing) {
@@ -64,12 +65,12 @@ export class DocumentView extends React.Component {
   }
 
   get isCreateMode () {
-    const { current: doc } = this.props.documents
+    const { current: doc } = this.props.document
     return doc !== null && doc.id == null
   }
 
   get originLink () {
-    const { current: doc } = this.props.documents
+    const { current: doc } = this.props.document
     if (doc.origin) {
       return (
         <span className={styles.origin}>
@@ -80,7 +81,7 @@ export class DocumentView extends React.Component {
   }
 
   get contextMenu () {
-    const { current: doc } = this.props.documents
+    const { current: doc } = this.props.document
     const menuItems = this.isCreateMode ? 'editTitle' : 'editTitle,share,delete'
     return (
       <DocumentContextMenu doc={doc} items={menuItems} direction='left' />
@@ -98,7 +99,7 @@ export class DocumentView extends React.Component {
   }
 
   get header () {
-    const { isFetching, current: doc } = this.props.documents
+    const { isFetching, current: doc } = this.props.document
     return (
       <AppBar
         modal={this.isModalDisplayed}
@@ -110,8 +111,8 @@ export class DocumentView extends React.Component {
   }
 
   get spinner () {
-    const { isFetching } = this.props.documents
-    if (isFetching) {
+    const { isFetching, isProcessing } = this.props.document
+    if (isFetching || isProcessing) {
       return (
         <div className='ui active inverted dimmer'>
           <div className='ui large text loader'>Loading</div>
@@ -121,14 +122,14 @@ export class DocumentView extends React.Component {
   }
 
   get document () {
-    const { isFetching, current: doc } = this.props.documents
+    const { isFetching, isProcessing, current: doc } = this.props.document
     if (doc) {
       return (
         <div>
           {this.content}
         </div>
       )
-    } else if (!isFetching) {
+    } else if (!isFetching && !isProcessing) {
       return (
         <p className={styles.noDocument}>No document :(</p>
       )
@@ -136,7 +137,7 @@ export class DocumentView extends React.Component {
   }
 
   get modificationDate () {
-    const { current: doc } = this.props.documents
+    const { current: doc } = this.props.document
     if (doc.date) {
       const date = String(doc.date)
       return (
@@ -148,12 +149,12 @@ export class DocumentView extends React.Component {
   }
 
   get content () {
-    const { current: doc } = this.props.documents
+    const { current: doc } = this.props.document
     return (
       <div>
         {this.originLink}
-        <DocumentLabels doc={doc} editable/>
-        <DocumentContent doc={doc} editable/>
+        <DocumentLabels doc={doc} editable={false}/>
+        <DocumentContent doc={doc} editable={false}/>
         {this.modificationDate}
       </div>
     )
@@ -173,7 +174,7 @@ export class DocumentView extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  documents: state.documents,
+  document: state.document,
   location: state.router.locationBeforeTransitions
 })
 

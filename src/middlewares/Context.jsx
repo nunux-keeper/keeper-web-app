@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { actions as labelsActions } from 'store/modules/labels'
 import { actions as profileActions } from 'store/modules/profile'
 import { actions as documentsActions } from 'store/modules/documents'
+import { actions as documentActions } from 'store/modules/document'
 
 export function fetchProfile (Component) {
   class ProfileAwareComponent extends React.Component {
@@ -35,10 +36,14 @@ export function createDocument (Component) {
 
     componentDidMount () {
       const { newDocument, createDocument, location } = this.props
-      if (location.query && location.query.url) {
-        createDocument(location.query)
+      const template = location.query || {}
+      if (typeof template.labels === 'string') {
+        template.labels = [template.labels]
+      }
+      if (template.url) {
+        createDocument(template)
       } else {
-        newDocument(location.query)
+        newDocument(template)
       }
     }
 
@@ -47,7 +52,7 @@ export function createDocument (Component) {
     }
   }
 
-  return connect(null, documentsActions)(NewDocumentAwareComponent)
+  return connect(null, documentActions)(NewDocumentAwareComponent)
 }
 
 export function fetchDocument (Component) {
@@ -68,7 +73,7 @@ export function fetchDocument (Component) {
     }
   }
 
-  return connect(null, documentsActions)(DocumentAwareComponent)
+  return connect(null, documentActions)(DocumentAwareComponent)
 }
 
 export function fetchDocuments (Component) {

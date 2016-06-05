@@ -93,6 +93,11 @@ export class DocumentsView extends React.Component {
       pathname: '/document/create',
       state: { modal: true, returnTo: location }
     }
+    if (this.label) {
+      createLink.query = {
+        labels: [this.label.id]
+      }
+    }
 
     return (
       <AppBar title={this.title} styles={bg} contextMenu={this.contextMenu}>

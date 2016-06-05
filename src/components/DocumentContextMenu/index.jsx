@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
 
-import { actions as documentsActions } from 'store/modules/documents'
+import { actions as documentActions } from 'store/modules/document'
 import { actions as notificationActions } from 'store/modules/notification'
 import { actions as titleModalActions } from 'store/modules/titleModal'
 
@@ -145,7 +145,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, notificationActions, documentsActions, titleModalActions), dispatch)
+  bindActionCreators(Object.assign({}, notificationActions, documentActions, titleModalActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentContextMenu)
