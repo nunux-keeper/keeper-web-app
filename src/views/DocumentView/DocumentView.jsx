@@ -7,6 +7,7 @@ import { routerActions } from 'react-router-redux'
 import AppBar from 'components/AppBar'
 import DocumentContextMenu from 'components/DocumentContextMenu'
 import DocumentLabels from 'components/DocumentLabels'
+import DocumentContent from 'components/DocumentContent'
 
 import * as NProgress from 'nprogress'
 
@@ -152,7 +153,7 @@ export class DocumentView extends React.Component {
       <div>
         {this.originLink}
         <DocumentLabels doc={doc} editable/>
-        <div className={styles.content} dangerouslySetInnerHTML={{__html: doc.content}} />
+        <DocumentContent doc={doc} editable/>
         {this.modificationDate}
       </div>
     )
