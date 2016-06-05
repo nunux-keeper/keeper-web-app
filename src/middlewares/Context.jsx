@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { actions as labelsActions } from 'redux/modules/labels'
-import { actions as profileActions } from 'redux/modules/profile'
-import { actions as documentsActions } from 'redux/modules/documents'
+import { actions as labelsActions } from 'store/modules/labels'
+import { actions as profileActions } from 'store/modules/profile'
+import { actions as documentsActions } from 'store/modules/documents'
 
 export function fetchProfile (Component) {
   class ProfileAwareComponent extends React.Component {

@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 
-import { actions as documentsActions } from 'redux/modules/documents'
-import { actions as urlModalActions } from 'redux/modules/urlModal'
+import { actions as documentsActions } from 'store/modules/documents'
+import { actions as urlModalActions } from 'store/modules/urlModal'
 
 import SearchBar from 'components/SearchBar'
 import InfiniteGrid from 'components/InfiniteGrid'

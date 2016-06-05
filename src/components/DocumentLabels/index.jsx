@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
 
-import { actions as documentsActions } from 'redux/modules/documents'
+import { actions as documentsActions } from 'store/modules/documents'
 
 export class DocumentLabels extends React.Component {
   static propTypes = {

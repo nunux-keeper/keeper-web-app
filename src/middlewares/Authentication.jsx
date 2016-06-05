@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { actions as authActions } from 'redux/modules/auth'
+import { actions as authActions } from 'store/modules/auth'
 
 export function requireAuthentication (Component) {
   class AuthenticatedComponent extends React.Component {

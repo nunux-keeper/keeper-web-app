@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { actions as documentsActions } from 'redux/modules/documents'
+import { actions as documentsActions } from 'store/modules/documents'
 
 import './BookmarkletView.scss'
 

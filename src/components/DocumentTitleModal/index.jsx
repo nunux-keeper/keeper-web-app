@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { actions as documentsActions } from 'redux/modules/documents'
-import { actions as titleModalActions } from 'redux/modules/titleModal'
+import { actions as documentsActions } from 'store/modules/documents'
+import { actions as titleModalActions } from 'store/modules/titleModal'
 
 export class DocumentTitleModal extends React.Component {
   static propTypes = {

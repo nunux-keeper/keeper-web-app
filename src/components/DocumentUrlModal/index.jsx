@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { routerActions } from 'react-router-redux'
-import { actions as urlModalActions } from 'redux/modules/urlModal'
+import { actions as urlModalActions } from 'store/modules/urlModal'
 
 export class DocumentUrlModal extends React.Component {
   static propTypes = {

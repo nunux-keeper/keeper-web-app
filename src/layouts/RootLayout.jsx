@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { actions as deviceActions } from 'redux/modules/device'
+import { actions as deviceActions } from 'store/modules/device'
 
 export class RootLayout extends React.Component {
   static propTypes = {

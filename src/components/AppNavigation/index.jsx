@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
-import { actions as labelsActions } from 'redux/modules/labels'
+import { actions as labelsActions } from 'store/modules/labels'
 
 import './styles.scss'
 
