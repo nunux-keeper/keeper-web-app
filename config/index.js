@@ -47,7 +47,8 @@ const config = {
     'react-router',
     'redux',
     'redux-actions',
-    'react-router-redux'
+    'react-router-redux',
+    'react-tinymce'
   ],
 
   // ----------------------------------

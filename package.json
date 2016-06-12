@@ -87,7 +87,6 @@
   },
   "homepage": "https://gitlab.com/nunux-keeper/keeper-web-app#README",
   "dependencies": {
-    "alloyeditor": "^1.2.0",
     "better-npm-run": "0.0.8",
     "chance": "^1.0.1",
     "debug": "^2.2.0",
@@ -109,6 +108,7 @@
     "react-router": "^2.0.0",
     "react-router-redux": "^4.0.0",
     "react-tap-event-plugin": "^0.2.1",
+    "react-tinymce": "^0.5.1",
     "redux": "^3.0.0",
     "redux-actions": "^0.9.0",
     "redux-thunk": "^2.0.1",

@@ -14,6 +14,7 @@ export const CREATE_DOCUMENT = 'CREATE_DOCUMENT'
 export const UPDATE_DOCUMENT = 'UPDATE_DOCUMENT'
 export const REMOVE_DOCUMENT = 'REMOVE_DOCUMENT'
 export const RESTORE_DOCUMENT = 'RESTORE_DOCUMENT'
+export const EDIT_DOCUMENT = 'EDIT_DOCUMENT'
 
 // ------------------------------------
 // Actions
@@ -58,6 +59,8 @@ export const restoreDocumentSuccess = createAction(RESTORE_DOCUMENT, (doc) => {
   return {response: doc}
 })
 
+export const toggleDocumentEditMode = createAction(EDIT_DOCUMENT)
+
 export const fetchDocument = (id) => {
   return (dispatch, getState) => {
     console.debug('Fetching document:', id)
@@ -80,15 +83,16 @@ export const createDocument = (doc) => {
 
 export const updateDocument = (doc, payload) => {
   return (dispatch, getState) => {
-    if (doc.id) {
+    const {isEditing} = getState().document
+    if (isEditing) {
+      console.debug('Updating document inplace:', payload)
+      return dispatch(updateDocumentSuccess(Object.assign({}, doc, payload)))
+    } else {
       console.debug('Updating document:', doc.id, payload)
       dispatch(updateDocumentRequest())
       return DocumentApi.update(doc, payload)
       .then((_doc) => dispatch(updateDocumentSuccess(_doc)))
       .catch((err) => dispatch(updateDocumentFailure(err)))
-    } else {
-      console.debug('Updating new document:', payload)
-      return dispatch(updateDocumentSuccess(Object.assign({}, doc, payload)))
     }
   }
 }
@@ -117,13 +121,50 @@ export const restoreRemovedDocument = () => {
   }
 }
 
+export const submitDocument = () => {
+  return (dispatch, getState) => {
+    const {current: doc} = getState().document
+    if (doc.id) {
+      console.debug('Submiting updated document:', doc.id)
+      dispatch(updateDocumentRequest())
+      // TODO update only modified fields
+      return DocumentApi.update(doc, doc)
+      .then((_doc) => dispatch(updateDocumentSuccess(_doc)))
+      .catch((err) => dispatch(updateDocumentFailure(err)))
+    } else {
+      console.debug('Submiting new document:', doc)
+      dispatch(createDocumentRequest())
+      return DocumentApi.create(doc)
+      .then((_doc) => dispatch(createDocumentSuccess(_doc)))
+      .catch((err) => dispatch(createDocumentFailure(err)))
+    }
+  }
+}
+
+export const resetDocument = () => {
+  return (dispatch, getState) => {
+    const {current: doc} = getState().document
+    if (doc.id) {
+      console.debug('Reseting document:', doc.id)
+      // TODO avoid fetcing back the doc
+      dispatch(fetchDocumentRequest())
+      return DocumentApi.get(doc.id)
+      .then((doc) => dispatch(fetchDocumentSuccess(doc)))
+      .catch((err) => dispatch(fetchDocumentFailure(err)))
+    }
+  }
+}
+
 export const actions = {
   newDocument,
   fetchDocument,
   createDocument,
   updateDocument,
   removeDocument,
-  restoreRemovedDocument
+  restoreRemovedDocument,
+  submitDocument,
+  resetDocument,
+  toggleDocumentEditMode
 }
 
 // ------------------------------------
@@ -176,14 +217,16 @@ export default handleActions({
   },
   [UPDATE_DOCUMENT]: (state, action) => {
     const update = {
-      isProcessing: action.payload == null,
-      isEditing: false
+      isProcessing: action.payload == null
     }
     const {error, response} = action.payload || {}
     if (error) {
       update.error = error
     } else if (response) {
       update.current = response
+    } else {
+      // Request
+      update.isEditing = false
     }
     return Object.assign({}, state, update)
   },
@@ -208,6 +251,12 @@ export default handleActions({
       update.error = error
     } else if (response) {
       update.current = response
+    }
+    return Object.assign({}, state, update)
+  },
+  [EDIT_DOCUMENT]: (state, action) => {
+    const update = {
+      isEditing: !state.isEditing
     }
     return Object.assign({}, state, update)
   }

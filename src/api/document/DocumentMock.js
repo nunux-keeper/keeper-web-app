@@ -89,6 +89,7 @@ export class DocumentMock {
   }
 
   create (doc) {
+    doc.id = chance.hash({length: 15})
     return new Promise((resolve) => {
       window.setTimeout(() => {
         resolve(window._db.add(doc))

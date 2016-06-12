@@ -44,7 +44,7 @@ export class DocumentLabels extends React.Component {
 
   renderViewMode () {
     const { doc } = this.props
-    const labels = doc.labels.map((id) => {
+    const $labels = doc.labels.map((id) => {
       const l = this.resolveLabel(id)
       if (!l) {
         return null
@@ -61,7 +61,7 @@ export class DocumentLabels extends React.Component {
     })
 
     return (
-      <div className='ui mini labels' ref='labels'>{labels}</div>
+      <div className='ui mini labels' ref='labels'>{$labels}</div>
     )
   }
 

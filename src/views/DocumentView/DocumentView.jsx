@@ -9,6 +9,8 @@ import DocumentContextMenu from 'components/DocumentContextMenu'
 import DocumentLabels from 'components/DocumentLabels'
 import DocumentContent from 'components/DocumentContent'
 
+import { actions as documentActions } from 'store/modules/document'
+
 import * as NProgress from 'nprogress'
 
 import styles from './DocumentView.scss'
@@ -17,8 +19,15 @@ export class DocumentView extends React.Component {
   static propTypes = {
     document: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    push: PropTypes.func
+    push: PropTypes.func,
+    submitDocument: PropTypes.func.isRequired,
+    resetDocument: PropTypes.func.isRequired
   };
+
+  constructor (props) {
+    super(props)
+    this.redirectBack = this.redirectBack.bind(this)
+  }
 
   componentWillReceiveProps (nextProps) {
     // if no document found then redirect...
@@ -28,21 +37,7 @@ export class DocumentView extends React.Component {
       !nextProps.document.current
     ) {
       console.debug('No more document. Redirecting...')
-      const {push, location} = this.props
-      if (location.state && location.state.returnTo) {
-        const {pathname, search} = location.state.returnTo
-        push({
-          pathname: pathname,
-          search: search,
-          state: {
-            backFromModal: true
-          }
-        })
-      } else {
-        const url = location.pathname
-        const to = url.substr(0, url.lastIndexOf('/'))
-        push(to)
-      }
+      this.redirectBack()
     }
   }
 
@@ -56,6 +51,24 @@ export class DocumentView extends React.Component {
       } else if (wasProcessing && !isProcessing) {
         NProgress.done()
       }
+    }
+  }
+
+  redirectBack () {
+    const {push, location} = this.props
+    if (location.state && location.state.returnTo) {
+      const {pathname, search} = location.state.returnTo
+      push({
+        pathname: pathname,
+        search: search,
+        state: {
+          backFromModal: true
+        }
+      })
+    } else {
+      const url = location.pathname
+      const to = url.substr(0, url.lastIndexOf('/'))
+      push(to)
     }
   }
 
@@ -82,17 +95,22 @@ export class DocumentView extends React.Component {
 
   get contextMenu () {
     const { current: doc } = this.props.document
-    const menuItems = this.isCreateMode ? 'editTitle' : 'editTitle,share,delete'
+    const menuItems = this.isCreateMode ? 'editTitle' : 'editTitle,edit,share,delete'
     return (
       <DocumentContextMenu doc={doc} items={menuItems} direction='left' />
     )
   }
 
-  get saveButton () {
-    if (this.isCreateMode) {
+  get editButtons () {
+    const { isEditing } = this.props.document
+    if (isEditing) {
+      const { submitDocument, resetDocument } = this.props
+      const resetFn = this.isCreateMode ? this.redirectBack : resetDocument
       return (
         <div className='item'>
-          <div className='ui primary button'>Save</div>
+          <div className='ui button' onClick={resetFn}>Cancel</div>
+          &nbsp;
+          <div className='ui primary button' onClick={submitDocument}>Save</div>
         </div>
       )
     }
@@ -105,7 +123,7 @@ export class DocumentView extends React.Component {
         modal={this.isModalDisplayed}
         title={isFetching || !doc ? 'Document' : doc.title}
         contextMenu={isFetching || !doc ? null : this.contextMenu}>
-        {this.saveButton}
+        {this.editButtons}
       </AppBar>
     )
   }
@@ -149,12 +167,12 @@ export class DocumentView extends React.Component {
   }
 
   get content () {
-    const { current: doc } = this.props.document
+    const { current: doc, isEditing } = this.props.document
     return (
       <div>
         {this.originLink}
-        <DocumentLabels doc={doc} editable={false}/>
-        <DocumentContent doc={doc} editable={false}/>
+        <DocumentLabels doc={doc} editable={isEditing}/>
+        <DocumentContent doc={doc} editable={isEditing}/>
         {this.modificationDate}
       </div>
     )
@@ -179,7 +197,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, routerActions), dispatch)
+  bindActionCreators(Object.assign({}, routerActions, documentActions), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentView)

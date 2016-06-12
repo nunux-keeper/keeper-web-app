@@ -21,7 +21,9 @@ const webpackConfig = {
   externals: {
     'jquery': 'jQuery'
   },
-  module: {}
+  module: {
+    noParse: /node_modules\/quill\/dist/
+  }
 }
 // ------------------------------------
 // Entry Points

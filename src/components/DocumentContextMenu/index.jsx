@@ -14,6 +14,7 @@ export class DocumentContextMenu extends React.Component {
     items: PropTypes.string,
     direction: PropTypes.string,
     showNotification: PropTypes.func.isRequired,
+    toggleDocumentEditMode: PropTypes.func.isRequired,
     removeDocument: PropTypes.func.isRequired,
     restoreRemovedDocument: PropTypes.func.isRequired,
     showTitleModal: PropTypes.func.isRequired
@@ -62,8 +63,9 @@ export class DocumentContextMenu extends React.Component {
 
   get editMenuItem () {
     if (this.state.menuItems.has('edit')) {
+      const { toggleDocumentEditMode } = this.props
       return (
-        <div className='item'>
+        <div className='item' onClick={toggleDocumentEditMode}>
           <i className='edit icon'></i>
           Edit mode
         </div>

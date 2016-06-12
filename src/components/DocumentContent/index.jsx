@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import TinyMCE from 'react-tinymce'
 
 import { actions as documentActions } from 'store/modules/document'
 
@@ -19,26 +20,30 @@ export class DocumentContent extends React.Component {
 
   constructor (props) {
     super(props)
-    this.onChange = this.onChange.bind(this)
+    this.handleEditorChange = this.handleEditorChange.bind(this)
   }
 
-  componentDidMount () {
-    const $el = this.refs.content
-    const { editable } = this.props
-    if (editable) {
-      window.AlloyEditor.editable($el)
-    }
-  }
-
-  onChange (value, text, $selectedItem) {
+  handleEditorChange (e) {
     const { updateDocument, doc } = this.props
-    const payload = {
-      labels: value.split(',')
-    }
-    updateDocument(doc, payload)
+    updateDocument(doc, {content: e.target.getContent()})
   }
 
-  render () {
+  renderEditMode () {
+    const { doc } = this.props
+    const config = {
+      plugins: 'link image code',
+      toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+    }
+    return (
+      <TinyMCE
+        content={doc.content}
+        config={config}
+        onChange={this.handleEditorChange}
+      />
+    )
+  }
+
+  renderViewMode () {
     const { doc } = this.props
     return (
       <div
@@ -47,6 +52,11 @@ export class DocumentContent extends React.Component {
         dangerouslySetInnerHTML={{__html: doc.content}}
       />
     )
+  }
+
+  render () {
+    const { editable } = this.props
+    return editable ? this.renderEditMode() : this.renderViewMode()
   }
 }
 
