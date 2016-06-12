@@ -20,9 +20,9 @@ const getRandomDocument = (doc = {}) => {
   }, doc)
 }
 
-class InMemoryDb {
+class DocumentInMemoryDb {
   constructor (nb = 25) {
-    console.log('Init. in memory database...', nb)
+    console.log('Init. document in memory database...', nb)
     this.db = []
     for (let i = 0; i < nb; i++) {
       this.db.push(getRandomDocument())
@@ -70,29 +70,33 @@ class InMemoryDb {
   }
 }
 
-if (!window._db) {
-  window._db = new InMemoryDb()
+if (!window._db_documents) {
+  window._db_documents = new DocumentInMemoryDb()
 }
 
 export class DocumentMock {
+  constructor (db) {
+    this.db = db
+  }
+
   search (params) {
     const {from, size} = params
     return new Promise((resolve) => {
       window.setTimeout(() => {
-        resolve(window._db.search(from, size))
+        resolve(this.db.search(from, size))
       }, 2000)
     })
   }
 
   get (id) {
-    return Promise.resolve(window._db.get(id))
+    return Promise.resolve(this.db.get(id))
   }
 
   create (doc) {
     doc.id = chance.hash({length: 15})
     return new Promise((resolve) => {
       window.setTimeout(() => {
-        resolve(window._db.add(doc))
+        resolve(this.db.add(doc))
       }, 2000)
     })
   }
@@ -100,19 +104,19 @@ export class DocumentMock {
   update (doc, update) {
     return new Promise((resolve) => {
       window.setTimeout(() => {
-        resolve(window._db.update(doc, update))
+        resolve(this.db.update(doc, update))
       }, 1000)
     })
   }
 
   remove (doc) {
-    return Promise.resolve(window._db.remove(doc))
+    return Promise.resolve(this.db.remove(doc))
   }
 
   restore (doc) {
-    return Promise.resolve(window._db.restore(doc))
+    return Promise.resolve(this.db.restore(doc))
   }
 }
 
-const instance = new DocumentMock()
+const instance = new DocumentMock(window._db_documents)
 export default instance

@@ -2,80 +2,110 @@ import Chance from 'chance'
 
 const chance = new Chance()
 
-function getRandomLabel (_label) {
-  const {
-    id = chance.hash({length: 15}),
-    label = chance.sentence({words: 2}),
-    color = chance.color({format: 'hex'})
-  } = _label
-  return {id, label, color}
+const getRandomLabel = (label = {}) => {
+  return Object.assign({
+    id: chance.hash({length: 15}),
+    label: chance.sentence({words: 2}),
+    color: chance.color({format: 'hex'})
+  }, label)
 }
 
-function getRandomLabels (nb = 5) {
-  const result = [
-    {id: 'test', label: 'test', color: '#F2711C'}
-  ]
-
-  for (let i = 0; i < nb; i++) {
-    result.push(getRandomLabel({}))
-  }
-  return result
-}
-
-export class LabelMock {
-  constructor () {
+class LabelInMemoryDb {
+  constructor (nb = 5) {
+    console.log('Init. label in memory database...', nb)
     this.db = []
+    this.db.push({id: 'test', label: 'test', color: '#F2711C'})
+    for (let i = 0; i < nb - 1; i++) {
+      this.db.push(getRandomLabel())
+    }
+  }
+
+  get (id) {
+    return this.db.find((d) => d.id === id)
+  }
+
+  add (label) {
+    const newLabel = getRandomLabel(label)
+    this.db = [newLabel, ...this.db]
+    return newLabel
+  }
+
+  restore (label) {
+    this.db = [label, ...this.db]
+    return label
+  }
+
+  remove (label) {
+    this.db = this.db.filter((l) => l.id !== label.id)
+    return label
   }
 
   all () {
-    if (this.db.length) {
-      return Promise.resolve(this.db)
-    }
+    return this.db
+  }
+
+  update (label, update) {
+    let result = null
+    this.db = this.db.reduce((acc, item) => {
+      if (item.id === label.id) {
+        result = Object.assign({}, item, update)
+        item = result
+      }
+      acc.push(item)
+      return acc
+    }, [])
+    return result
+  }
+}
+
+if (!window._db_labels) {
+  window._db_labels = new LabelInMemoryDb()
+}
+
+export class LabelMock {
+  constructor (db) {
+    this.db = db
+  }
+
+  all () {
     return new Promise((resolve) => {
       window.setTimeout(() => {
-        this.db = getRandomLabels()
-        resolve(this.db)
-      }, 2000)
+        resolve(this.db.all())
+      }, 1000)
     })
   }
 
   get (id) {
-    let _label = null
-    this.db.forEach((item) => {
-      if (item.id === id) {
-        _label = item
-      }
-    })
-    return Promise.resolve(_label)
+    return Promise.resolve(this.db.get(id))
   }
 
   create (label) {
-    const _label = getRandomLabel(label)
-    this.db.push(_label)
-    return Promise.resolve(_label)
+    label.id = chance.hash({length: 15})
+    return new Promise((resolve) => {
+      window.setTimeout(() => {
+        resolve(this.db.add(label))
+      }, 2000)
+    })
   }
 
   update (label, update) {
-    const _label = Object.assign(label, update)
-    this.db.forEach((item, index, array) => {
-      if (item.id === _label.id) {
-        array[index] = _label
-      }
+    return new Promise((resolve) => {
+      window.setTimeout(() => {
+        resolve(this.db.update(label, update))
+      }, 1000)
     })
-    return Promise.resolve(_label)
   }
 
-  remove (label) {
-    this.removed = label
-    this.db = this.db.filter((l) => l.id !== label.id)
-    return Promise.resolve(label)
+  remove (doc) {
+    return Promise.resolve(this.db.remove(doc))
   }
 
-  restore (label) {
-    this.db.push(label)
-    return Promise.resolve(label)
+  restore (doc) {
+    return Promise.resolve(this.db.restore(doc))
   }
 }
 
-const instance = new LabelMock()
+const instance = new LabelMock(window._db_labels)
+
 export default instance
+
