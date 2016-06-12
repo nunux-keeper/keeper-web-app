@@ -23,15 +23,24 @@ export class DocumentLabels extends React.Component {
   }
 
   componentDidMount () {
-    const $el = this.refs.labels
     const { editable } = this.props
-    const params = {
-      transition: 'drop'
-    }
     if (editable) {
-      params.onChange = this.onChange
+      const $el = this.refs.labels
+      window.$($el).dropdown({
+        transition: 'drop',
+        onChange: this.onChange
+      })
     }
-    window.$($el).dropdown(params)
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (!prevProps.editable && this.props.editable) {
+      const $el = this.refs.labels
+      window.$($el).dropdown({
+        transition: 'drop',
+        onChange: this.onChange
+      })
+    }
   }
 
   onChange (value, text, $selectedItem) {

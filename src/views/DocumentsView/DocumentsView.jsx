@@ -123,7 +123,9 @@ export class DocumentsView extends React.Component {
     const { isFetching } = this.props.documents
     if (isFetching) {
       return (
-        <div className='ui active centered inline loader' />
+        <div className='ui active inverted dimmer'>
+          <div className='ui indeterminate text loader'>Loading Documents</div>
+        </div>
       )
     }
   }
@@ -141,7 +143,7 @@ export class DocumentsView extends React.Component {
       )
     } else if (!isFetching) {
       return (
-        <p className={styles.noDocuments}>No documents :(</p>
+        <p className={styles.noDocuments}>No documents founds</p>
       )
     }
   }
