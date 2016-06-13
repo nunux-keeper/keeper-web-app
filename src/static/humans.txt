@@ -1,9 +1,13 @@
 # Check it out: http://humanstxt.org/
 
-# TEAM
+/* TEAM */
 
-    <name> -- <role> -- <twitter>
+  Author: Nicolas Carlier
+  Site: http://ncarlier.github.io/
+  Twitter: @ncarlier
+  From: Tours, Centre, France
 
-# THANKS
-
-    <name>
+/* SITE */
+  Language: English
+  Doctype: HTML5
+  IDE: vim
