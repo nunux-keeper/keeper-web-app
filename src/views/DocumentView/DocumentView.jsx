@@ -95,7 +95,7 @@ export class DocumentView extends React.Component {
 
   get contextMenu () {
     const { current: doc } = this.props.document
-    const menuItems = this.isCreateMode ? 'editTitle' : 'editTitle,edit,share,delete'
+    const menuItems = this.isCreateMode ? 'editTitle' : 'editTitle,edit,raw,share,delete'
     return (
       <DocumentContextMenu doc={doc} items={menuItems} direction='left' />
     )

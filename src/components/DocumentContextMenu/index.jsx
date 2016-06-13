@@ -50,11 +50,26 @@ export class DocumentContextMenu extends React.Component {
     }
   }
 
+  get rawMenuItem () {
+    if (this.state.menuItems.has('raw')) {
+      const doc = this.props.doc
+      return (
+        <a href={`/api/v2/document/${doc.id}?raw`}
+          title='View RAW document'
+          className='item'
+          target='_blank'>
+          <i className='file code outline icon'></i>
+          View RAW
+        </a>
+      )
+    }
+  }
+
   get editTitleMenuItem () {
     if (this.state.menuItems.has('editTitle')) {
       return (
         <div className='item' onClick={this.handleEditTitle}>
-          <i className='edit icon'></i>
+          <i className='font icon'></i>
           Edit title
         </div>
       )
@@ -101,13 +116,21 @@ export class DocumentContextMenu extends React.Component {
     }
   }
 
+  get shareMenuDivider () {
+    if (this.state.menuItems.has('share')) {
+      return (<div className='ui divider'></div>)
+    }
+  }
+
   render () {
     return (
       <div className='menu'>
         {this.detailMenuItem}
+        {this.rawMenuItem}
+        {this.shareMenuItem}
+        {this.shareMenuDivider}
         {this.editTitleMenuItem}
         {this.editMenuItem}
-        {this.shareMenuItem}
         {this.deleteMenuDivider}
         {this.deleteMenuItem}
       </div>
