@@ -14,7 +14,7 @@
     "npm": "^3.0.0"
   },
   "scripts": {
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist/*",
     "compile": "better-npm-run compile",
     "lint": "eslint src tests server",
     "lint:fix": "npm run lint -- --fix",
