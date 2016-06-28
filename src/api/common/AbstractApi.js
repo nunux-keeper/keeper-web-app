@@ -2,16 +2,24 @@ import fetch from 'isomorphic-fetch'
 
 export default class AbstractApi {
 
-  getUrl (url, params) {
-    return url + '?' +
-      Object.keys(params).map(function (key) {
-        return encodeURIComponent(key) + '=' +
-          encodeURIComponent(params[key])
-      }).join('&')
+  buildQueryString (query) {
+    if (query) {
+      return '?' +
+        Object.keys(query).map(function (key) {
+          return encodeURIComponent(key) + '=' +
+            encodeURIComponent(query[key])
+        }).join('&')
+    } else {
+      return ''
+    }
   }
 
-  fetch (url, params = {method: 'get', body, headers: {}}) {
-    const {method, body, headers} = params
+  resolveUrl (url, query) {
+    return window.API_ROOT + url + this.buildQueryString(query)
+  }
+
+  fetch (url, params = {method: 'get', body, headers: {}, query}) {
+    const {method, body, headers, query} = params
     headers.Accept = 'application/json'
     headers['Content-Type'] = 'application/json'
 
@@ -19,7 +27,7 @@ export default class AbstractApi {
       window._keycloak.updateToken(30).success(resolve).error(reject)
     }).then(() => {
       headers['Authorization'] = `Bearer ${window._keycloak.token}`
-      return fetch(url, {method, body, headers})
+      return fetch(this.resolveUrl(url, query), {method, body, headers})
       .then(response => response.json())
     })
   }

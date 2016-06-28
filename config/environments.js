@@ -16,7 +16,8 @@ export default {
         host: 'http://localhost:8000',
         match: /^\/api\/.*/
       }
-    }
+    },
+    api_root: '/api'
   }),
 
   // ======================================================
@@ -31,6 +32,7 @@ export default {
       chunks: true,
       chunkModules: true,
       colors: true
-    }
+    },
+    api_root: 'http://api.nunux.org/keeper/v2'
   })
 }

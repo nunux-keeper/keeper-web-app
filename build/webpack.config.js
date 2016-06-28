@@ -58,14 +58,19 @@ webpackConfig.output = {
 webpackConfig.plugins = [
   new webpack.DefinePlugin(config.globals),
   new HtmlWebpackPlugin({
-    template: paths.client('index.html'),
+    title: 'test',
+    template: paths.client('index.ejs'),
     hash: false,
     favicon: paths.client('static/favicon.ico'),
     filename: 'index.html',
     inject: 'body',
     minify: {
       collapseWhitespace: true
-    }
+    },
+    window: {
+      API_ROOT: config.api_root
+    },
+    files: config.external_files
   })
 ]
 

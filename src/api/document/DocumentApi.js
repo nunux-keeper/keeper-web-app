@@ -3,7 +3,9 @@ import AbstractApi from 'api/common/AbstractApi'
 export class DocumentApi extends AbstractApi {
   search (params) {
     const {q, from, size, order} = params
-    return this.fetch(this.getUrl('/document', {q, from, size, order}))
+    return this.fetch('/document', {
+      query: {q, from, size, order}
+    })
   }
 
   get (id) {

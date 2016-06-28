@@ -1,7 +1,7 @@
 {
-  "realm": "master",
-  "realm-public-key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs7pmLOBqCbL93P3Yze0l6U2/iOmOW/CIgo3M4QTpd+QlhGtvNVhlczDiCFk1aZw3t0xgh25qH1j3wsny8Ja06FGeHPta7B1E8nYjcprGXw4kEacAStO2z8Wg6ABgM82a14adiWprGzJioO5quutwJAAI1C+YGRAjviMNYw5AH/SKLyjxZTrGeC0dSJTtjdPKKWRDo3udU+0/ykfu+EJO2FvNestCDYHIMhaMKKG+zkpqtnxNqKciSSpHNWHIFlHh36AX5ntmyV4gJPGx997igjrozxlqNqz1GOPc0uU/WyqrYBDJ2tE2nANl7Joi8V+krTuw+cnQVcY6WLHtNdoHQQIDAQAB",
-  "auth-server-url": "http://home:8080/auth",
+  "realm": "nunux",
+  "realm-public-key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp5Yx+/jWVTS2d944f85LqgVA2qHF+VCUF4GV9sHDmZ9OqgqyP2QphGliNZzrrTiR1Y4+cMmuEiWHreoFVYW2Jd9VgaCG6sB/7mP6Wp8n+XmPl2DNogiSB4Y9pVBYdMZngsXNK05thFZ2jnstz6R5MHr0AkNfsytBmBh0bHRwpc9MSpjYOd+OJL0Qv88BEZXfyTw7mX/t6osef0l1FBrPLY99KjYFaD9A6V4/5ObgzzgKotbUt5Xjx70DvZ76B8aDm9lz3I3mWQMGHhEFhswbJBojrHE6G9SPjENVQ33MiGC1cWtsxAjD1v5VuPn3+/L55T1IneFj9+8w2vYHRn89gQIDAQAB",
+  "auth-server-url": "http://login.nunux.org/auth",
   "ssl-required": "external",
   "resource": "nunux-keeper",
   "public-client": true
