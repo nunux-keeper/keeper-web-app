@@ -18,7 +18,7 @@ export default class AbstractApi {
     return window.API_ROOT + url + this.buildQueryString(query)
   }
 
-  fetch (url, params = {method: 'get', body, headers: {}, query}) {
+  fetch (url, params = {method: 'get', body: null, headers: {}, query: null}) {
     const {method, body, headers, query} = params
     headers.Accept = 'application/json'
     headers['Content-Type'] = 'application/json'
