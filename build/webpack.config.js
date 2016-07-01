@@ -58,7 +58,7 @@ webpackConfig.output = {
 webpackConfig.plugins = [
   new webpack.DefinePlugin(config.globals),
   new HtmlWebpackPlugin({
-    title: 'test',
+    title: 'Keeper',
     template: paths.client('index.ejs'),
     hash: false,
     favicon: paths.client('static/favicon.ico'),
