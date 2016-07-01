@@ -1,6 +1,7 @@
 .SILENT :
 .PHONY : up down install
 
+USERNAME:=ncarlier
 APPNAME:=keeper-web-app
 env?=dev
 
