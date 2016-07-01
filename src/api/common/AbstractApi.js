@@ -20,14 +20,16 @@ export default class AbstractApi {
 
   fetch (url, params = {method: 'get', body: null, headers: {}, query: null}) {
     const {method, body, headers, query} = params
-    headers.Accept = 'application/json'
-    headers['Content-Type'] = 'application/json'
+    const h = Object.assign({}, {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }, headers)
 
     return new Promise((resolve, reject) => {
       window._keycloak.updateToken(30).success(resolve).error(reject)
     }).then(() => {
       headers['Authorization'] = `Bearer ${window._keycloak.token}`
-      return fetch(this.resolveUrl(url, query), {method, body, headers})
+      return fetch(this.resolveUrl(url, query), {method, body, h})
       .then(response => response.json())
     })
   }
