@@ -28,7 +28,7 @@ export default class AbstractApi {
     return new Promise((resolve, reject) => {
       window._keycloak.updateToken(30).success(resolve).error(reject)
     }).then(() => {
-      headers['Authorization'] = `Bearer ${window._keycloak.token}`
+      h['Authorization'] = `Bearer ${window._keycloak.token}`
       return fetch(this.resolveUrl(url, query), {method, body, h})
       .then(response => response.json())
     })
