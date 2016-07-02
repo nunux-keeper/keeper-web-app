@@ -38,7 +38,10 @@ export class AppNavigation extends React.Component {
 
   get labels () {
     const { labels } = this.props
-    const items = this.props.labels.items.map(
+    if (!labels || labels.isFetching || !labels.length) {
+      return
+    }
+    return this.props.labels.items.map(
       (label) => <Link
         key={`label-${label.id}`}
         to={{pathname: `/label/${label.id}`}}
@@ -48,13 +51,6 @@ export class AppNavigation extends React.Component {
         <i className='tag icon'></i>
       </Link>
     )
-    if (items.length) {
-      return items
-    } else if (!labels.isFetching) {
-      return (
-        <p>No labels :(</p>
-      )
-    }
   }
 
   render () {
