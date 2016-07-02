@@ -38,7 +38,7 @@ export class AppNavigation extends React.Component {
 
   get labels () {
     const { labels } = this.props
-    if (labels.isFetching || labels.items || !labels.items.length) {
+    if (labels.isFetching || !labels.items || !labels.items.length) {
       return
     }
     return labels.items.map(
