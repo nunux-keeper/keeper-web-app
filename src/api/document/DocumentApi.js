@@ -2,7 +2,13 @@ import AbstractApi from 'api/common/AbstractApi'
 
 export class DocumentApi extends AbstractApi {
   search (params) {
-    const {q, from, size, order} = params
+    const {from, size, order, label} = params
+    let {q} = params
+    if (label && q) {
+      q = `label:${label} AND ${q}`
+    } else if (label) {
+      q = `label:${label}`
+    }
     return this.fetch('/document', {
       query: {q, from, size, order}
     })
