@@ -7,7 +7,7 @@ export class DocumentApi extends AbstractApi {
     if (label && q) {
       q = `label:${label} AND ${q}`
     } else if (label) {
-      q = `label:${label}`
+      q = `labels:${label}`
     }
     return this.fetch('/document', {
       query: {q, from, size, order}
