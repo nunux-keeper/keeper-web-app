@@ -4,13 +4,15 @@ export default class AbstractApi {
 
   buildQueryString (query) {
     if (query) {
-      return '?' +
-        Object.keys(query).map(function (key) {
-          if (query[key]) {
-            return encodeURIComponent(key) + '=' +
-              encodeURIComponent(query[key])
-          }
-        }).join('&')
+      const params = Object.keys(query).reduce((acc, key) => {
+        if (query[key]) {
+          acc.push(
+            encodeURIComponent(key) + '=' + encodeURIComponent(query[key])
+          )
+        }
+        return acc
+      }, [])
+      return params.length ? '?' + params.join('&') : ''
     } else {
       return ''
     }
