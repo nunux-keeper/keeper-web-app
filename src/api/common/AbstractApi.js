@@ -6,8 +6,10 @@ export default class AbstractApi {
     if (query) {
       return '?' +
         Object.keys(query).map(function (key) {
-          return encodeURIComponent(key) + '=' +
-            encodeURIComponent(query[key])
+          if (query[key]) {
+            return encodeURIComponent(key) + '=' +
+              encodeURIComponent(query[key])
+          }
         }).join('&')
     } else {
       return ''
