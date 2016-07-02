@@ -90,7 +90,7 @@ export class DocumentLabels extends React.Component {
 
     return (
       <div className='ui fluid multiple search selection dropdown' ref='labels'>
-        <input type='hidden' name='country' value={value} />
+        <input type='hidden' name='label' value={value} />
         <i className='dropdown icon'></i>
         <div className='default text'>No labels</div>
         <div className='menu'>

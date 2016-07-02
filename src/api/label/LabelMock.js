@@ -70,7 +70,9 @@ export class LabelMock {
   all () {
     return new Promise((resolve) => {
       window.setTimeout(() => {
-        resolve(this.db.all())
+        resolve({
+          labels: this.db.all()
+        })
       }, 1000)
     })
   }

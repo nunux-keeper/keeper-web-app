@@ -30,9 +30,9 @@ export const fetchLabelSuccess = createAction(FETCH_LABEL, (label) => {
 
 export const fetchLabelsRequest = createAction(FETCH_LABELS)
 export const fetchLabelsFailure = createAction(FETCH_LABELS, errorHandler)
-export const fetchLabelsSuccess = createAction(FETCH_LABELS, (labels) => {
-  console.debug('Labels fetched:', labels)
-  return {response: labels}
+export const fetchLabelsSuccess = createAction(FETCH_LABELS, (res) => {
+  console.debug('Labels fetched:', res.labels)
+  return {response: res.labels}
 })
 
 export const createLabelRequest = createAction(CREATE_LABEL)
