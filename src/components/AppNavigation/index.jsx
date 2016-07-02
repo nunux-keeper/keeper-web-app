@@ -38,10 +38,10 @@ export class AppNavigation extends React.Component {
 
   get labels () {
     const { labels } = this.props
-    if (!labels || labels.isFetching || !labels.length) {
+    if (labels.isFetching || labels.items || !labels.items.length) {
       return
     }
-    return this.props.labels.items.map(
+    return labels.items.map(
       (label) => <Link
         key={`label-${label.id}`}
         to={{pathname: `/label/${label.id}`}}
