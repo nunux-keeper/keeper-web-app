@@ -41,6 +41,20 @@ export class DocumentTile extends React.Component {
     }
   }
 
+  get fromLink () {
+    const {value: doc} = this.props
+    if (doc.origin) {
+      return (
+        <span className='meta'>
+          from&nbsp;
+          <a href={doc.origin} target='_blank' title={doc.origin}>
+            {doc.origin}
+          </a>
+        </span>
+      )
+    }
+  }
+
   render () {
     const { location } = this.props
     const doc = this.props.value
@@ -61,12 +75,7 @@ export class DocumentTile extends React.Component {
             className='header'>
             {doc.title}
           </Link>
-          <span className='meta'>
-            from&nbsp;
-            <a href={doc.origin} target='_blank' title={doc.origin}>
-              {doc.origin}
-            </a>
-          </span>
+          {this.fromLink}
           <DocumentLabels doc={doc} editable={false} />
         </div>
       </div>

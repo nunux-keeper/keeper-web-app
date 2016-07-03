@@ -40,7 +40,7 @@ export default class ProfileView extends React.Component {
             src={`http://www.gravatar.com/avatar/${current.hash}`}
           />
           <div className='content'>
-            {current.username}
+            {current.name}
             <div className='sub header'>Member since {since}</div>
           </div>
         </h2>

@@ -103,8 +103,8 @@ export class LabelView extends React.Component {
         showNotification({message: 'Label created'})
       })
     } else {
-      updateLabel(this.state).then(() => {
-        const { current } = this.props.labels
+      const { current } = this.props.labels
+      updateLabel(current, this.state).then(() => {
         this.props.push(`/label/${current.id}`)
         showNotification({message: 'Label updated'})
       })
