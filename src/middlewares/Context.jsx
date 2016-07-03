@@ -40,7 +40,7 @@ export function createDocument (Component) {
       if (typeof template.labels === 'string') {
         template.labels = [template.labels]
       }
-      if (template.url) {
+      if (template.origin) {
         createDocument(template)
       } else {
         newDocument(template)
