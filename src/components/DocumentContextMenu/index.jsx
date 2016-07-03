@@ -53,8 +53,9 @@ export class DocumentContextMenu extends React.Component {
   get rawMenuItem () {
     if (this.state.menuItems.has('raw')) {
       const doc = this.props.doc
+      const base = window.API_ROOT
       return (
-        <a href={`/api/v2/document/${doc.id}?raw`}
+        <a href={`${base}/document/${doc.id}?raw`}
           title='View RAW document'
           className='item'
           target='_blank'>
