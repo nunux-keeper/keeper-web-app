@@ -201,7 +201,7 @@ export default handleActions({
     const update = {
       isProcessing: action.payload == null
     }
-    const {error, response} = action.payloada || {}
+    const {error, response} = action.payload || {}
     if (error) {
       update.error = error
     } else if (response) {
