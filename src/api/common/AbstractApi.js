@@ -1,6 +1,9 @@
 import fetch from 'isomorphic-fetch'
 
 export default class AbstractApi {
+  constructor () {
+    this.firstCall = true
+  }
 
   buildQueryString (query) {
     if (query) {
@@ -35,10 +38,11 @@ export default class AbstractApi {
     return new Promise((resolve, reject) => {
       window._keycloak.updateToken(30).success(resolve).error(reject)
     }).then((updated) => {
-      if (updated) {
-        // Token was updated. Authorization header is set in order to
-        // update the API cookie.
+      if (updated || this.firstCall) {
+        // Token was updated or it's the first API call.
+        // Authorization header is set in order to update the API cookie.
         headers['Authorization'] = `Bearer ${window._keycloak.token}`
+        this.firstCall = false
       }
       return fetch(this.resolveUrl(url, query), {method, body, headers})
       .then(response => response.json())
