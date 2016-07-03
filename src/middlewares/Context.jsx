@@ -40,7 +40,10 @@ export function createDocument (Component) {
       if (typeof template.labels === 'string') {
         template.labels = [template.labels]
       }
-      if (template.origin) {
+      if (template.url) {
+        const {url} = template
+        template.origin = decodeURIComponent(url)
+        delete template.url
         createDocument(template)
       } else {
         newDocument(template)

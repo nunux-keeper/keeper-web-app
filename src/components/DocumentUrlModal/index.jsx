@@ -74,7 +74,7 @@ export class DocumentUrlModal extends React.Component {
     const {url} = this.state
     push({
       pathname: '/document/create',
-      query: { origin: encodeURIComponent(url) },
+      query: { url: encodeURIComponent(url) },
       state: { modal: true, returnTo: location }
     })
   }
