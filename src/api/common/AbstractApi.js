@@ -31,10 +31,10 @@ export default class AbstractApi {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
-      }
+      },
+      credentials: 'include'
     }, params)
-    const {method, body, headers, query} = params
-    let credentials = 'include'
+    const {method, body, headers, query, credentials} = params
 
     return new Promise((resolve, reject) => {
       window._keycloak.updateToken(30).success(resolve).error(reject)
@@ -44,7 +44,6 @@ export default class AbstractApi {
         // Authorization header is set in order to update the API cookie.
         headers['Authorization'] = `Bearer ${window._keycloak.token}`
         this.firstCall = false
-        credentials = 'omit'
       }
       return fetch(this.resolveUrl(url, query), {method, body, headers, credentials})
       .then(response => response.json())
