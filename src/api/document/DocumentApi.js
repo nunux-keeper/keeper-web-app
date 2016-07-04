@@ -5,7 +5,7 @@ export class DocumentApi extends AbstractApi {
     const {from, size, order, label} = params
     let {q} = params
     if (label && q) {
-      q = `label:${label} AND ${q}`
+      q = `labels:${label} AND ${q}`
     } else if (label) {
       q = `labels:${label}`
     }
