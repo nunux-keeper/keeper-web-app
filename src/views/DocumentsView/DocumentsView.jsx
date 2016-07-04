@@ -13,8 +13,6 @@ import AppBar from 'components/AppBar'
 
 import * as NProgress from 'nprogress'
 
-import styles from './DocumentsView.scss'
-
 export class DocumentsView extends React.Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
@@ -131,19 +129,41 @@ export class DocumentsView extends React.Component {
   }
 
   get documents () {
-    const { isFetching, hasMore } = this.props.documents
+    const { isFetching, hasMore, error } = this.props.documents
     const items = this.props.documents.items.map((doc) => <DocumentTile key={'doc-' + doc.id} value={doc} />)
     const sizes = ['one', 'three', 'five']
     const size = sizes[this.props.device.size - 1]
-    if (items.length) {
+    if (error) {
+      return (
+        <div className='ui error dimmer'>
+          <div className='content'>
+            <div className='center'>
+              <h2 className='ui icon inverted header'>
+                <i className='bug icon'></i>
+                An error occurred!
+              </h2>
+            </div>
+          </div>
+        </div>
+      )
+    } else if (!isFetching && items.length === 0) {
+      return (
+        <div className='ui inverted dimmer'>
+          <div className='content'>
+            <div className='center'>
+              <h2 className='ui icon header gray'>
+                <i className='ban icon'></i>
+                No documents.
+              </h2>
+            </div>
+          </div>
+        </div>
+      )
+    } else {
       return (
         <InfiniteGrid size={size} hasMore={hasMore} loadMore={this.fetchFollowingDocuments}>
           {items}
         </InfiniteGrid>
-      )
-    } else if (!isFetching) {
-      return (
-        <p className={styles.noDocuments}>No documents founds</p>
       )
     }
   }

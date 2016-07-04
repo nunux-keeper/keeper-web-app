@@ -131,25 +131,25 @@ export class DocumentView extends React.Component {
   get spinner () {
     const { isFetching, isProcessing } = this.props.document
     if (isFetching || isProcessing) {
+      const msg = isFetching ? 'Loading document...' : 'Processing...'
       return (
         <div className='ui active inverted dimmer'>
-          <div className='ui large text loader'>Loading</div>
+          <div className='ui large text loader'>{msg}</div>
         </div>
       )
     }
   }
 
   get document () {
-    const { isFetching, isProcessing, current: doc } = this.props.document
-    if (doc) {
+    const { isFetching, isEditing, current: doc } = this.props.document
+    if (doc && !isFetching) {
       return (
         <div>
-          {this.content}
+          {this.originLink}
+          <DocumentLabels doc={doc} editable={isEditing}/>
+          <DocumentContent doc={doc} editable={isEditing}/>
+          {this.modificationDate}
         </div>
-      )
-    } else if (!isFetching && !isProcessing) {
-      return (
-        <p className={styles.noDocument}>No document :(</p>
       )
     }
   }
@@ -164,18 +164,6 @@ export class DocumentView extends React.Component {
         </span>
       )
     }
-  }
-
-  get content () {
-    const { current: doc, isEditing } = this.props.document
-    return (
-      <div>
-        {this.originLink}
-        <DocumentLabels doc={doc} editable={isEditing}/>
-        <DocumentContent doc={doc} editable={isEditing}/>
-        {this.modificationDate}
-      </div>
-    )
   }
 
   render () {

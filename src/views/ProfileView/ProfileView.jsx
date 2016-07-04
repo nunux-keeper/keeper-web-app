@@ -32,7 +32,7 @@ export default class ProfileView extends React.Component {
         </div>
       )
     } else if (current) {
-      const since = moment(current.date).fromNow()
+      const since = moment(current.date).fromNow(true)
       return (
         <h2 className='ui header'>
           <img
