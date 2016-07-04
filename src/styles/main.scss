@@ -58,6 +58,15 @@
         }
       }
     }
+    ui.error.dimmer {
+      background-color: darkred;
+    }
+    ui.warn.dimmer {
+      background-color: orange;
+    }
+    ui.icon.header.gray {
+      color: #cacaca;
+    }
   }
 
 }
