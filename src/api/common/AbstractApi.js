@@ -29,12 +29,14 @@ export default class AbstractApi {
     params = Object.assign({
       method: 'get',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+        Accept: 'application/json'
       },
       credentials: 'include'
     }, params)
     const {method, body, headers, query, credentials} = params
+    if (method === 'post' || method === 'put' || method === 'patch') {
+      headers['Content-Type'] = 'application/json'
+    }
 
     return new Promise((resolve, reject) => {
       window._keycloak.updateToken(30).success(resolve).error(reject)
@@ -46,7 +48,15 @@ export default class AbstractApi {
         this.firstCall = false
       }
       return fetch(this.resolveUrl(url, query), {method, body, headers, credentials})
-      .then(response => response.json())
+      .then(response => {
+        if (response.status === 204) {
+          return Promise.resolve()
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json()
+        } else {
+          return response.json().then(Promise.reject)
+        }
+      })
     })
   }
 }
