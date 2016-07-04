@@ -58,13 +58,13 @@
         }
       }
     }
-    ui.error.dimmer {
+    .ui.error.dimmer {
       background-color: darkred;
     }
-    ui.warn.dimmer {
+    .ui.warn.dimmer {
       background-color: orange;
     }
-    ui.icon.header.gray {
+    .ui.icon.header.gray {
       color: #cacaca;
     }
   }
