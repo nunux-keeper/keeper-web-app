@@ -17,7 +17,7 @@ export default {
         match: /^\/api\/.*/
       }
     },
-    api_root: '/api'
+    api_root: 'http://api.nunux.org/keeper/v2'
   }),
 
   // ======================================================

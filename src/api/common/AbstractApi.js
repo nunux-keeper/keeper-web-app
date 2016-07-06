@@ -54,7 +54,7 @@ export default class AbstractApi {
         } else if (response.status >= 200 && response.status < 300) {
           return response.json()
         } else {
-          return response.json().then(Promise.reject)
+          return response.json().then((err) => Promise.reject(err))
         }
       })
     })

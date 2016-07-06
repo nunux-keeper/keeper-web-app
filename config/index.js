@@ -13,6 +13,11 @@ const config = {
   env : process.env.NODE_ENV || 'development',
 
   // ----------------------------------
+  // API Configuration
+  // ----------------------------------
+  use_mock : process.env.MOCK || false,
+
+  // ----------------------------------
   // Project Structure
   // ----------------------------------
   path_base  : path.resolve(__dirname, '..'),
@@ -92,6 +97,7 @@ config.globals = {
   '__PROD__'     : config.env === 'production',
   '__TEST__'     : config.env === 'test',
   '__DEBUG__'    : config.env === 'development' && !argv.no_debug,
+  '__MOCK__'     : config.use_mock,
   '__COVERAGE__' : !argv.watch && config.env === 'test',
   '__BASENAME__' : JSON.stringify(process.env.BASENAME || '')
 }

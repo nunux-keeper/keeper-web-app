@@ -1,5 +1,5 @@
-if (__PROD__) {
-  module.exports = require('./ProfileApi')
-} else {
+if (__MOCK__) {
   module.exports = require('./ProfileMock')
+} else {
+  module.exports = require('./ProfileApi')
 }
