@@ -5,6 +5,7 @@ import { actions as notificationActions } from 'store/modules/notification'
 
 export class AppNotification extends React.Component {
   static propTypes = {
+    device: PropTypes.object.isRequired,
     notification: PropTypes.object.isRequired,
     hideNotification: PropTypes.func.isRequired
   };
@@ -36,12 +37,18 @@ export class AppNotification extends React.Component {
   }
 
   get styles () {
-    return {
+    const { size } = this.props.device
+    return size > 1 ? {
       position: 'fixed',
       bottom: 10,
       left: '50%',
       marginLeft: -200,
       width: 400
+    } : {
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      right: 0
     }
   }
 
@@ -82,7 +89,8 @@ export class AppNotification extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  notification: state.notification
+  notification: state.notification,
+  device: state.device
 })
 
 const mapDispatchToProps = (dispatch) => (
