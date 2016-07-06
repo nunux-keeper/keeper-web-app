@@ -97,16 +97,27 @@ export class LabelView extends React.Component {
     e.preventDefault()
     const { createLabel, updateLabel, showNotification } = this.props
     if (this.isCreateForm) {
-      createLabel(this.state).then(() => {
-        const { current } = this.props.labels
-        this.props.push(`/label/${current.id}`)
+      createLabel(this.state).then((label) => {
+        this.props.push(`/label/${label.id}`)
         showNotification({message: 'Label created'})
+      }).catch((err) => {
+        showNotification({
+          header: 'Unable to create label',
+          message: err.error,
+          level: 'error'
+        })
       })
     } else {
       const { current } = this.props.labels
-      updateLabel(current, this.state).then(() => {
-        this.props.push(`/label/${current.id}`)
+      updateLabel(current, this.state).then((label) => {
+        this.props.push(`/label/${label.id}`)
         showNotification({message: 'Label updated'})
+      }).catch((err) => {
+        showNotification({
+          header: 'Unable to update label',
+          message: err.error,
+          level: 'error'
+        })
       })
     }
   }

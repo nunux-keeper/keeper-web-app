@@ -135,7 +135,7 @@ export class DocumentsView extends React.Component {
     const size = sizes[this.props.device.size - 1]
     if (error) {
       return (
-        <div className='ui error active dimmer'>
+        <div className='ui error panel'>
           <div className='content'>
             <div className='center'>
               <h2 className='ui icon inverted header'>
@@ -148,7 +148,7 @@ export class DocumentsView extends React.Component {
       )
     } else if (!isFetching && items.length === 0) {
       return (
-        <div className='ui inverted active dimmer'>
+        <div className='ui panel'>
           <div className='content'>
             <div className='center'>
               <h2 className='ui icon header gray'>

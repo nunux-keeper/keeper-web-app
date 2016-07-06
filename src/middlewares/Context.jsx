@@ -26,7 +26,7 @@ export function fetchProfile (Component) {
   return connect(null, profileActions)(ProfileAwareComponent)
 }
 
-export function createDocument (Component) {
+export function createNewDocument (Component) {
   class NewDocumentAwareComponent extends React.Component {
     static propTypes = {
       location: PropTypes.object.isRequired,

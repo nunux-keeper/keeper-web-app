@@ -15,7 +15,7 @@ import { requireAuthentication } from 'middlewares/Authentication'
 
 import {
   fetchProfile,
-  createDocument,
+  createNewDocument,
   fetchDocument,
   fetchDocuments,
   fetchLabel,
@@ -30,7 +30,7 @@ export default (store) => (
     <Route component={requireAuthentication(MainLayout)}>
       <Route path='profile' component={fetchProfile(ProfileView)} />
       <Route path='document' component={fetchDocuments(DocumentsView)} />
-      <Route path='document/create' component={createDocument(DocumentView)} />
+      <Route path='document/create' component={createNewDocument(DocumentView)} />
       <Route path='document/:docId' component={fetchDocument(DocumentView)} />
       <Route path='label/create' component={LabelView} />
       <Route path='label/:labelId' component={fetchLabelAndDocuments(DocumentsView)} />

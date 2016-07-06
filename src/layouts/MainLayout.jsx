@@ -15,31 +15,44 @@ export class MainLayout extends React.Component {
   };
 
   componentWillReceiveProps (nextProps) {
-    // if we changed routes...
-    if (
-      nextProps.location.state &&
-      nextProps.location.state.modal
-    ) {
-      // save the old children (just like animation)
-      this.previousChildren = this.props.children
+    if (nextProps.location !== this.props.location) {
+      // if we changed routes...
+      if (
+        nextProps.location.state &&
+        nextProps.location.state.modal
+      ) {
+        // save the old children (just like animation)
+        this.previousChildren = this.props.children
+      } else {
+        this.previousChildren = null
+      }
+    }
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return nextProps.location !== this.props.location
+  }
+
+  renderModal () {
+    if (this.previousChildren) {
+      const { location, children } = this.props
+      return (
+        <AppModal returnTo={location.state.returnTo}>
+          {children}
+        </AppModal>
+      )
     }
   }
 
   render () {
-    const { location, children } = this.props
-    const isModal = (location.state && location.state.modal && this.previousChildren)
+    const { children } = this.props
 
     return (
       <div id='main'>
         <AppNavigation />
         <div className='pusher'>
-          {isModal ? this.previousChildren : this.props.children}
-
-          {isModal && (
-            <AppModal returnTo={location.state.returnTo}>
-              {children}
-            </AppModal>
-          )}
+          {this.previousChildren || children}
+          {this.renderModal()}
           <AppNotification />
           <DocumentTitleModal />
           <DocumentUrlModal />
