@@ -1,9 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
 import DocumentApi from 'api/document'
-
-const errorHandler = function (err) {
-  return {error: err}
-}
+import { errorHandler, payloadResponse } from 'store/helper'
 
 // ------------------------------------
 // Constants
@@ -42,6 +39,7 @@ export const fetchDocuments = (params = {from: 0, size: 20}) => {
       return DocumentApi.search(params)
       .then((res) => dispatch(fetchDocumentsSuccess(res)))
       .catch((err) => dispatch(fetchDocumentsFailure(err)))
+      .then(payloadResponse)
     } else {
       console.warn('Unable to fetch documents. No more documents', params)
       return Promise.resolve(null)

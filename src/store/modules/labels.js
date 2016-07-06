@@ -1,11 +1,8 @@
 import { createAction, handleActions } from 'redux-actions'
 import LabelApi from 'api/label'
+import { errorHandler, payloadResponse } from 'store/helper'
 
 import _ from 'lodash'
-
-const errorHandler = function (err) {
-  return {error: err}
-}
 
 // ------------------------------------
 // Constants
@@ -75,6 +72,7 @@ export const fetchLabel = (id) => {
     return LabelApi.get(id)
     .then((label) => dispatch(fetchLabelSuccess(label)))
     .catch((err) => dispatch(fetchLabelFailure(err)))
+    .then(payloadResponse)
   }
 }
 
@@ -90,6 +88,7 @@ export const fetchLabels = () => {
       return LabelApi.all()
       .then((labels) => dispatch(fetchLabelsSuccess(labels)))
       .catch((err) => dispatch(fetchLabelsFailure(err)))
+      .then(payloadResponse)
     }
   }
 }
@@ -101,6 +100,7 @@ export const createLabel = (label) => {
     return LabelApi.create(label)
     .then((_label) => dispatch(createLabelSuccess(_label)))
     .catch((err) => dispatch(createLabelFailure(err)))
+    .then(payloadResponse)
   }
 }
 
@@ -116,6 +116,7 @@ export const updateLabel = (label, payload) => {
     return LabelApi.update(label, payload)
     .then((_label) => dispatch(updateLabelSuccess(_label)))
     .catch((err) => dispatch(updateLabelFailure(err)))
+    .then(payloadResponse)
   }
 }
 
@@ -126,6 +127,7 @@ export const removeLabel = (label) => {
     return LabelApi.remove(label)
     .then(() => dispatch(removeLabelSuccess(label)))
     .catch((err) => dispatch(removeLabelFailure(err)))
+    .then(payloadResponse)
   }
 }
 
@@ -140,6 +142,7 @@ export const restoreRemovedLabel = () => {
     return LabelApi.restore(labels.removed)
     .then((_label) => dispatch(restoreLabelSuccess(_label)))
     .catch((err) => dispatch(restoreLabelFailure(err)))
+    .then(payloadResponse)
   }
 }
 

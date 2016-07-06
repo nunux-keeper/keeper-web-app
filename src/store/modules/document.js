@@ -1,9 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
 import DocumentApi from 'api/document'
-
-const errorHandler = function (err) {
-  return {error: err}
-}
+import { errorHandler, payloadResponse } from 'store/helper'
 
 // ------------------------------------
 // Constants
@@ -68,6 +65,7 @@ export const fetchDocument = (id) => {
     return DocumentApi.get(id)
     .then((doc) => dispatch(fetchDocumentSuccess(doc)))
     .catch((err) => dispatch(fetchDocumentFailure(err)))
+    .then(payloadResponse)
   }
 }
 
@@ -78,6 +76,7 @@ export const createDocument = (doc) => {
     return DocumentApi.create(doc)
     .then((_doc) => dispatch(createDocumentSuccess(_doc)))
     .catch((err) => dispatch(createDocumentFailure(err)))
+    .then(payloadResponse)
   }
 }
 
@@ -93,6 +92,7 @@ export const updateDocument = (doc, payload) => {
       return DocumentApi.update(doc, payload)
       .then((_doc) => dispatch(updateDocumentSuccess(_doc)))
       .catch((err) => dispatch(updateDocumentFailure(err)))
+      .then(payloadResponse)
     }
   }
 }
@@ -104,6 +104,7 @@ export const removeDocument = (doc) => {
     return DocumentApi.remove(doc)
     .then(() => dispatch(removeDocumentSuccess(doc)))
     .catch((err) => dispatch(removeDocumentFailure(err)))
+    .then(payloadResponse)
   }
 }
 
@@ -118,6 +119,7 @@ export const restoreRemovedDocument = () => {
     return DocumentApi.restore(documents.removed)
     .then((_doc) => dispatch(restoreDocumentSuccess(_doc)))
     .catch((err) => dispatch(restoreDocumentFailure(err)))
+    .then(payloadResponse)
   }
 }
 
@@ -131,12 +133,14 @@ export const submitDocument = () => {
       return DocumentApi.update(doc, doc)
       .then((_doc) => dispatch(updateDocumentSuccess(_doc)))
       .catch((err) => dispatch(updateDocumentFailure(err)))
+      .then(payloadResponse)
     } else {
       console.debug('Submiting new document:', doc)
       dispatch(createDocumentRequest())
       return DocumentApi.create(doc)
       .then((_doc) => dispatch(createDocumentSuccess(_doc)))
       .catch((err) => dispatch(createDocumentFailure(err)))
+      .then(payloadResponse)
     }
   }
 }
@@ -151,6 +155,7 @@ export const resetDocument = () => {
       return DocumentApi.get(doc.id)
       .then((doc) => dispatch(fetchDocumentSuccess(doc)))
       .catch((err) => dispatch(fetchDocumentFailure(err)))
+      .then(payloadResponse)
     }
   }
 }

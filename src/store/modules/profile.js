@@ -1,9 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
 import ProfileApi from 'api/profile'
-
-const errorHandler = function (err) {
-  return {error: err}
-}
+import { errorHandler, payloadResponse } from 'store/helper'
 
 // ------------------------------------
 // Constants
@@ -32,6 +29,7 @@ export const fetchProfile = () => {
     return ProfileApi.get()
     .then((profile) => dispatch(fetchProfileSuccess(profile)))
     .catch((err) => dispatch(fetchProfileFailure(err)))
+    .then(payloadResponse)
   }
 }
 

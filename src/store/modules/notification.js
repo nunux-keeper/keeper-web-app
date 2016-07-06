@@ -22,7 +22,9 @@ export const actions = {
 // ------------------------------------
 export default handleActions({
   [SHOW_NOTIFICATION]: (state, {payload}) => {
-    const {header, message, level, actionLabel, actionFn} = payload
+    const {header, message, level, actionLabel, actionFn} = Object.assign({
+      level: 'info'
+    }, payload)
     return Object.assign({}, state, {
       header, message, level, actionLabel, actionFn
     })
