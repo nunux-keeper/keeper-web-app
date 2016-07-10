@@ -101,7 +101,12 @@ if (__DEV__) {
 if (!__TEST__) {
   webpackConfig.plugins.push(
     new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor']
+      name: 'vendor',
+      chunks: ['vendor']
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'bookmarklet',
+      chunks: ['bookmarklet']
     })
   )
 }
