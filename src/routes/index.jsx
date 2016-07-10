@@ -26,8 +26,8 @@ import {
 export default (store) => (
   <Route path='/' component={RootLayout}>
     <IndexRoute component={HomeView} />
-    <Route path='bookmarklet' component={BookmarkletView} />
     <Route component={requireAuthentication(MainLayout)}>
+      <Route path='bookmarklet' component={BookmarkletView} />
       <Route path='profile' component={fetchProfile(ProfileView)} />
       <Route path='document' component={fetchDocuments(DocumentsView)} />
       <Route path='document/create' component={createNewDocument(DocumentView)} />

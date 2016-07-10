@@ -11,7 +11,7 @@ export class BookmarkletView extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    documents: PropTypes.object.isRequired
+    document: PropTypes.object.isRequired
   };
 
   constructor (props) {
@@ -79,7 +79,7 @@ export class BookmarkletView extends React.Component {
 
   submitSuccess () {
     const { origin } = document.location
-    const { current: doc } = this.props.documents
+    const { current: doc } = this.props.document
     window.open(`${origin}/document/${doc.id}`)
   }
 
@@ -95,7 +95,7 @@ export class BookmarkletView extends React.Component {
       doc.content = this.state.content
       doc.contentType = 'text/html'
     }
-    actions.documents.createDocument(doc)
+    actions.document.createDocument(doc)
     .then(() => {
       this.setState({
         loading: false,
@@ -212,11 +212,11 @@ export class BookmarkletView extends React.Component {
 
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
-  documents: state.documents
+  document: state.document
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({
-  documents: DocumentActions
+  document: DocumentActions
 }, dispatch))
 
 export default connect(mapStateToProps, mapActionsToProps)(BookmarkletView)
