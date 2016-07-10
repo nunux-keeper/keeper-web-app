@@ -62,7 +62,7 @@ export class AppNavigation extends React.Component {
       <div className='ui sidebar large vertical menu' id='nav' ref='nav'>
         <h2 className='ui header'>
           <i className='cloud download icon'></i>
-          <div className='content'>Keeper</div>
+          <span>Keeper</span>
         </h2>
         <Link to={{ pathname: '/profile' }} className='item'>
           Profile

@@ -1,15 +1,15 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { bindActionCreators } from 'redux'
-import { routerActions } from 'react-router-redux'
-
 import AppBar from 'components/AppBar'
 import DocumentContextMenu from 'components/DocumentContextMenu'
 import DocumentLabels from 'components/DocumentLabels'
 import DocumentContent from 'components/DocumentContent'
 
-import { actions as documentActions } from 'store/modules/document'
+import { bindActions } from 'store/helper'
+
+import { routerActions as RouterActions } from 'react-router-redux'
+import { actions as DocumentActions } from 'store/modules/document'
 
 import * as NProgress from 'nprogress'
 
@@ -17,11 +17,9 @@ import styles from './DocumentView.scss'
 
 export class DocumentView extends React.Component {
   static propTypes = {
+    actions: PropTypes.object.isRequired,
     document: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    push: PropTypes.func,
-    submitDocument: PropTypes.func.isRequired,
-    resetDocument: PropTypes.func.isRequired
+    location: PropTypes.object.isRequired
   };
 
   constructor (props) {
@@ -55,10 +53,10 @@ export class DocumentView extends React.Component {
   }
 
   redirectBack () {
-    const {push, location} = this.props
+    const {actions, location} = this.props
     if (location.state && location.state.returnTo) {
       const {pathname, search} = location.state.returnTo
-      push({
+      actions.router.push({
         pathname: pathname,
         search: search,
         state: {
@@ -68,7 +66,7 @@ export class DocumentView extends React.Component {
     } else {
       const url = location.pathname
       const to = url.substr(0, url.lastIndexOf('/'))
-      push(to)
+      actions.router.push(to)
     }
   }
 
@@ -104,13 +102,14 @@ export class DocumentView extends React.Component {
   get editButtons () {
     const { isEditing } = this.props.document
     if (isEditing) {
-      const { submitDocument, resetDocument } = this.props
-      const resetFn = this.isCreateMode ? this.redirectBack : resetDocument
+      const { actions } = this.props
+      const resetFn = this.isCreateMode ? this.redirectBack : actions.document.resetDocument
+      const submitFn = actions.document.submitDocument
       return (
         <div className='item'>
           <div className='ui button' onClick={resetFn}>Cancel</div>
           &nbsp;
-          <div className='ui primary button' onClick={submitDocument}>Save</div>
+          <div className='ui primary button' onClick={submitFn}>Save</div>
         </div>
       )
     }
@@ -184,9 +183,10 @@ const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, routerActions, documentActions), dispatch)
-)
+const mapActionsToProps = (dispatch) => (bindActions({
+  document: DocumentActions,
+  router: RouterActions
+}, dispatch))
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentView)
+export default connect(mapStateToProps, mapActionsToProps)(DocumentView)
 

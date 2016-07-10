@@ -1,16 +1,17 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
-import { actions as documentActions } from 'store/modules/document'
+import { bindActions } from 'store/helper'
+
+import { actions as DocumentActions } from 'store/modules/document'
 
 import './BookmarkletView.scss'
 
 export class BookmarkletView extends React.Component {
   static propTypes = {
+    actions: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    documents: PropTypes.object.isRequired,
-    createDocument: PropTypes.func.isRequired
+    documents: PropTypes.object.isRequired
   };
 
   constructor (props) {
@@ -85,7 +86,7 @@ export class BookmarkletView extends React.Component {
   submitDoc () {
     this.setState({loading: true})
 
-    const { createDocument, location } = this.props
+    const { actions, location } = this.props
     const doc = {
       title: location.query.title,
       origin: location.query.url
@@ -94,7 +95,8 @@ export class BookmarkletView extends React.Component {
       doc.content = this.state.content
       doc.contentType = 'text/html'
     }
-    createDocument(doc).then(() => {
+    actions.documents.createDocument(doc)
+    .then(() => {
       this.setState({
         loading: false,
         success: true,
@@ -213,8 +215,8 @@ const mapStateToProps = (state) => ({
   documents: state.documents
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, documentActions), dispatch)
-)
+const mapActionsToProps = (dispatch) => (bindActions({
+  documents: DocumentActions
+}, dispatch))
 
-export default connect(mapStateToProps, mapDispatchToProps)(BookmarkletView)
+export default connect(mapStateToProps, mapActionsToProps)(BookmarkletView)

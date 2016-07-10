@@ -1,11 +1,14 @@
 :global {
   #nav {
     h2 {
-      background: #1b1c1d;
+      background: #fbbd08;
       color: rgba(255,255,255,.9);
       margin: 0;
-      padding: 0 1em;
-      line-height: 40px;
+      padding: 2em 0;
+      text-align: center;
+      .icon {
+        display: inline-block;
+      }
     }
   }
 }

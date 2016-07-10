@@ -1,7 +1,10 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { routerActions } from 'react-router-redux'
+
+import { bindActions } from 'store/helper'
+
+import { routerActions as RouterActions } from 'react-router-redux'
+
 import Modal from 'react-modal'
 
 import './styles.scss'
@@ -24,7 +27,7 @@ const customMobileStyles = {
 
 export default class AppModal extends React.Component {
   static propTypes = {
-    push: PropTypes.func,
+    actions: PropTypes.object.isRequired,
     children: PropTypes.node.isRequired,
     returnTo: PropTypes.object,
     device: PropTypes.object.isRequired
@@ -36,9 +39,9 @@ export default class AppModal extends React.Component {
   }
 
   handleClose () {
-    const { returnTo } = this.props
+    const { returnTo, actions } = this.props
     if (returnTo) {
-      this.props.push({
+      actions.router.push({
         pathname: returnTo.pathname,
         search: returnTo.search,
         state: {
@@ -66,9 +69,9 @@ const mapStateToProps = (state) => ({
   device: state.device
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, routerActions), dispatch)
-)
+const mapActionsToProps = (dispatch) => (bindActions({
+  router: RouterActions
+}, dispatch))
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppModal)
+export default connect(mapStateToProps, mapActionsToProps)(AppModal)
 

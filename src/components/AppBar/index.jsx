@@ -1,16 +1,18 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { routerActions } from 'react-router-redux'
+
+import { bindActions } from 'store/helper'
+
+import { routerActions as RouterActions } from 'react-router-redux'
 
 export class AppBar extends React.Component {
   static propTypes = {
+    actions: PropTypes.object.isRequired,
     children: PropTypes.node,
     contextMenu: PropTypes.node,
     title: PropTypes.node.isRequired,
     modal: PropTypes.bool,
     styles: PropTypes.object,
-    push: PropTypes.func,
     location: PropTypes.object.isRequired
   };
 
@@ -74,7 +76,9 @@ export class AppBar extends React.Component {
     return (
       <div className='ui top inverted menu' style={styles} ref='bar'>
         {this.sidebarIcon}
-        <div className='header item'>{title}</div>
+        <div className='header item' title={title}>
+          <span>{title}</span>
+        </div>
         <div className='right menu'>
           {children}
           {this.contextMenu}
@@ -84,10 +88,10 @@ export class AppBar extends React.Component {
   }
 
   handleCloseClick () {
-    const {push, location} = this.props
+    const {actions, location} = this.props
     if (location.state.returnTo) {
       const {pathname, search} = location.state.returnTo
-      push({
+      actions.router.push({
         pathname: pathname,
         search: search,
         state: {
@@ -109,8 +113,8 @@ const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, routerActions), dispatch)
-)
+const mapActionsToProps = (dispatch) => (bindActions({
+  router: RouterActions
+}, dispatch))
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppBar)
+export default connect(mapStateToProps, mapActionsToProps)(AppBar)

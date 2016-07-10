@@ -1,20 +1,20 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { routerActions } from 'react-router-redux'
-import { actions as labelsActions } from 'store/modules/labels'
-import { actions as notificationActions } from 'store/modules/notification'
+
+import { bindActions } from 'store/helper'
+
+import { routerActions as RouterActions } from 'react-router-redux'
+import { actions as LabelsActions } from 'store/modules/labels'
+import { actions as NotificationActions } from 'store/modules/notification'
+
 import ColorSwatch from 'components/ColorSwatch'
 import AppBar from 'components/AppBar'
 
 export class LabelView extends React.Component {
   static propTypes = {
+    actions: PropTypes.object.isRequired,
     labels: PropTypes.object,
-    createLabel: PropTypes.func.isRequired,
-    updateLabel: PropTypes.func.isRequired,
-    showNotification: PropTypes.func.isRequired,
-    location: PropTypes.object.isRequired,
-    push: PropTypes.func
+    location: PropTypes.object.isRequired
   };
 
   constructor (props) {
@@ -95,13 +95,13 @@ export class LabelView extends React.Component {
 
   handleSubmit (e) {
     e.preventDefault()
-    const { createLabel, updateLabel, showNotification } = this.props
+    const { actions } = this.props
     if (this.isCreateForm) {
-      createLabel(this.state).then((label) => {
-        this.props.push(`/label/${label.id}`)
-        showNotification({message: 'Label created'})
+      actions.labels.createLabel(this.state).then((label) => {
+        actions.router.push(`/label/${label.id}`)
+        actions.notification.showNotification({message: 'Label created'})
       }).catch((err) => {
-        showNotification({
+        actions.notification.showNotification({
           header: 'Unable to create label',
           message: err.error,
           level: 'error'
@@ -109,11 +109,11 @@ export class LabelView extends React.Component {
       })
     } else {
       const { current } = this.props.labels
-      updateLabel(current, this.state).then((label) => {
-        this.props.push(`/label/${label.id}`)
-        showNotification({message: 'Label updated'})
+      actions.labels.updateLabel(current, this.state).then((label) => {
+        actions.router.push(`/label/${label.id}`)
+        actions.notification.showNotification({message: 'Label updated'})
       }).catch((err) => {
-        showNotification({
+        actions.notification.showNotification({
           header: 'Unable to update label',
           message: err.error,
           level: 'error'
@@ -123,11 +123,12 @@ export class LabelView extends React.Component {
   }
 
   handleCancel () {
-    const { state } = this.props.location
+    const { actions, location: loc } = this.props
+    const { state } = loc
     if (state && state.returnTo) {
-      this.props.push(state.returnTo)
+      actions.router.push(state.returnTo)
     } else {
-      this.props.push('/document')
+      actions.router.push('/document')
     }
   }
 
@@ -156,13 +157,10 @@ const mapStateToProps = (state) => ({
   labels: state.labels
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign(
-    {},
-    notificationActions,
-    labelsActions,
-    routerActions
-  ), dispatch)
-)
+const mapActionsToProps = (dispatch) => (bindActions({
+  notification: NotificationActions,
+  labels: LabelsActions,
+  router: RouterActions
+}, dispatch))
 
-export default connect(mapStateToProps, mapDispatchToProps)(LabelView)
+export default connect(mapStateToProps, mapActionsToProps)(LabelView)
