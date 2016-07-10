@@ -71,6 +71,7 @@ webpackConfig.plugins = [
     window: {
       API_ROOT: config.api_root
     },
+    excludeChunks: ['bookmarklet'],
     files: config.external_files
   })
 ]
