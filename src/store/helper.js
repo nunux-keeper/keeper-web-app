@@ -1,3 +1,5 @@
+import { bindActionCreators } from 'redux'
+
 export const errorHandler = function (err) {
   return {error: err}
 }
@@ -11,3 +13,10 @@ export const payloadResponse = function (res) {
   }
 }
 
+export const bindActions = function (actions, dispatch) {
+  const result = Object.keys(actions).reduce((acc, key) => {
+    acc[key] = bindActionCreators(actions[key], dispatch)
+    return acc
+  }, {})
+  return {actions: result}
+}
