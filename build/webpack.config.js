@@ -33,13 +33,13 @@ const APP_ENTRY_PATHS = [
   paths.client('main.js')
 ]
 
-// const APP_BOOKMARKLET_PATH = paths.client('bookmarklet.js')
+const APP_BOOKMARKLET_PATH = paths.client('bookmarklet.js')
 
 webpackConfig.entry = {
   app: __DEV__
     ? APP_ENTRY_PATHS.concat(`webpack-hot-middleware/client?path=${config.compiler_public_path}__webpack_hmr`)
     : APP_ENTRY_PATHS,
-  // bookmarklet: [APP_BOOKMARKLET_PATH],
+  bookmarklet: [APP_BOOKMARKLET_PATH],
   vendor: config.compiler_vendor
 }
 
@@ -47,7 +47,8 @@ webpackConfig.entry = {
 // Bundle Output
 // ------------------------------------
 webpackConfig.output = {
-  filename: `[name].[${config.compiler_hash_type}].js`,
+  // filename: `[name].[${config.compiler_hash_type}].js`,
+  filename: '[name].js',
   path: paths.dist(),
   publicPath: config.compiler_public_path
 }
@@ -60,7 +61,7 @@ webpackConfig.plugins = [
   new HtmlWebpackPlugin({
     title: 'Keeper',
     template: paths.client('index.ejs'),
-    hash: false,
+    hash: true,
     favicon: paths.client('static/favicon.ico'),
     filename: 'index.html',
     inject: 'body',
