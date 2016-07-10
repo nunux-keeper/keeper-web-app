@@ -135,7 +135,7 @@ export const restoreRemovedLabel = () => {
   return (dispatch, getState) => {
     const {labels} = getState()
     if (!labels.removed) {
-      return Promise.reject('No label to restore.')
+      return Promise.reject({error: 'No label to restore.'})
     }
     console.debug('Restoring label:', labels.removed.id)
     dispatch(restoreLabelRequest())
@@ -230,14 +230,14 @@ export default handleActions({
     if (error) {
       update.error = error
     } else if (response) {
-      update.current = null
       const label = response
       const index = _.findIndex(state.items, (item) => item.id === label.id)
       if (index >= 0) {
         update.items = state.items.filter((item) => item.id !== label.id)
-        update.removed = label
         update.removedIndex = index
       }
+      update.current = null
+      update.removed = label
     }
     return Object.assign({}, state, update)
   },
@@ -249,9 +249,8 @@ export default handleActions({
     if (error) {
       update.error = error
     } else if (response) {
-      update.current = response
       update.items = state.items.slice()
-      update.items.splice(state.removedIndex, 0, update.current)
+      update.items.splice(state.removedIndex, 0, response)
       update.removed = null
       update.removedIndex = null
     }

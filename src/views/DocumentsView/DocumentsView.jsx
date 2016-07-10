@@ -1,10 +1,14 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { bindActionCreators } from 'redux'
 
-import { actions as documentsActions } from 'store/modules/documents'
-import { actions as urlModalActions } from 'store/modules/urlModal'
+import { bindActions } from 'store/helper'
+
+import { routerActions as RouterActions } from 'react-router-redux'
+import { actions as DocumentsActions } from 'store/modules/documents'
+import { actions as LabelsActions } from 'store/modules/labels'
+import { actions as UrlModalActions } from 'store/modules/urlModal'
+import { actions as NotificationActions } from 'store/modules/notification'
 
 import SearchBar from 'components/SearchBar'
 import InfiniteGrid from 'components/InfiniteGrid'
@@ -15,18 +19,19 @@ import * as NProgress from 'nprogress'
 
 export class DocumentsView extends React.Component {
   static propTypes = {
+    actions: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     documents: PropTypes.object.isRequired,
     labels: PropTypes.object.isRequired,
-    device: PropTypes.object.isRequired,
-    fetchDocuments: PropTypes.func.isRequired,
-    showUrlModal: PropTypes.func.isRequired
+    device: PropTypes.object.isRequired
   };
 
   constructor () {
     super()
     this.fetchFollowingDocuments = this.fetchFollowingDocuments.bind(this)
     this.refreshDocuments = this.refreshDocuments.bind(this)
+    this.removeLabel = this.removeLabel.bind(this)
+    this.undoRemoveLabel = this.undoRemoveLabel.bind(this)
   }
 
   componentDidUpdate (prevProps) {
@@ -71,6 +76,10 @@ export class DocumentsView extends React.Component {
             <i className='tag icon'></i>
             Edit Label
           </Link>
+          <a className='item' onClick={this.removeLabel}>
+            <i className='trash icon'></i>
+            Delete Label
+          </a>
         </div>
       )
     }
@@ -85,7 +94,7 @@ export class DocumentsView extends React.Component {
   }
 
   get header () {
-    const { location, showUrlModal } = this.props
+    const { location, actions } = this.props
     const bg = this.label ? {backgroundColor: this.label.color} : {}
     const createLink = {
       pathname: '/document/create',
@@ -108,7 +117,7 @@ export class DocumentsView extends React.Component {
             <Link to={createLink} className='item'>
               <i className='file outline icon'></i>New document...
             </Link>
-            <a className='item' onClick={showUrlModal}>
+            <a className='item' onClick={actions.urlModal.showUrlModal}>
               <i className='cloud download icon'></i>From URL...
             </a>
           </div>
@@ -181,16 +190,52 @@ export class DocumentsView extends React.Component {
   }
 
   fetchFollowingDocuments () {
-    const { params } = this.props.documents
+    const { actions, documents } = this.props
+    const { params } = documents
     params.from++
-    this.props.fetchDocuments(params)
+    actions.documents.fetchDocuments(params)
   }
 
   refreshDocuments () {
-    const { params } = this.props.documents
+    const { actions, documents } = this.props
+    const { params } = documents
     params.from = 0
-    this.props.fetchDocuments(params)
+    actions.documents.fetchDocuments(params)
   }
+
+  removeLabel () {
+    const { actions } = this.props
+    actions.labels.removeLabel(this.label)
+    .then((label) => {
+      actions.router.push({pathname: '/document'})
+      actions.notification.showNotification({
+        message: 'Label deleted',
+        actionLabel: 'undo',
+        actionFn: () => this.undoRemoveLabel()
+      })
+    }).catch((err) => {
+      actions.notification.showNotification({
+        header: 'Unable to delete label',
+        message: err.error,
+        level: 'error'
+      })
+    })
+  }
+
+  undoRemoveLabel () {
+    const { actions } = this.props
+    actions.labels.restoreRemovedLabel().then((label) => {
+      actions.router.push({pathname: `/label/${label.id}`})
+      actions.notification.showNotification({header: 'Label restored'})
+    }).catch((err) => {
+      actions.notification.showNotification({
+        header: 'Unable to restore label',
+        message: err.error,
+        level: 'error'
+      })
+    })
+  }
+
 }
 
 const mapStateToProps = (state) => ({
@@ -200,8 +245,12 @@ const mapStateToProps = (state) => ({
   device: state.device
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, documentsActions, urlModalActions), dispatch)
-)
+const mapActionsToProps = (dispatch) => (bindActions({
+  documents: DocumentsActions,
+  labels: LabelsActions,
+  urlModal: UrlModalActions,
+  notification: NotificationActions,
+  router: RouterActions
+}, dispatch))
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentsView)
+export default connect(mapStateToProps, mapActionsToProps)(DocumentsView)

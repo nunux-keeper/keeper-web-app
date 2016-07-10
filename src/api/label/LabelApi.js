@@ -30,7 +30,7 @@ export class LabelApi extends AbstractApi {
   }
 
   restore (label) {
-    return this.fetch(`/document/${label.id}/restore`, {
+    return this.fetch(`/label/${label.id}/restore`, {
       method: 'post'
     })
   }

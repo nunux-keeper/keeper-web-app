@@ -104,4 +104,9 @@
       color: #FFF;
     }
   }
+
+  .ui.top.menu > .header {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
