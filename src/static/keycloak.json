@@ -1,8 +1,8 @@
 {
-  "realm": "nunux",
-  "realm-public-key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp5Yx+/jWVTS2d944f85LqgVA2qHF+VCUF4GV9sHDmZ9OqgqyP2QphGliNZzrrTiR1Y4+cMmuEiWHreoFVYW2Jd9VgaCG6sB/7mP6Wp8n+XmPl2DNogiSB4Y9pVBYdMZngsXNK05thFZ2jnstz6R5MHr0AkNfsytBmBh0bHRwpc9MSpjYOd+OJL0Qv88BEZXfyTw7mX/t6osef0l1FBrPLY99KjYFaD9A6V4/5ObgzzgKotbUt5Xjx70DvZ76B8aDm9lz3I3mWQMGHhEFhswbJBojrHE6G9SPjENVQ33MiGC1cWtsxAjD1v5VuPn3+/L55T1IneFj9+8w2vYHRn89gQIDAQAB",
+  "realm": "NunuxKeeper",
+  "realm-public-key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC7kgrRHj3XvKylJmt4uoqXN/EU\nK8+GCuWEvWk2uaOoIJhsqqTsxR7Y4CLkdAQS05y3YJK/FT4wNIMmyMZGCCvZd6iO\nLA4u7DuoQs3/WTQfwQzu7ZLDK1xvo9Pk8wMZdAQ8uCYaeffNpVLOcSzX3v7mEoBa\nMOsTa4smYTcSs9/G3QIDAQAB\n-----END PUBLIC KEY-----\n",
   "auth-server-url": "http://login.nunux.org/auth",
   "ssl-required": "external",
-  "resource": "nunux-keeper",
+  "resource": "nunux-keeper-app",
   "public-client": true
 }
