@@ -26,7 +26,7 @@ window.kBookmarklet = function () {
     $o.style.background = 'transparent'
     $o.style.cursor = 'pointer'
     $o.addEventListener('dragenter', function (e) {
-      popup.postMessage('onDragEnter', window.K_REALM)
+      popup.postMessage(JSON.stringify({ _type: 'onDragEnter' }), window.K_REALM)
     }, false)
     $o.addEventListener('dragover', function (e) {
       if (e.preventDefault) {
@@ -35,18 +35,18 @@ window.kBookmarklet = function () {
       return false
     }, false)
     $o.addEventListener('dragleave', function (e) {
-      popup.postMessage('onDragLeave', window.K_REALM)
+      popup.postMessage(JSON.stringify({ _type: 'onDragLeave' }), window.K_REALM)
     }, false)
     $o.addEventListener('drop', function (e) {
       if (e.preventDefault) {
         e.preventDefault()
       }
       var data = e.dataTransfer.getData('text/html')
-      popup.postMessage(data, window.K_REALM)
+      popup.postMessage(JSON.stringify({ _type: 'onDropData', data: data }), window.K_REALM)
       return false
     }, false)
     $o.addEventListener('click', function (e) {
-      popup.postMessage('onClick', window.K_REALM)
+      popup.postMessage(JSON.stringify({ _type: 'onClick' }), window.K_REALM)
     }, false)
     $c.appendChild($o)
     document.body.appendChild($c)
@@ -75,7 +75,7 @@ window.kBookmarklet = function () {
   }
   window.addEventListener('message', receiveMessage, false)
   setInterval(function () {
-    popup.postMessage('ping', window.K_REALM)
+    popup.postMessage(JSON.stringify({ _type: 'ping' }), window.K_REALM)
   }, 2000)
 }
 

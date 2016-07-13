@@ -41,7 +41,14 @@ export class BookmarkletView extends React.Component {
   }
 
   receiveMessage (event) {
-    switch (event.data) {
+    let msg
+    try {
+      msg = JSON.parse(event.data)
+    } catch (e) {
+      console.error('Unable to parse received event data', e)
+      return
+    }
+    switch (msg._type) {
       case 'ping':
         while (this.messages.length > 0) {
           var message = this.messages.shift()
@@ -57,13 +64,14 @@ export class BookmarkletView extends React.Component {
       case 'onClick':
         this.submit()
         break
-      default:
+      case 'onDropData':
         this.setState({
           onDragOver: false,
-          content: event.data,
+          content: msg.data,
           error: null,
           success: null
         })
+        break
     }
   }
 
