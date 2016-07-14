@@ -29,8 +29,21 @@ export class LabelView extends React.Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
+    this.handleColorChoose = this.handleColorChoose.bind(this)
     this.handleColorChange = this.handleColorChange.bind(this)
     this.handleLabelChange = this.handleLabelChange.bind(this)
+  }
+
+  componentDidMount () {
+    const $form = this.refs.form
+    window.$($form)
+    .form({
+      on: 'blur',
+      fields: {
+        label: ['empty'],
+        color: ['empty']
+      }
+    })
   }
 
   get isCreateForm () {
@@ -53,19 +66,25 @@ export class LabelView extends React.Component {
     )
   }
 
+  get isValid () {
+    const $form = this.refs.form
+    return $form && window.$($form).form('is valid')
+  }
+
   get labelForm () {
     const { color, label } = this.state
     const { isProcessing } = this.props.labels
     const loading = isProcessing ? 'loading' : ''
+    const disabled = this.isValid ? '' : 'disabled'
     return (
       <div>
-        <form className={`ui form ${loading}`} onSubmit={this.handleSubmit}>
+        <form className={`ui form ${loading}`} onSubmit={this.handleSubmit} ref='form'>
           <div className='field'>
             <label>Label name</label>
             <input
               required
               type='text'
-              name='label-value'
+              name='label'
               placeholder='Label Name'
               value={label}
               onChange={this.handleLabelChange}
@@ -74,16 +93,15 @@ export class LabelView extends React.Component {
           <div className='field'>
             <label>Color value</label>
             <input
-              disabled
-              type='text'
-              name='color-value'
-              placeholder='Color value'
+              type='color'
+              name='color'
               value={color}
+              onChange={this.handleColorChange}
             />
-            <ColorSwatch value={color} onColorChange={this.handleColorChange} />
+            <ColorSwatch value={color} onColorChange={this.handleColorChoose} />
           </div>
         </form>
-        <button className='ui right floated primary button' onClick={this.handleSubmit}>
+        <button className={`ui right floated button primary ${disabled}`} onClick={this.handleSubmit}>
           Submit
         </button>
         <button className='ui right floated button' onClick={this.handleCancel}>
@@ -95,6 +113,9 @@ export class LabelView extends React.Component {
 
   handleSubmit (e) {
     e.preventDefault()
+    if (!this.isValid) {
+      return false
+    }
     const { actions } = this.props
     if (this.isCreateForm) {
       actions.labels.createLabel(this.state).then((label) => {
@@ -136,7 +157,11 @@ export class LabelView extends React.Component {
     this.setState({label: event.target.value})
   }
 
-  handleColorChange (color) {
+  handleColorChange (event) {
+    this.setState({color: event.target.value})
+  }
+
+  handleColorChoose (color) {
     this.setState({color: color})
   }
 

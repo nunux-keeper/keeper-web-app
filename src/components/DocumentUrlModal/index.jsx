@@ -31,19 +31,32 @@ export class DocumentUrlModal extends React.Component {
         onApprove: this.handleSubmit
       })
       .modal('show')
+      const $form = this.refs.form
+      window.$($form)
+      .form({
+        on: 'blur',
+        fields: {
+          url: ['url', 'empty']
+        }
+      })
     }
+  }
+
+  get isValid () {
+    const $form = this.refs.form
+    return $form && window.$($form).form('is valid')
   }
 
   render () {
     const { show } = this.props
     if (!show) return null
     const { url } = this.state
-    const disabled = url !== '' ? '' : 'disabled'
+    const disabled = this.isValid ? '' : 'disabled'
     return (
       <div className='ui modal' ref='modal'>
         <div className='header'>Create document from an URL</div>
         <div className='content'>
-          <form className='ui form' onSubmit={this.handleSubmit}>
+          <form className='ui form' onSubmit={this.handleSubmit} ref='form'>
             <div className='field'>
               <label>URL</label>
               <input
@@ -70,13 +83,15 @@ export class DocumentUrlModal extends React.Component {
   }
 
   handleSubmit () {
-    const {push, location} = this.props
-    const {url} = this.state
-    push({
-      pathname: '/document/create',
-      query: { url: encodeURIComponent(url) },
-      state: { modal: true, returnTo: location }
-    })
+    if (this.isValid) {
+      const {push, location} = this.props
+      const {url} = this.state
+      push({
+        pathname: '/document/create',
+        query: { url: encodeURIComponent(url) },
+        state: { modal: true, returnTo: location }
+      })
+    }
   }
 }
 

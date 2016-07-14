@@ -36,18 +36,31 @@ export class DocumentTitleModal extends React.Component {
         onApprove: this.handleSubmit
       })
       .modal('show')
+      const $form = this.refs.form
+      window.$($form)
+      .form({
+        on: 'blur',
+        fields: {
+          title: ['empty']
+        }
+      })
     }
+  }
+
+  get isValid () {
+    const $form = this.refs.form
+    return $form && window.$($form).form('is valid')
   }
 
   render () {
     const doc = this.state
     if (!doc) return null
-    const disabled = doc.title !== '' ? '' : 'disabled'
+    const disabled = this.isValid ? '' : 'disabled'
     return (
       <div className='ui modal' ref='modal'>
         <div className='header'>Update title</div>
         <div className='content'>
-          <form className='ui form' onSubmit={this.handleSubmit}>
+          <form className='ui form' onSubmit={this.handleSubmit} ref='form'>
             <div className='field'>
               <label>Title</label>
               <input
@@ -74,8 +87,10 @@ export class DocumentTitleModal extends React.Component {
   }
 
   handleSubmit () {
-    const { updateDocument, doc } = this.props
-    updateDocument(doc, {title: this.state.title})
+    if (this.isValid) {
+      const { updateDocument, doc } = this.props
+      updateDocument(doc, {title: this.state.title})
+    }
   }
 }
 

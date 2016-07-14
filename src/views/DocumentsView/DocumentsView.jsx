@@ -96,6 +96,7 @@ export class DocumentsView extends React.Component {
   get header () {
     const { location, actions } = this.props
     const bg = this.label ? {backgroundColor: this.label.color} : {}
+    const title = this.label ? this.label.label : 'All documents'
     const createLink = {
       pathname: '/document/create',
       state: { modal: true, returnTo: location }
@@ -107,7 +108,7 @@ export class DocumentsView extends React.Component {
     }
 
     return (
-      <AppBar title={this.title} styles={bg} contextMenu={this.contextMenu}>
+      <AppBar title={title} styles={bg} contextMenu={this.contextMenu}>
         <div className='item'>
           <SearchBar />
         </div>
