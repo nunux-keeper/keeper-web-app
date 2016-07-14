@@ -141,6 +141,7 @@ export class LabelView extends React.Component {
         })
       })
     }
+    return false
   }
 
   handleCancel () {

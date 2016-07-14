@@ -91,6 +91,7 @@ export class DocumentTitleModal extends React.Component {
       const { updateDocument, doc } = this.props
       updateDocument(doc, {title: this.state.title})
     }
+    return false
   }
 }
 

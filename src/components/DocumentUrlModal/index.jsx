@@ -92,6 +92,7 @@ export class DocumentUrlModal extends React.Component {
         state: { modal: true, returnTo: location }
       })
     }
+    return false
   }
 }
 
