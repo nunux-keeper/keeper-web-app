@@ -55,6 +55,21 @@ export class DocumentTile extends React.Component {
     }
   }
 
+  get illustration () {
+    const {value: doc} = this.props
+    if (doc.attachments.length) {
+      const base = window.API_ROOT
+      const att = doc.attachments[0]
+      return (
+        <img src={`${base}/document/${doc.id}/files/${att.key}`} />
+      )
+    } else {
+      return (
+        <img src='http://placehold.it/320x200?text=No+illustration' />
+      )
+    }
+  }
+
   render () {
     const { location } = this.props
     const doc = this.props.value
@@ -64,7 +79,7 @@ export class DocumentTile extends React.Component {
         <div title={doc.title}>
           <Link to={{ pathname: `${location.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
             {this.shareLink}
-            <img src='http://placehold.it/320x200' />
+            {this.illustration}
           </Link>
           <div className='contextual-menu'>{this.contextualMenu}</div>
         </div>
