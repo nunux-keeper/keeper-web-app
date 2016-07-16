@@ -14,6 +14,18 @@ export class AppNotification extends React.Component {
     super()
     this.handleAction = this.handleAction.bind(this)
     this.handleClose = this.handleClose.bind(this)
+    this.timeout = null
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    const { header, message, level } = this.props.notification
+    if (level !== 'error' && (header || message)) {
+      if (this.timeout) {
+        clearTimeout(this.timeout)
+        this.timeout = null
+      }
+      this.timeout = setTimeout(this.handleClose, 5000)
+    }
   }
 
   get header () {
@@ -31,7 +43,7 @@ export class AppNotification extends React.Component {
     const { actionLabel } = this.props.notification
     if (actionLabel) {
       return (
-        <button className='ui compact button' onClick={this.handleAction}>{actionLabel}</button>
+        <button className='ui small inverted basic button' onClick={this.handleAction}>{actionLabel}</button>
       )
     }
   }
@@ -60,8 +72,14 @@ export class AppNotification extends React.Component {
     }
   }
 
-  handleClose (e) {
-    window.$(e.target).closest('.message').transition({
+  handleClose () {
+    if (this.timeout) {
+      clearTimeout(this.timeout)
+      this.timeout = null
+    }
+    console.debug('Closing notification...')
+    const $msg = this.refs.msg
+    window.$($msg).transition({
       animation: 'fade',
       onComplete: this.props.hideNotification
     })
@@ -71,15 +89,15 @@ export class AppNotification extends React.Component {
     const { header, message, level } = this.props.notification
     if (header || message) {
       return (
-        <div className={`ui floating attached ${level} message`} style={this.styles}>
+        <div className={`ui floating attached ${level} message`} style={this.styles} ref='msg'>
           <i className='close icon' onClick={this.handleClose}></i>
+          {this.header}
           <div className='content'>
-            {this.header}
             <p>
               {message}
             </p>
+            {this.actionButton}
           </div>
-          {this.actionButton}
         </div>
       )
     } else {

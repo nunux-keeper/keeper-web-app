@@ -104,6 +104,15 @@
       color: #FFF;
     }
   }
+  .ui.message > .content {
+    display: flex;
+    p {
+      flex: 1 100%;
+    }
+    button {
+      align-self: flex-end;
+    }
+  }
 
   .ui.top.menu > .header {
     text-overflow: ellipsis;
