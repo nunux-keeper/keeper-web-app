@@ -21,6 +21,7 @@ export class DocumentContent extends React.Component {
   constructor (props) {
     super(props)
     this.handleEditorChange = this.handleEditorChange.bind(this)
+    this.handleContentChange = this.handleContentChange.bind(this)
   }
 
   handleEditorChange (e) {
@@ -28,19 +29,37 @@ export class DocumentContent extends React.Component {
     updateDocument(doc, {content: e.target.getContent()})
   }
 
+  handleContentChange (e) {
+    const { updateDocument, doc } = this.props
+    updateDocument(doc, {content: e.target.value})
+  }
+
   renderEditMode () {
     const { doc } = this.props
-    const config = {
-      plugins: 'link image code',
-      toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+    if (doc.contentType.match(/^text\/html/)) {
+      const config = {
+        plugins: 'link image code',
+        toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+      }
+      return (
+        <TinyMCE
+          content={doc.content}
+          config={config}
+          onChange={this.handleEditorChange}
+        />
+      )
+    } else {
+      return (
+        <div className='ui form'>
+          <div className='field'>
+            <textarea
+              value={doc.content}
+              onChange={this.handleContentChange}>
+            </textarea>
+          </div>
+        </div>
+      )
     }
-    return (
-      <TinyMCE
-        content={doc.content}
-        config={config}
-        onChange={this.handleEditorChange}
-      />
-    )
   }
 
   renderViewMode () {
