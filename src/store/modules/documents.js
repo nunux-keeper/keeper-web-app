@@ -26,7 +26,8 @@ export const fetchDocumentsSuccess = createAction(FETCH_DOCUMENTS, (res) => {
 export const fetchDocuments = (params = {from: 0, size: 20}) => {
   params = Object.assign({
     from: 0,
-    size: 20
+    size: 20,
+    order: 'desc'
   }, params)
   return (dispatch, getState) => {
     const {documents} = getState()

@@ -4,15 +4,13 @@ import { Link } from 'react-router'
 
 import { bindActions } from 'store/helper'
 
-import { routerActions as RouterActions } from 'react-router-redux'
 import { actions as DocumentsActions } from 'store/modules/documents'
-import { actions as LabelsActions } from 'store/modules/labels'
 import { actions as UrlModalActions } from 'store/modules/urlModal'
-import { actions as NotificationActions } from 'store/modules/notification'
 
 import SearchBar from 'components/SearchBar'
 import InfiniteGrid from 'components/InfiniteGrid'
 import DocumentTile from 'components/DocumentTile'
+import DocumentsContextMenu from 'components/DocumentsContextMenu'
 import AppBar from 'components/AppBar'
 
 import * as NProgress from 'nprogress'
@@ -29,9 +27,6 @@ export class DocumentsView extends React.Component {
   constructor () {
     super()
     this.fetchFollowingDocuments = this.fetchFollowingDocuments.bind(this)
-    this.refreshDocuments = this.refreshDocuments.bind(this)
-    this.removeLabel = this.removeLabel.bind(this)
-    this.undoRemoveLabel = this.undoRemoveLabel.bind(this)
   }
 
   componentDidUpdate (prevProps) {
@@ -62,35 +57,7 @@ export class DocumentsView extends React.Component {
   }
 
   get contextMenu () {
-    const { location } = this.props
-    if (this.label) {
-      return (
-        <div className='menu'>
-          <a className='item' onClick={this.refreshDocuments}>
-            <i className='refresh icon'></i>
-            Refresh
-          </a>
-          <div className='ui divider'></div>
-          <Link to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: location, title: `Edit label: ${this.label.label}`} }}
-            className='item'>
-            <i className='tag icon'></i>
-            Edit Label
-          </Link>
-          <a className='item' onClick={this.removeLabel}>
-            <i className='trash icon'></i>
-            Delete Label
-          </a>
-        </div>
-      )
-    }
-    return (
-      <div className='menu'>
-        <a className='item' onClick={this.refreshDocuments}>
-          <i className='refresh icon'></i>
-          Refresh
-        </a>
-      </div>
-    )
+    return (<DocumentsContextMenu />)
   }
 
   get header () {
@@ -196,47 +163,6 @@ export class DocumentsView extends React.Component {
     params.from++
     actions.documents.fetchDocuments(params)
   }
-
-  refreshDocuments () {
-    const { actions, documents } = this.props
-    const { params } = documents
-    params.from = 0
-    actions.documents.fetchDocuments(params)
-  }
-
-  removeLabel () {
-    const { actions } = this.props
-    actions.labels.removeLabel(this.label)
-    .then((label) => {
-      actions.router.push({pathname: '/document'})
-      actions.notification.showNotification({
-        message: 'Label deleted',
-        actionLabel: 'undo',
-        actionFn: () => this.undoRemoveLabel()
-      })
-    }).catch((err) => {
-      actions.notification.showNotification({
-        header: 'Unable to delete label',
-        message: err.error,
-        level: 'error'
-      })
-    })
-  }
-
-  undoRemoveLabel () {
-    const { actions } = this.props
-    actions.labels.restoreRemovedLabel().then((label) => {
-      actions.router.push({pathname: `/label/${label.id}`})
-      actions.notification.showNotification({header: 'Label restored'})
-    }).catch((err) => {
-      actions.notification.showNotification({
-        header: 'Unable to restore label',
-        message: err.error,
-        level: 'error'
-      })
-    })
-  }
-
 }
 
 const mapStateToProps = (state) => ({
@@ -248,10 +174,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = (dispatch) => (bindActions({
   documents: DocumentsActions,
-  labels: LabelsActions,
-  urlModal: UrlModalActions,
-  notification: NotificationActions,
-  router: RouterActions
+  urlModal: UrlModalActions
 }, dispatch))
 
 export default connect(mapStateToProps, mapActionsToProps)(DocumentsView)
