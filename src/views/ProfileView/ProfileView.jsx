@@ -49,10 +49,23 @@ export default class ProfileView extends React.Component {
     }
   }
 
+  get managementLink () {
+    return (
+      <span>
+        Profile management is delegated to Keycloak. Click&nbsp;
+        <a href='http://login.nunux.org/auth/realms/NunuxKeeper/account?referrer=nunux-keeper-app' target='_blank'>
+          here
+        </a>
+        &nbsp;to manage your profile.
+      </span>
+    )
+  }
+
   get profile () {
     return (
       <div>
         {this.userHeader}
+        {this.managementLink}
         <div className='ui pointing secondary menu' ref='menu'>
           <a className='item active' data-tab='bookmarklet'>Bookmarklet</a>
         </div>
