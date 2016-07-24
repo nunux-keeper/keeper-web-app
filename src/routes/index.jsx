@@ -10,6 +10,7 @@ import LabelView from 'views/LabelView/LabelView'
 import DocumentsView from 'views/DocumentsView/DocumentsView'
 import DocumentView from 'views/DocumentView/DocumentView'
 import BookmarkletView from 'views/BookmarkletView/BookmarkletView'
+import GraveyardView from 'views/GraveyardView/GraveyardView'
 
 import { requireAuthentication } from 'middlewares/Authentication'
 
@@ -20,7 +21,8 @@ import {
   fetchDocuments,
   fetchLabel,
   fetchLabelAndDocument,
-  fetchLabelAndDocuments
+  fetchLabelAndDocuments,
+  fetchGraveyard
 } from 'middlewares/Context'
 
 export default (store) => (
@@ -29,6 +31,7 @@ export default (store) => (
     <Route component={requireAuthentication(MainLayout)}>
       <Route path='bookmarklet' component={BookmarkletView} />
       <Route path='profile' component={fetchProfile(ProfileView)} />
+      <Route path='trash' component={fetchGraveyard(GraveyardView)} />
       <Route path='document' component={fetchDocuments(DocumentsView)} />
       <Route path='document/create' component={createNewDocument(DocumentView)} />
       <Route path='document/:docId' component={fetchDocument(DocumentView)} />

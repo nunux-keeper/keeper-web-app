@@ -6,6 +6,7 @@ import { bindActions } from 'store/helper'
 
 import { routerActions as RouterActions } from 'react-router-redux'
 import { actions as DocumentsActions } from 'store/modules/documents'
+import { actions as GraveyardActions } from 'store/modules/graveyard'
 import { actions as LabelsActions } from 'store/modules/labels'
 import { actions as NotificationActions } from 'store/modules/notification'
 
@@ -14,7 +15,8 @@ export class DocumentsContextMenu extends React.Component {
     actions: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     documents: PropTypes.object.isRequired,
-    labels: PropTypes.object.isRequired
+    labels: PropTypes.object.isRequired,
+    items: PropTypes.string
   };
 
   constructor (props) {
@@ -23,6 +25,11 @@ export class DocumentsContextMenu extends React.Component {
     this.handleOrderSwitch = this.handleOrderSwitch.bind(this)
     this.handleRemoveLabel = this.handleRemoveLabel.bind(this)
     this.handleUndoRemoveLabel = this.handleUndoRemoveLabel.bind(this)
+    this.handleEmptyGraveyard = this.handleEmptyGraveyard.bind(this)
+  }
+
+  key (name) {
+    return `menu-${name}`
   }
 
   get label () {
@@ -32,7 +39,7 @@ export class DocumentsContextMenu extends React.Component {
 
   get refreshMenuItem () {
     return (
-      <div className='item' onClick={this.handleRefresh}>
+      <div key={this.key('refresh')} className='item' onClick={this.handleRefresh}>
         <i className='refresh icon'></i>
         Refresh
       </div>
@@ -45,7 +52,7 @@ export class DocumentsContextMenu extends React.Component {
     const txt = asc ? 'From most recent' : 'From oldest'
     const css = asc ? 'ascending' : 'descending'
     return (
-      <div className='item' onClick={this.handleOrderSwitch}>
+      <div key={this.key('order')} className='item' onClick={this.handleOrderSwitch}>
         <i className={`sort numeric ${css}  icon`}></i>
         {txt}
       </div>
@@ -56,7 +63,7 @@ export class DocumentsContextMenu extends React.Component {
     const { location } = this.props
     if (this.label) {
       return (
-        <Link to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: location, title: `Edit label: ${this.label.label}`} }}
+        <Link key={this.key('edit-label')} to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: location, title: `Edit label: ${this.label.label}`} }}
           className='item'>
           <i className='tag icon'></i>
           Edit Label
@@ -68,7 +75,7 @@ export class DocumentsContextMenu extends React.Component {
   get deleteLabelMenuItem () {
     if (this.label) {
       return (
-        <a className='item' onClick={this.handleRemoveLabel}>
+        <a key={this.key('delete-label')} className='item' onClick={this.handleRemoveLabel}>
           <i className='trash icon'></i>
           Delete Label
         </a>
@@ -76,20 +83,30 @@ export class DocumentsContextMenu extends React.Component {
     }
   }
 
-  get labelMenuDivider () {
-    if (this.label) {
-      return (<div className='ui divider'></div>)
-    }
+  get emptyGraveyardMenuItem () {
+    return (
+      <a key={this.key('empty-graveyard')} className='item' onClick={this.handleEmptyGraveyard}>
+        <i className='trash icon'></i>
+        Empty the trash
+      </a>
+    )
+  }
+
+  get dividerMenuItem () {
+    return (<div key={this.key('divider' + Math.random())} className='ui divider'></div>)
+  }
+
+  get menu () {
+    const { items } = this.props
+    return items.split(',').map((item) => {
+      return this[item + 'MenuItem']
+    })
   }
 
   render () {
     return (
       <div className='menu'>
-        {this.refreshMenuItem}
-        {this.orderMenuItem}
-        {this.labelMenuDivider}
-        {this.editLabelMenuItem}
-        {this.deleteLabelMenuItem}
+        {this.menu}
       </div>
     )
   }
@@ -140,6 +157,19 @@ export class DocumentsContextMenu extends React.Component {
       })
     })
   }
+
+  handleEmptyGraveyard () {
+    const { actions } = this.props
+    actions.graveyard.emptyGraveyard().then(() => {
+      actions.notification.showNotification({header: 'The trash is emptied'})
+    }).catch((err) => {
+      actions.notification.showNotification({
+        header: 'Unable to empty the trash',
+        message: err.error,
+        level: 'error'
+      })
+    })
+  }
 }
 
 const mapStateToProps = (state) => ({
@@ -150,6 +180,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = (dispatch) => (bindActions({
   documents: DocumentsActions,
+  graveyard: GraveyardActions,
   labels: LabelsActions,
   notification: NotificationActions,
   router: RouterActions

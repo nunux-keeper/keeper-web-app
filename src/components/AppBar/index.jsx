@@ -5,6 +5,8 @@ import { bindActions } from 'store/helper'
 
 import { routerActions as RouterActions } from 'react-router-redux'
 
+import './styles.scss'
+
 export class AppBar extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,

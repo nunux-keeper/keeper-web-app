@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { actions as notificationActions } from 'store/modules/notification'
 
+import './styles.scss'
+
 export class AppNotification extends React.Component {
   static propTypes = {
     device: PropTypes.object.isRequired,

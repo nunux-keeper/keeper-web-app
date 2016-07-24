@@ -123,6 +123,17 @@ export const restoreRemovedDocument = () => {
   }
 }
 
+export const restoreDocument = (doc) => {
+  return (dispatch, getState) => {
+    console.debug('Restoring document:', doc.id)
+    dispatch(restoreDocumentRequest())
+    return DocumentApi.restore(doc)
+    .then((_doc) => dispatch(restoreDocumentSuccess(_doc)))
+    .catch((err) => dispatch(restoreDocumentFailure(err)))
+    .then(payloadResponse)
+  }
+}
+
 export const submitDocument = () => {
   return (dispatch, getState) => {
     const {current: doc} = getState().document
@@ -167,6 +178,7 @@ export const actions = {
   updateDocument,
   removeDocument,
   restoreRemovedDocument,
+  restoreDocument,
   submitDocument,
   resetDocument,
   toggleDocumentEditMode

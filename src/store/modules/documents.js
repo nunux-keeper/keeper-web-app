@@ -143,9 +143,10 @@ export default handleActions({
     const {response} = action.payload || {}
     if (response) {
       // Restore document into the list
+      const idx = state.removedIndex || 0
       const update = {}
       update.items = state.items.slice()
-      update.items.splice(state.removedIndex, 0, response)
+      update.items.splice(idx, 0, response)
       update.total = state.total + 1
       update.removed = null
       update.removedIndex = null

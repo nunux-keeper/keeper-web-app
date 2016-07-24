@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
 
 import { bindActions } from 'store/helper'
 
 import { actions as DocumentsActions } from 'store/modules/documents'
+import { actions as GraveyardActions } from 'store/modules/graveyard'
 import { actions as UrlModalActions } from 'store/modules/urlModal'
 
 import SearchBar from 'components/SearchBar'
@@ -16,23 +16,22 @@ import AppSignPanel from 'components/AppSignPanel'
 
 import * as NProgress from 'nprogress'
 
-export class DocumentsView extends React.Component {
+export class GraveyardView extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    documents: PropTypes.object.isRequired,
-    labels: PropTypes.object.isRequired,
+    graveyard: PropTypes.object.isRequired,
     device: PropTypes.object.isRequired
   };
 
   constructor () {
     super()
-    this.fetchFollowingDocuments = this.fetchFollowingDocuments.bind(this)
+    this.fetchFollowingGhosts = this.fetchFollowingGhosts.bind(this)
   }
 
   componentDidUpdate (prevProps) {
-    const {isProcessing} = this.props.documents
-    const {isProcessing: wasProcessing} = prevProps.documents
+    const {isProcessing} = this.props.graveyard
+    const {isProcessing: wasProcessing} = prevProps.graveyard
     if (!wasProcessing && isProcessing) {
       NProgress.start()
     } else if (wasProcessing && !isProcessing) {
@@ -40,75 +39,45 @@ export class DocumentsView extends React.Component {
     }
   }
 
-  get label () {
-    const { labels } = this.props
-    return labels.current
-  }
-
   get title () {
-    const { total } = this.props.documents
-    const title = this.label ? `Documents - ${this.label.label}` : 'Documents'
+    const { total } = this.props.graveyard
     const totalLabel = total ? <div className='ui tiny horizontal label'>{total}</div> : null
     return (
       <div>
         {totalLabel}
-        <span>{title}</span>
+        <span>Trash</span>
       </div>
     )
   }
 
   get contextMenu () {
-    const menuItems = this.label ? 'refresh,order,divider,editLabel,divider,deleteLabel' : 'refresh,order'
-    return (<DocumentsContextMenu items={menuItems} />)
+    return (<DocumentsContextMenu items='emptyGraveyard' />)
   }
 
   get header () {
-    const { location, actions } = this.props
-    const bg = this.label ? {backgroundColor: this.label.color} : {}
-    const title = this.label ? this.label.label : 'All documents'
-    const createLink = {
-      pathname: '/document/create',
-      state: { modal: true, returnTo: location }
-    }
-    if (this.label) {
-      createLink.query = {
-        labels: [this.label.id]
-      }
-    }
-
+    const bg = {backgroundColor: '#696969'}
     return (
-      <AppBar title={title} styles={bg} contextMenu={this.contextMenu}>
+      <AppBar title={this.title} styles={bg} contextMenu={this.contextMenu}>
         <div className='item'>
           <SearchBar />
-        </div>
-        <div className='ui dropdown icon right item'>
-          <i className='plus vertical icon'></i>
-          <div className='menu'>
-            <Link to={createLink} className='item'>
-              <i className='file outline icon'></i>New document...
-            </Link>
-            <a className='item' onClick={actions.urlModal.showUrlModal}>
-              <i className='cloud download icon'></i>From URL...
-            </a>
-          </div>
         </div>
       </AppBar>
     )
   }
 
   get loader () {
-    const { isFetching } = this.props.documents
+    const { isFetching } = this.props.graveyard
     if (isFetching) {
       return (
         <div className='ui active inverted dimmer'>
-          <div className='ui indeterminate text loader'>Loading Documents</div>
+          <div className='ui indeterminate text loader'>Loading deleted documents...</div>
         </div>
       )
     }
   }
 
-  get documents () {
-    const { isFetching, items, hasMore, error } = this.props.documents
+  get ghosts () {
+    const { isFetching, items, hasMore, error } = this.props.graveyard
     if (error) {
       return (
         <AppSignPanel level='error'>
@@ -119,8 +88,8 @@ export class DocumentsView extends React.Component {
     } else if (!isFetching && items.length === 0) {
       return (
         <AppSignPanel>
-          <i className='ban icon'></i>
-          No documents.
+          <i className='trash icon'></i>
+          The trash is empty
         </AppSignPanel>
       )
     } else {
@@ -128,7 +97,7 @@ export class DocumentsView extends React.Component {
       const sizes = ['one', 'three', 'five']
       const size = sizes[this.props.device.size - 1]
       return (
-        <InfiniteGrid size={size} hasMore={hasMore} loadMore={this.fetchFollowingDocuments}>
+        <InfiniteGrid size={size} hasMore={hasMore} loadMore={this.fetchFollowingGhosts}>
           {$items}
         </InfiniteGrid>
       )
@@ -139,32 +108,32 @@ export class DocumentsView extends React.Component {
     return (
       <div className='view'>
         {this.header}
-        <div className='ui main documents'>
-          {this.documents}
+        <div className='ui main trash'>
+          {this.ghosts}
           {this.loader}
         </div>
       </div>
     )
   }
 
-  fetchFollowingDocuments () {
-    const { actions, documents } = this.props
-    const { params } = documents
+  fetchFollowingGhosts () {
+    const { actions, graveyard } = this.props
+    const { params } = graveyard
     params.from++
-    actions.documents.fetchDocuments(params)
+    actions.graveyard.fetchGhosts(params)
   }
 }
 
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
-  labels: state.labels,
-  documents: state.documents,
+  graveyard: state.graveyard,
   device: state.device
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({
   documents: DocumentsActions,
+  graveyard: GraveyardActions,
   urlModal: UrlModalActions
 }, dispatch))
 
-export default connect(mapStateToProps, mapActionsToProps)(DocumentsView)
+export default connect(mapStateToProps, mapActionsToProps)(GraveyardView)

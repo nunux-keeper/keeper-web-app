@@ -22,10 +22,13 @@ export class DocumentTile extends React.Component {
 
   get contextualMenu () {
     const {value: doc} = this.props
+    const menu = doc.ghost ? 'restore,destroy' : 'detail,share,divider,editTitle,divider,delete'
     return (
-      <div className='ui icon top right pointing dropdown circular button'>
-        <i className='ellipsis vertical icon'></i>
-        <DocumentContextMenu doc={doc} items='detail,editTitle,share,delete' />
+      <div className='contextual-menu'>
+        <div className='ui icon top right pointing dropdown circular button'>
+          <i className='ellipsis vertical icon'></i>
+          <DocumentContextMenu doc={doc} items={menu} />
+        </div>
       </div>
     )
   }
@@ -56,40 +59,61 @@ export class DocumentTile extends React.Component {
   }
 
   get illustration () {
-    const {value: doc} = this.props
+    const {location, value: doc} = this.props
+    let $img = <img src='http://placehold.it/320x200?text=No+illustration' />
     if (doc.attachments.length) {
       const base = window.API_ROOT
       const att = doc.attachments[0]
+      $img = <img src={`${base}/document/${doc.id}/files/${att.key}`} />
+    }
+    if (doc.ghost) {
       return (
-        <img src={`${base}/document/${doc.id}/files/${att.key}`} />
+        <div className='ui fluid image'>
+          {$img}
+        </div>
       )
     } else {
+      const state = { modal: true, returnTo: location, title: doc.title }
       return (
-        <img src='http://placehold.it/320x200?text=No+illustration' />
+        <Link to={{ pathname: `${location.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
+          {this.shareLink}
+          {$img}
+        </Link>
+      )
+    }
+  }
+
+  get header () {
+    const {location, value: doc} = this.props
+    if (doc.ghost) {
+      return (
+        <span className='header' title={doc.title}>
+          {doc.title}
+        </span>
+      )
+    } else {
+      const state = { modal: true, returnTo: location, title: doc.title }
+      return (
+        <Link
+          to={{ pathname: `${location.pathname}/${doc.id}`, state: state }}
+          title={doc.title}
+          className='header'>
+          {doc.title}
+        </Link>
       )
     }
   }
 
   render () {
-    const { location } = this.props
-    const doc = this.props.value
-    const state = { modal: true, returnTo: location, title: doc.title }
+    const { value: doc } = this.props
     return (
       <div className='ui card doc' id={`doc-${doc.id}`} ref='doc'>
         <div title={doc.title}>
-          <Link to={{ pathname: `${location.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
-            {this.shareLink}
-            {this.illustration}
-          </Link>
-          <div className='contextual-menu'>{this.contextualMenu}</div>
+          {this.illustration}
+          {this.contextualMenu}
         </div>
         <div className='content'>
-          <Link
-            to={{ pathname: `${location.pathname}/${doc.id}`, state: state }}
-            title={doc.title}
-            className='header'>
-            {doc.title}
-          </Link>
+          {this.header}
           {this.fromLink}
           <DocumentLabels doc={doc} editable={false} />
         </div>

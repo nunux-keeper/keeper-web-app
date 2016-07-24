@@ -6,6 +6,7 @@ import { actions as labelsActions } from 'store/modules/labels'
 import { actions as profileActions } from 'store/modules/profile'
 import { actions as documentsActions } from 'store/modules/documents'
 import { actions as documentActions } from 'store/modules/document'
+import { actions as graveyardActions } from 'store/modules/graveyard'
 
 export function fetchProfile (Component) {
   class ProfileAwareComponent extends React.Component {
@@ -164,5 +165,47 @@ export function fetchLabelAndDocument (Component) {
 
 export function fetchLabelAndDocuments (Component) {
   return fetchDocuments(fetchLabel(Component))
+}
+
+export function fetchGraveyard (Component) {
+  class GraveyardAwareComponent extends React.Component {
+    static propTypes = {
+      params: PropTypes.object.isRequired,
+      location: PropTypes.object.isRequired,
+      fetchGhosts: PropTypes.func.isRequired
+    };
+
+    componentDidMount () {
+      console.debug('GraveyardAwareComponent::componentDidMount')
+      const { params, location, fetchGhosts } = this.props
+      if (!(location.state && location.state.backFromModal)) {
+        fetchGhosts({
+          label: params.labelId,
+          ... location.query
+        })
+      }
+    }
+
+    componentWillReceiveProps (nextProps) {
+      console.debug('GraveyardAwareComponent::componentWillReceiveProps')
+      const { params, location, fetchGhosts } = this.props
+      if (location.search !== nextProps.location.search) {
+        fetchGhosts({
+          label: params.labelId,
+          ... nextProps.location.query
+        })
+      }
+    }
+
+    render () {
+      return (<Component {...this.props}/>)
+    }
+  }
+
+  const mapDispatchToProps = (dispatch) => (
+    bindActionCreators(Object.assign({}, graveyardActions), dispatch)
+  )
+
+  return connect(null, mapDispatchToProps)(GraveyardAwareComponent)
 }
 

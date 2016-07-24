@@ -1,0 +1,31 @@
+:global {
+  .ui.panel {
+    position: absolute;
+    top: 0!important;
+    left: 0!important;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+    &.error {
+      background-color: darkred;
+    }
+    &.warn {
+      background-color: orange;
+    }
+    > .content{
+      width: 100%;
+      height: 100%;
+      display: table;
+      -webkit-user-select: text;
+      > * {
+        display: table-cell;
+        vertical-align: middle;
+        color: #fff;
+      }
+    }
+    .ui.icon.header.normal {
+      color: #cacaca;
+    }
+  }
+}

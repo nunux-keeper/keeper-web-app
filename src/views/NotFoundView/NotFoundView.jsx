@@ -1,20 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router'
+
+import AppSignPanel from 'components/AppSignPanel'
 
 export const NotFoundView = (props) => (
   <div className='ui segment' style={{ height: '100%' }}>
-    <div className='ui panel warn'>
-      <div className='content'>
-        <div className='center'>
-          <h2 className='ui inverted icon header'>
-            <i className='ban icon'></i>
-            Page not found!
-          </h2>
-          <br/>
-          <Link to='/'>Back to home page</Link>
-        </div>
-      </div>
-    </div>
+    <AppSignPanel level='warn'>
+      <i className='ban icon'></i>
+      Page not found!
+    </AppSignPanel>
   </div>
 )
 export default NotFoundView

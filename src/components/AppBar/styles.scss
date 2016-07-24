@@ -1,0 +1,9 @@
+:global {
+  .ui.top.menu > .header {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex-shrink: 1;
+    white-space: nowrap;
+  }
+}
+

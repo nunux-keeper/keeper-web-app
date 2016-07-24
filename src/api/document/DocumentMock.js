@@ -1,4 +1,5 @@
 import Chance from 'chance'
+import GraveyardMock from 'api/graveyard'
 
 const chance = new Chance()
 
@@ -110,11 +111,13 @@ export class DocumentMock {
   }
 
   remove (doc) {
-    return Promise.resolve(this.db.remove(doc))
+    return GraveyardMock.add(doc)
+    .then(() => Promise.resolve(this.db.remove(doc)))
   }
 
   restore (doc) {
-    return Promise.resolve(this.db.restore(doc))
+    return GraveyardMock.remove(doc)
+    .then(() => Promise.resolve(this.db.restore(doc)))
   }
 }
 
