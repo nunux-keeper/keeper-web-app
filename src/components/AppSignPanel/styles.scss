@@ -13,6 +13,9 @@
     &.warn {
       background-color: orange;
     }
+    &.announcement {
+      background-color: royalblue;
+    }
     > .content{
       width: 100%;
       height: 100%;

@@ -11,6 +11,7 @@ import DocumentsView from 'views/DocumentsView/DocumentsView'
 import DocumentView from 'views/DocumentView/DocumentView'
 import BookmarkletView from 'views/BookmarkletView/BookmarkletView'
 import GraveyardView from 'views/GraveyardView/GraveyardView'
+import SharesView from 'views/SharesView/SharesView'
 
 import { requireAuthentication } from 'middlewares/Authentication'
 
@@ -39,6 +40,7 @@ export default (store) => (
       <Route path='label/:labelId' component={fetchLabelAndDocuments(DocumentsView)} />
       <Route path='label/:labelId/edit' component={fetchLabel(LabelView)} />
       <Route path='label/:labelId/:docId' component={fetchLabelAndDocument(DocumentView)} />
+      <Route path='share' component={SharesView} />
     </Route>
     <Route path='/404' component={NotFoundView} />
     <Redirect from='*' to='/404' />

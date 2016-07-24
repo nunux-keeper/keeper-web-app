@@ -88,7 +88,7 @@ export class AppNavigation extends React.Component {
           Trash
           <i className='trash icon'></i>
         </Link>
-        <Link to={{ pathname: '/' }} className='item'>
+        <Link to={{ pathname: '/share' }} className='item'>
           Shares
           <i className='share alternate icon'></i>
         </Link>
