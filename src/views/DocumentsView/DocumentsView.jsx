@@ -38,6 +38,7 @@ export class DocumentsView extends React.Component {
     } else if (wasProcessing && !isProcessing) {
       NProgress.done()
     }
+    document.title = this.title
   }
 
   get label () {
@@ -46,15 +47,7 @@ export class DocumentsView extends React.Component {
   }
 
   get title () {
-    const { total } = this.props.documents
-    const title = this.label ? `Documents - ${this.label.label}` : 'Documents'
-    const totalLabel = total ? <div className='ui tiny horizontal label'>{total}</div> : null
-    return (
-      <div>
-        {totalLabel}
-        <span>{title}</span>
-      </div>
-    )
+    return this.label ? this.label.label : 'All documents'
   }
 
   get contextMenu () {
@@ -63,9 +56,8 @@ export class DocumentsView extends React.Component {
   }
 
   get header () {
-    const { location, actions } = this.props
+    const { location, actions, documents: {total} } = this.props
     const bg = this.label ? {backgroundColor: this.label.color} : {}
-    const title = this.label ? this.label.label : 'All documents'
     const createLink = {
       pathname: '/document/create',
       state: { modal: true, returnTo: location }
@@ -76,8 +68,11 @@ export class DocumentsView extends React.Component {
       }
     }
 
+    const $totalLabel = total ? <div className='ui tiny horizontal label'>{total}</div> : null
+    const $title = <div>{$totalLabel}<span>{this.title}</span></div>
+
     return (
-      <AppBar title={title} styles={bg} contextMenu={this.contextMenu}>
+      <AppBar title={$title} styles={bg} contextMenu={this.contextMenu}>
         <div className='item'>
           <SearchBar />
         </div>

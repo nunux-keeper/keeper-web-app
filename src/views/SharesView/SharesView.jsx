@@ -4,6 +4,10 @@ import AppBar from 'components/AppBar'
 import AppSignPanel from 'components/AppSignPanel'
 
 export default class DocumentsView extends React.Component {
+  componentDidMount () {
+    document.title = 'Shares'
+  }
+
   render () {
     return (
       <div className='view'>

@@ -37,17 +37,11 @@ export class GraveyardView extends React.Component {
     } else if (wasProcessing && !isProcessing) {
       NProgress.done()
     }
+    document.title = this.title
   }
 
   get title () {
-    const { total } = this.props.graveyard
-    const totalLabel = total ? <div className='ui tiny horizontal label'>{total}</div> : null
-    return (
-      <div>
-        {totalLabel}
-        <span>Trash</span>
-      </div>
-    )
+    return 'Trash'
   }
 
   get contextMenu () {
@@ -55,9 +49,12 @@ export class GraveyardView extends React.Component {
   }
 
   get header () {
+    const { graveyard: {total} } = this.props
     const bg = {backgroundColor: '#696969'}
+    const $totalLabel = total ? <div className='ui tiny horizontal label'>{total}</div> : null
+    const $title = <div>{$totalLabel}<span>{this.title}</span></div>
     return (
-      <AppBar title={this.title} styles={bg} contextMenu={this.contextMenu}>
+      <AppBar title={$title} styles={bg} contextMenu={this.contextMenu}>
         <div className='item'>
           <SearchBar />
         </div>

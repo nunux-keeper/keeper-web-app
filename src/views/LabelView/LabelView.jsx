@@ -46,6 +46,15 @@ export class LabelView extends React.Component {
     })
   }
 
+  componentDidUpdate (prevProps) {
+    document.title = this.title
+  }
+
+  get title () {
+    const { current: { label } } = this.props.labels
+    return this.isCreateForm ? 'New label' : `Edit label: ${label}`
+  }
+
   get isCreateForm () {
     const pathname = this.props.location.pathname
     return pathname === '/label/create'
@@ -57,11 +66,10 @@ export class LabelView extends React.Component {
   }
 
   get header () {
-    const { current } = this.props.labels
     return (
       <AppBar
         modal={this.isModalDisplayed}
-        title={this.isCreateForm ? 'New label' : `Edit label: ${current.label}`}
+        title={this.title}
       />
     )
   }

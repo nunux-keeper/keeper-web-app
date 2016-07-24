@@ -50,6 +50,7 @@ export class DocumentView extends React.Component {
         NProgress.done()
       }
     }
+    document.title = this.title
   }
 
   redirectBack () {
@@ -115,12 +116,17 @@ export class DocumentView extends React.Component {
     }
   }
 
+  get title () {
+    const { isFetching, current: doc } = this.props.document
+    return isFetching || !doc ? 'Document' : doc.title
+  }
+
   get header () {
     const { isFetching, current: doc } = this.props.document
     return (
       <AppBar
         modal={this.isModalDisplayed}
-        title={isFetching || !doc ? 'Document' : doc.title}
+        title={this.title}
         contextMenu={isFetching || !doc ? null : this.contextMenu}>
         {this.editButtons}
       </AppBar>

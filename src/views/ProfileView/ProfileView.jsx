@@ -15,6 +15,7 @@ export default class ProfileView extends React.Component {
   componentDidMount () {
     const $el = this.refs.menu
     window.$($el).find('.item').tab()
+    document.title = 'Profile'
   }
 
   get header () {
