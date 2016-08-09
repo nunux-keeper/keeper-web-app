@@ -51,8 +51,12 @@ export class LabelView extends React.Component {
   }
 
   get title () {
-    const { current: { label } } = this.props.labels
-    return this.isCreateForm ? 'New label' : `Edit label: ${label}`
+    if (this.isCreateForm) {
+      return 'New label'
+    } else {
+      const { current: {label} } = this.props.labels
+      return `Edit label: ${label}`
+    }
   }
 
   get isCreateForm () {
