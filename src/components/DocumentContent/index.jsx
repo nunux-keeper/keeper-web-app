@@ -39,7 +39,8 @@ export class DocumentContent extends React.Component {
     if (doc.contentType.match(/^text\/html/)) {
       const config = {
         plugins: 'link image code',
-        toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+        toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
+        extended_valid_elements: 'img[class|src|border=0|alt|title|hspace|vspace|width|height|align|name|data-src|app-src]'
       }
       return (
         <TinyMCE
