@@ -146,8 +146,8 @@ export class DocumentView extends React.Component {
   }
 
   get document () {
-    const { isFetching, isEditing, current: doc } = this.props.document
-    if (doc && !isFetching) {
+    const { isFetching, isProcessing, isEditing, current: doc } = this.props.document
+    if (doc && !isFetching && !isProcessing) {
       return (
         <div>
           {this.originLink}
