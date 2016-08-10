@@ -53,7 +53,7 @@ export default class ProfileView extends React.Component {
     return (
       <span>
         Profile management is delegated to an external service. Click&nbsp;
-        <a href='http://login.nunux.org/auth/realms/NunuxKeeper/account?referrer=nunux-keeper-app' target='_blank'>
+        <a href='http://login.nunux.org/auth/realms/nunux.org/account?referrer=nunux-keeper-app' target='_blank'>
           here
         </a>
         &nbsp;to manage your profile.
