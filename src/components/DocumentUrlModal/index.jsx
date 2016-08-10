@@ -84,12 +84,13 @@ export class DocumentUrlModal extends React.Component {
 
   handleSubmit () {
     if (this.isValid) {
-      const {push, location} = this.props
+      const {push} = this.props
       const {url} = this.state
       push({
         pathname: '/document/create',
-        query: { url: encodeURIComponent(url) },
-        state: { modal: true, returnTo: location }
+        query: { url: encodeURIComponent(url) }
+        // FIXME When modal documents view is crushed by the create view
+        // state: { modal: true, returnTo: location }
       })
     }
   }
