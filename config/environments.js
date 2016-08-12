@@ -17,7 +17,7 @@ export default {
         match: /^\/api\/.*/
       }
     },
-    api_root: 'http://api.nunux.org/keeper/v2'
+    api_root: 'https://api.nunux.org/keeper/v2'
   }),
 
   // ======================================================
@@ -33,6 +33,6 @@ export default {
       chunkModules: true,
       colors: true
     },
-    api_root: 'http://api.nunux.org/keeper/v2'
+    api_root: 'https://api.nunux.org/keeper/v2'
   })
 }

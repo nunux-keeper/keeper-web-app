@@ -62,7 +62,7 @@ const config = {
       'https://cdn.jsdelivr.net/jquery/2.2.1/jquery.min.js',
       'https://cdn.jsdelivr.net/semantic-ui/2.1.8/semantic.min.js',
       'https://cdn.tinymce.com/4/tinymce.min.js',
-      'http://login.nunux.org/auth/js/2.1.0.final/keycloak.js'
+      'https://login.nunux.org/auth/js/2.1.0.final/keycloak.js'
     ]
   },
 
