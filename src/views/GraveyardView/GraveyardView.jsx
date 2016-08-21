@@ -6,11 +6,11 @@ import { bindActions } from 'store/helper'
 import { actions as DocumentsActions } from 'store/modules/documents'
 import { actions as GraveyardActions } from 'store/modules/graveyard'
 import { actions as UrlModalActions } from 'store/modules/urlModal'
+import { actions as NotificationActions } from 'store/modules/notification'
 
 import SearchBar from 'components/SearchBar'
 import InfiniteGrid from 'components/InfiniteGrid'
 import DocumentTile from 'components/DocumentTile'
-import DocumentsContextMenu from 'components/DocumentsContextMenu'
 import AppBar from 'components/AppBar'
 import AppSignPanel from 'components/AppSignPanel'
 
@@ -27,6 +27,7 @@ export class GraveyardView extends React.Component {
   constructor () {
     super()
     this.fetchFollowingGhosts = this.fetchFollowingGhosts.bind(this)
+    this.handleEmptyGraveyard = this.handleEmptyGraveyard.bind(this)
   }
 
   componentDidUpdate (prevProps) {
@@ -44,20 +45,19 @@ export class GraveyardView extends React.Component {
     return 'Trash'
   }
 
-  get contextMenu () {
-    return (<DocumentsContextMenu items='emptyGraveyard' />)
-  }
-
   get header () {
     const { graveyard: {total} } = this.props
     const bg = {backgroundColor: '#696969'}
     const $totalLabel = total ? <div className='ui tiny horizontal label'>{total}</div> : null
     const $title = <div>{$totalLabel}<span>{this.title}</span></div>
     return (
-      <AppBar title={$title} styles={bg} contextMenu={this.contextMenu}>
+      <AppBar title={$title} styles={bg} >
         <div className='item'>
           <SearchBar />
         </div>
+        <a className='icon item' onClick={this.handleEmptyGraveyard} title='Empty the trash'>
+          <i className='trash icon'></i>
+        </a>
       </AppBar>
     )
   }
@@ -119,6 +119,20 @@ export class GraveyardView extends React.Component {
     params.from++
     actions.graveyard.fetchGhosts(params)
   }
+
+  handleEmptyGraveyard () {
+    const { actions } = this.props
+    actions.graveyard.emptyGraveyard().then(() => {
+      actions.notification.showNotification({header: 'The trash is emptied'})
+    }).catch((err) => {
+      actions.notification.showNotification({
+        header: 'Unable to empty the trash',
+        message: err.error,
+        level: 'error'
+      })
+    })
+  }
+
 }
 
 const mapStateToProps = (state) => ({
@@ -130,6 +144,7 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = (dispatch) => (bindActions({
   documents: DocumentsActions,
   graveyard: GraveyardActions,
+  notification: NotificationActions,
   urlModal: UrlModalActions
 }, dispatch))
 
