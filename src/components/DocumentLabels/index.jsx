@@ -76,7 +76,7 @@ export class DocumentLabels extends React.Component {
 
   renderEditMode () {
     const { doc, labels } = this.props
-    const value = doc.labels.map((l) => l.id)
+    const value = doc.labels.join()
     const items = labels.items.map((l) => {
       const key = `label-${doc.id}-${l.id}`
       const color = {color: l.color}
