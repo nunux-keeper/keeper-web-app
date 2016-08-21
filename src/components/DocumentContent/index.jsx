@@ -5,8 +5,6 @@ import TinyMCE from 'react-tinymce'
 
 import { actions as documentActions } from 'store/modules/document'
 
-import styles from './styles.scss'
-
 export class DocumentContent extends React.Component {
   static propTypes = {
     doc: PropTypes.object.isRequired,
@@ -68,7 +66,7 @@ export class DocumentContent extends React.Component {
     return (
       <div
         ref='content'
-        className={styles.content}
+        className='readable'
         dangerouslySetInnerHTML={{__html: doc.content}}
       />
     )
