@@ -60,7 +60,7 @@ export class DocumentTile extends React.Component {
 
   get illustration () {
     const {location, value: doc} = this.props
-    let $img = <img src='http://placehold.it/320x200?text=No+illustration' />
+    let $img = <span>No illustration</span>
     if (doc.attachments.length) {
       const base = window.API_ROOT
       const att = doc.attachments[0]
