@@ -7,7 +7,7 @@ import BookmarkletTab from 'views/ProfileView/BookmarkletTab/BookmarkletTab'
 
 import moment from 'moment'
 
-export default class ProfileView extends React.Component {
+export class ProfileView extends React.Component {
   static propTypes = {
     profile: PropTypes.object.isRequired
   };
