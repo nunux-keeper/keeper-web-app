@@ -53,7 +53,7 @@ class DocumentInMemoryDb {
   search (from = 0, size = 20) {
     return {
       total: this.db.length,
-      hits: this.db.slice(from * size, (from * size) + size)
+      hits: this.db.slice(from, from + size)
     }
   }
 
