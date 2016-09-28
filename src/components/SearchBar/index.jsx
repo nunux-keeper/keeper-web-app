@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { routerActions } from 'react-router-redux'
 
-export default class SearchBar extends React.Component {
+export class SearchBar extends React.Component {
   static propTypes = {
     push: PropTypes.func,
     location: PropTypes.object.isRequired

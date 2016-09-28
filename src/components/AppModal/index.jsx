@@ -25,7 +25,7 @@ const customMobileStyles = {
   }
 }
 
-export default class AppModal extends React.Component {
+export class AppModal extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
     children: PropTypes.node.isRequired,
