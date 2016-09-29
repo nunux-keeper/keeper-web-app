@@ -52,7 +52,8 @@ export class AppBar extends React.Component {
           <i className='remove icon'></i>
         </a>
       )
-    } else {
+  } else {
+      // TODO RWD: Hide for desktop
       return (
         <a className='item' onClick={this.handleMenuClick}>
           <i className='sidebar icon'></i>

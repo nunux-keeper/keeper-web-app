@@ -3,29 +3,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { actions as labelsActions } from 'store/modules/labels'
-import { actions as profileActions } from 'store/modules/profile'
 import { actions as documentsActions } from 'store/modules/documents'
 import { actions as documentActions } from 'store/modules/document'
 import { actions as graveyardActions } from 'store/modules/graveyard'
-
-export function fetchProfile (Component) {
-  class ProfileAwareComponent extends React.Component {
-    static propTypes = {
-      fetchProfile: PropTypes.func.isRequired
-    };
-
-    componentDidMount () {
-      const { fetchProfile } = this.props
-      fetchProfile()
-    }
-
-    render () {
-      return (<Component {...this.props}/>)
-    }
-  }
-
-  return connect(null, profileActions)(ProfileAwareComponent)
-}
 
 export function createNewDocument (Component) {
   class NewDocumentAwareComponent extends React.Component {

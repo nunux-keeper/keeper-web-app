@@ -5,18 +5,16 @@ import RootLayout from 'layouts/RootLayout'
 import MainLayout from 'layouts/MainLayout'
 import NotFoundView from 'views/NotFoundView/NotFoundView'
 import HomeView from 'views/HomeView/HomeView'
-import ProfileView from 'views/ProfileView/ProfileView'
 import LabelView from 'views/LabelView/LabelView'
 import DocumentsView from 'views/DocumentsView/DocumentsView'
 import DocumentView from 'views/DocumentView/DocumentView'
 import BookmarkletView from 'views/BookmarkletView/BookmarkletView'
 import GraveyardView from 'views/GraveyardView/GraveyardView'
-import SharesView from 'views/SharesView/SharesView'
+import SettingsView from 'views/SettingsView/SettingsView'
 
 import { requireAuthentication } from 'middlewares/Authentication'
 
 import {
-  fetchProfile,
   createNewDocument,
   fetchDocument,
   fetchDocuments,
@@ -31,7 +29,6 @@ export default (store) => (
     <IndexRoute component={HomeView} />
     <Route component={requireAuthentication(MainLayout)}>
       <Route path='bookmarklet' component={BookmarkletView} />
-      <Route path='profile' component={fetchProfile(ProfileView)} />
       <Route path='trash' component={fetchGraveyard(GraveyardView)} />
       <Route path='document' component={fetchDocuments(DocumentsView)} />
       <Route path='document/create' component={createNewDocument(DocumentView)} />
@@ -40,7 +37,7 @@ export default (store) => (
       <Route path='label/:labelId' component={fetchLabelAndDocuments(DocumentsView)} />
       <Route path='label/:labelId/edit' component={fetchLabel(LabelView)} />
       <Route path='label/:labelId/:docId' component={fetchLabelAndDocument(DocumentView)} />
-      <Route path='share' component={SharesView} />
+      <Route path='settings' component={SettingsView} />
     </Route>
     <Route path='/404' component={NotFoundView} />
     <Redirect from='*' to='/404' />

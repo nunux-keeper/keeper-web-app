@@ -1,0 +1,21 @@
+.profile {
+  padding: 0 0.5em;
+  > span {
+    display: inline-block;
+    vertical-align: middle;
+    strong {
+      display: block;
+    }
+    small {
+      color: rgba(255,255,255,.5);
+    }
+  }
+  a {
+    color: rgba(255,255,255,.5);
+    float: right;
+    margin-top: 0.5em;
+    &:hover {
+      color: white;
+    }
+  }
+}

@@ -47,8 +47,10 @@ export class MainLayout extends React.Component {
   render () {
     const { children } = this.props
 
+    // TODO RWD: Replace pusher class by followin style
+    // padding-left: 260px;   height: inherit;
     return (
-      <div id='main'>
+      <div id='main' className='ui pushable'>
         <AppNavigation />
         <div className='pusher'>
           {this.previousChildren || children}

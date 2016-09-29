@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
 import { actions as labelsActions } from 'store/modules/labels'
 
+import ProfilePanel from 'components/ProfilePanel'
+
 import './styles.scss'
 
 export class AppNavigation extends React.Component {
@@ -19,6 +21,7 @@ export class AppNavigation extends React.Component {
   }
 
   componentDidUpdate () {
+    // TODO RWD Not for desktop
     const $el = window.$(this.refs.nav)
     $el.find('a.item').click(() => {
       $el.sidebar('hide')
@@ -58,16 +61,16 @@ export class AppNavigation extends React.Component {
       location
     } = this.props
 
+    // TODO RWD visible only on desktop
     return (
-      <div className='ui sidebar large vertical menu' id='nav' ref='nav'>
-        <h2 className='ui header'>
-          <i className='cloud download icon'></i>
-          <span>Keeper</span>
-        </h2>
-        <Link to={{ pathname: '/profile' }} className='item'>
-          Profile
-          <i className='user icon'></i>
-        </Link>
+      <div className='ui left vertical sidebar menu' id='nav' ref='nav'>
+        <header>
+          <h2 className='ui icon header'>
+            <i className='cloud download icon'></i>
+            <div className='content'>Nunux Keeper</div>
+          </h2>
+          <ProfilePanel />
+        </header>
         <Link to={{ pathname: '/document' }} className='item'>
           Documents
           <i className='grid layout icon'></i>
@@ -88,9 +91,9 @@ export class AppNavigation extends React.Component {
           Trash
           <i className='trash icon'></i>
         </Link>
-        <Link to={{ pathname: '/share' }} className='item'>
-          Shares
-          <i className='share alternate icon'></i>
+        <Link to={{ pathname: '/settings' }} className='item'>
+          Settings
+          <i className='settings icon'></i>
         </Link>
       </div>
     )
