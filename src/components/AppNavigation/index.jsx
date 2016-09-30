@@ -45,7 +45,7 @@ export class AppNavigation extends React.Component {
   get labels () {
     const { labels } = this.props
     if (labels.isFetching && labels.items.length === 0) {
-      return
+      return null
     }
     return labels.items.map(
       (label) => <Link
