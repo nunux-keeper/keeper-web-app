@@ -5,7 +5,7 @@ import moment from 'moment'
 
 import styles from './styles.scss'
 
-export class ProfilePanel extends React.Component {
+class ProfilePanel extends React.Component {
   static propTypes = {
     profile: PropTypes.object.isRequired
   };
@@ -32,7 +32,7 @@ export class ProfilePanel extends React.Component {
         </div>
       )
     }
-    return null
+    return <div></div>
   }
 }
 

@@ -65,7 +65,7 @@ export class AppNavigation extends React.Component {
       visible
     } = this.props
 
-    const visibility = visible ? `visible` : ''
+    const visibility = visible ? 'visible' : ''
 
     return (
       <div className={`ui left ${visibility} vertical sidebar menu`} id='nav' ref='nav'>
