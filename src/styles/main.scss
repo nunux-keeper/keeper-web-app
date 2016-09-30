@@ -42,7 +42,11 @@
   #main {
     height: inherit;
     > .pusher {
-      height: 100%;
+      height: inherit;
+    }
+    > .pushed {
+      height: inherit;
+      padding-left: 260px;
     }
   }
   #main, .ReactModalPortal {
@@ -58,7 +62,7 @@
       > .main {
         flex: 1;
         overflow: auto;
-        padding: 2em;
+        padding: 1em;
         background: #fff;
         position: relative;
         &.documents, &.trash {

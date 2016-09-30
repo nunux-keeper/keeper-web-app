@@ -5,6 +5,8 @@ import { bindActions } from 'store/helper'
 
 import { routerActions as RouterActions } from 'react-router-redux'
 
+import { Sizes } from 'store/modules/device'
+
 import './styles.scss'
 
 export class AppBar extends React.Component {
@@ -52,13 +54,15 @@ export class AppBar extends React.Component {
           <i className='remove icon'></i>
         </a>
       )
-  } else {
-      // TODO RWD: Hide for desktop
-      return (
-        <a className='item' onClick={this.handleMenuClick}>
-          <i className='sidebar icon'></i>
-        </a>
-      )
+    } else {
+      const { device } = this.props
+      if (device.size < Sizes.LARGE) {
+        return (
+          <a className='item' onClick={this.handleMenuClick}>
+            <i className='sidebar icon'></i>
+          </a>
+        )
+      }
     }
   }
 
@@ -113,7 +117,8 @@ export class AppBar extends React.Component {
 
 const mapStateToProps = (state) => ({
   label: state.label,
-  location: state.router.locationBeforeTransitions
+  location: state.router.locationBeforeTransitions,
+  device: state.device
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({

@@ -10,6 +10,7 @@ import './styles.scss'
 
 export class AppNavigation extends React.Component {
   static propTypes = {
+    visible: PropTypes.bool.isRequired,
     fetchLabels: PropTypes.func.isRequired,
     labels: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired
@@ -21,10 +22,12 @@ export class AppNavigation extends React.Component {
   }
 
   componentDidUpdate () {
-    // TODO RWD Not for desktop
     const $el = window.$(this.refs.nav)
     $el.find('a.item').click(() => {
-      $el.sidebar('hide')
+      // Hide navigation bar if visibility is not forced
+      if (!this.props.visible) {
+        $el.sidebar('hide')
+      }
     })
   }
 
@@ -41,7 +44,7 @@ export class AppNavigation extends React.Component {
 
   get labels () {
     const { labels } = this.props
-    if (labels.isFetching || !labels.items || !labels.items.length) {
+    if (labels.isFetching && labels.items.length === 0) {
       return
     }
     return labels.items.map(
@@ -58,12 +61,14 @@ export class AppNavigation extends React.Component {
 
   render () {
     const {
-      location
+      location,
+      visible
     } = this.props
 
-    // TODO RWD visible only on desktop
+    const visibility = visible ? `visible` : ''
+
     return (
-      <div className='ui left vertical sidebar menu' id='nav' ref='nav'>
+      <div className={`ui left ${visibility} vertical sidebar menu`} id='nav' ref='nav'>
         <header>
           <h2 className='ui icon header'>
             <i className='cloud download icon'></i>

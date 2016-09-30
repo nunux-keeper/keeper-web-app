@@ -6,12 +6,15 @@ import AppNotification from 'components/AppNotification'
 import DocumentTitleModal from 'components/DocumentTitleModal'
 import DocumentUrlModal from 'components/DocumentUrlModal'
 
+import { Sizes } from 'store/modules/device'
+
 import '../styles/main.scss'
 
 export class MainLayout extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-    location: PropTypes.object
+    location: PropTypes.object,
+    device: PropTypes.object.isRequired
   };
 
   componentWillReceiveProps (nextProps) {
@@ -30,7 +33,8 @@ export class MainLayout extends React.Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return nextProps.location !== this.props.location
+    return nextProps.location !== this.props.location ||
+      nextProps.device !== this.props.device
   }
 
   renderModal () {
@@ -45,14 +49,15 @@ export class MainLayout extends React.Component {
   }
 
   render () {
-    const { children } = this.props
+    const { children, device } = this.props
+    // Navigation bar status depends of the device size.
+    const visible = device.size === Sizes.LARGE
+    const clazz = visible ? 'pushed' : 'pusher'
 
-    // TODO RWD: Replace pusher class by followin style
-    // padding-left: 260px;   height: inherit;
     return (
       <div id='main' className='ui pushable'>
-        <AppNavigation />
-        <div className='pusher'>
+        <AppNavigation visible={visible}/>
+        <div className={clazz}>
           {this.previousChildren || children}
           {this.renderModal()}
           <AppNotification />
@@ -65,7 +70,8 @@ export class MainLayout extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  location: state.router.locationBeforeTransitions
+  location: state.router.locationBeforeTransitions,
+  device: state.device
 })
 
 export default connect(mapStateToProps)(MainLayout)
