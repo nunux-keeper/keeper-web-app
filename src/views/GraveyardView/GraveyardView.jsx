@@ -48,11 +48,11 @@ export class GraveyardView extends React.Component {
   get header () {
     const { graveyard: {total} } = this.props
     const bg = {backgroundColor: '#696969'}
-    const $totalLabel = total ? <div className='ui tiny horizontal label'>{total}</div> : null
-    const $title = <div>{$totalLabel}<span>{this.title}</span></div>
+    const $totalLabel = total ? <small>[{total}]</small> : null
+    const $title = <span><i className='trash icon'></i>{this.title} {$totalLabel}</span>
     return (
       <AppBar title={$title} styles={bg} >
-        <div className='item'>
+        <div className='item stretch'>
           <SearchBar />
         </div>
         <a className='icon item' onClick={this.handleEmptyGraveyard} title='Empty the trash'>

@@ -10,3 +10,14 @@ body.dimmable.undetached.dimmed {
     position: static;
   }
 }
+.ui.menu:not(.vertical) .right.menu {
+  flex: 0 1 100%;
+  justify-content: flex-end;
+  margin-left: 0!important;
+  .item.stretch {
+    flex: 0 1 100%;
+  }
+}
+.ui.menu:not(.vertical) .right.item {
+  margin-left: 0!important;
+}

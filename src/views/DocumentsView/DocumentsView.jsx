@@ -62,18 +62,20 @@ export class DocumentsView extends React.Component {
       pathname: '/document/create',
       state: { modal: true, returnTo: location }
     }
+    var $icon = 'grid layout'
     if (this.label) {
+      $icon = 'tag'
       createLink.query = {
         labels: [this.label.id]
       }
     }
 
-    const $totalLabel = total ? <div className='ui tiny horizontal label'>{total}</div> : null
-    const $title = <div>{$totalLabel}<span>{this.title}</span></div>
+    const $totalLabel = total ? <small>[{total}]</small> : null
+    const $title = <span><i className={`${$icon} icon`}></i>{this.title} {$totalLabel}</span>
 
     return (
       <AppBar title={$title} styles={bg} contextMenu={this.contextMenu}>
-        <div className='item'>
+        <div className='item stretch'>
           <SearchBar />
         </div>
         <div className='ui dropdown icon right item'>
