@@ -34,7 +34,7 @@ export default class InfiniteGrid extends React.Component {
   }
 
   componentDidUpdate (prevProps) {
-    if (prevProps.hasMore !== this.props.hasMore) {
+    if (!prevProps.hasMore && this.props.hasMore) {
       // console.debug('InfiniteGrid::componentDidUpdate', this.state)
       this.attachScrollListener()
     }
@@ -55,7 +55,7 @@ export default class InfiniteGrid extends React.Component {
     // console.debug('scroll delta: ', delta)
     if (delta < Number(this.props.threshold)) {
       this.detachScrollListener()
-      this.props.loadMore()
+      this.props.loadMore().then(this.attachScrollListener.bind(this))
     }
   }
 
