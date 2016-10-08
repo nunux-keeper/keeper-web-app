@@ -53,6 +53,9 @@ export class DocumentLabels extends React.Component {
 
   renderViewMode () {
     const { doc } = this.props
+    if (!doc.labels) {
+      return null
+    }
     const $labels = doc.labels.map((id) => {
       const l = this.resolveLabel(id)
       if (!l) {
@@ -76,7 +79,7 @@ export class DocumentLabels extends React.Component {
 
   renderEditMode () {
     const { doc, labels } = this.props
-    const value = doc.labels.join()
+    const value = doc.labels ? doc.labels.join() : null
     const items = labels.items.map((l) => {
       const key = `label-${doc.id}-${l.id}`
       const color = {color: l.color}
