@@ -117,7 +117,7 @@ export class GraveyardView extends React.Component {
     const { actions, graveyard } = this.props
     const { params } = graveyard
     params.from++
-    actions.graveyard.fetchGhosts(params)
+    return actions.graveyard.fetchGhosts(params)
   }
 
   handleEmptyGraveyard () {

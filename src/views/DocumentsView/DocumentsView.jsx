@@ -148,7 +148,7 @@ export class DocumentsView extends React.Component {
     const { actions, documents } = this.props
     const { params } = documents
     params.from += params.size
-    actions.documents.fetchDocuments(params)
+    return actions.documents.fetchDocuments(params)
   }
 }
 
