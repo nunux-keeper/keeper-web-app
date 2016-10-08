@@ -122,6 +122,7 @@ export class DocumentsContextMenu extends React.Component {
     const { actions, documents } = this.props
     const { params } = documents
     params.order = params.order && params.order === 'asc' ? 'desc' : 'asc'
+    params.from = 0
     actions.documents.fetchDocuments(params)
   }
 
