@@ -13,7 +13,7 @@ class ProfilePanel extends React.Component {
   render () {
     const { current } = this.props.profile
     if (current) {
-      const gravatar = `http://www.gravatar.com/avatar/${current.hash}`
+      const gravatar = `https://www.gravatar.com/avatar/${current.hash}`
       const since = moment(current.date).fromNow(true)
       return (
         <div className={styles.profile}>
@@ -24,7 +24,7 @@ class ProfilePanel extends React.Component {
           </span>
           <a
             target='_blank'
-            href='http://login.nunux.org/auth/realms/nunux.org/account?referrer=nunux-keeper-app'
+            href='https://login.nunux.org/auth/realms/nunux.org/account?referrer=nunux-keeper-app'
             title='Manage your profile'
           >
             <i className='icon user'></i>
