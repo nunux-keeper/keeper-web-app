@@ -65,14 +65,10 @@ export default handleActions({
     if (error) {
       update.error = error
     } else if (response) {
-      let {items, total} = response
-      update.hasMore = total > items.length
-      if (state.params && state.params.from) {
-        update.hasMore = total > state.items.length + items.length
-        items = state.items.concat(items)
-      }
-      update.items = items
+      const {items, total} = response
       update.total = total
+      update.items = state.items.concat(items)
+      update.hasMore = total > update.items.length
     } else if (params) {
       update.params = params
       if (params.from === 0) {
