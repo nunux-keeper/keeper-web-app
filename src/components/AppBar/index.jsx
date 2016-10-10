@@ -17,7 +17,8 @@ export class AppBar extends React.Component {
     title: PropTypes.node.isRequired,
     modal: PropTypes.bool,
     styles: PropTypes.object,
-    location: PropTypes.object.isRequired
+    location: PropTypes.object.isRequired,
+    device: PropTypes.object.isRequired
   };
 
   static defaultProps = {
@@ -83,9 +84,7 @@ export class AppBar extends React.Component {
     return (
       <div className='ui top inverted menu' style={styles} ref='bar'>
         {this.sidebarIcon}
-        <div className='header item' title={title}>
-          <span>{title}</span>
-        </div>
+        <div className='header item'>{title}</div>
         <div className='right menu'>
           {children}
           {this.contextMenu}
