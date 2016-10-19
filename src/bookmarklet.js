@@ -58,6 +58,7 @@ window.kBookmarklet = function () {
   $ifrm.style.width = '100%'
   $ifrm.style.height = '100%'
   $ifrm.style.border = 'none'
+  $ifrm.style.margin = 0
 
   $c.appendChild($ifrm)
 
