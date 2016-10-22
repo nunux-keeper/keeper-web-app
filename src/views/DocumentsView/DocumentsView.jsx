@@ -7,7 +7,7 @@ import { bindActions } from 'store/helper'
 import { actions as DocumentsActions } from 'store/modules/documents'
 import { actions as UrlModalActions } from 'store/modules/urlModal'
 
-import SearchBar from 'components/SearchBar'
+import SearchBarItem from 'components/SearchBarItem'
 import InfiniteGrid from 'components/InfiniteGrid'
 import DocumentTile from 'components/DocumentTile'
 import DocumentsContextMenu from 'components/DocumentsContextMenu'
@@ -75,9 +75,7 @@ export class DocumentsView extends React.Component {
 
     return (
       <AppBar title={$title} styles={bg} contextMenu={this.contextMenu}>
-        <div className='item stretch'>
-          <SearchBar />
-        </div>
+        <SearchBarItem placeholder={`Search in "${this.title}"...`} />
         <div className='ui dropdown icon right item'>
           <i className='plus vertical icon'></i>
           <div className='menu'>

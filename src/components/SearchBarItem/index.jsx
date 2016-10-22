@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { routerActions } from 'react-router-redux'
 
-export class SearchBar extends React.Component {
+export class SearchBarItem extends React.Component {
   static propTypes = {
+    placeholder: PropTypes.string.isRequired,
     push: PropTypes.func,
     location: PropTypes.object.isRequired
   };
@@ -37,16 +38,19 @@ export class SearchBar extends React.Component {
   }
 
   render () {
+    const {placeholder} = this.props
     return (
-      <div className='ui icon input'>
-        <input
-          type='text'
-          placeholder='Search...'
-          value={this.state.q}
-          onChange={this.handleChange}
-          onKeyDown={this.handleUpdateSearchQuery}
-        />
-        <i className='search link icon'></i>
+      <div className='search item'>
+        <div className='ui icon input'>
+          <input
+            type='text'
+            placeholder={placeholder}
+            value={this.state.q}
+            onChange={this.handleChange}
+            onKeyDown={this.handleUpdateSearchQuery}
+          />
+          <i className='search link icon'></i>
+        </div>
       </div>
     )
   }
@@ -60,4 +64,4 @@ const mapDispatchToProps = (dispatch) => (
   bindActionCreators(Object.assign({}, routerActions), dispatch)
 )
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchBar)
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBarItem)

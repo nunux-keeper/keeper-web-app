@@ -8,7 +8,7 @@ import { actions as GraveyardActions } from 'store/modules/graveyard'
 import { actions as UrlModalActions } from 'store/modules/urlModal'
 import { actions as NotificationActions } from 'store/modules/notification'
 
-import SearchBar from 'components/SearchBar'
+import SearchBarItem from 'components/SearchBarItem'
 import InfiniteGrid from 'components/InfiniteGrid'
 import DocumentTile from 'components/DocumentTile'
 import AppBar from 'components/AppBar'
@@ -52,9 +52,7 @@ export class GraveyardView extends React.Component {
     const $title = <span><i className='trash icon'></i>{this.title} {$totalLabel}</span>
     return (
       <AppBar title={$title} styles={bg} >
-        <div className='item stretch'>
-          <SearchBar />
-        </div>
+        <SearchBarItem placeholder={`Search in ${this.title}...`} />
         <a className='icon item' onClick={this.handleEmptyGraveyard} title='Empty the trash'>
           <i className='trash icon'></i>
         </a>

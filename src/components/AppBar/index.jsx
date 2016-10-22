@@ -82,9 +82,9 @@ export class AppBar extends React.Component {
   render () {
     const { children, styles, title } = this.props
     return (
-      <div className='ui top inverted menu' style={styles} ref='bar'>
+      <div className='ui top inverted borderless menu' style={styles} ref='bar'>
         {this.sidebarIcon}
-        <div className='header item'>{title}</div>
+        <div className='item title'>{title}</div>
         <div className='right menu'>
           {children}
           {this.contextMenu}
