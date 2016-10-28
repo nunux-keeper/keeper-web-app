@@ -1,4 +1,6 @@
+/*global $:true*/
 import React, { PropTypes } from 'react'
+import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import TinyMCE from 'react-tinymce'
@@ -22,6 +24,25 @@ export class DocumentContent extends React.Component {
     this.handleContentChange = this.handleContentChange.bind(this)
   }
 
+  componentDidMount () {
+    this.filterImgDataRefAttr()
+  }
+
+  componentDidUpdate () {
+    this.filterImgDataRefAttr()
+  }
+
+  filterImgDataRefAttr () {
+    const { doc } = this.props
+    // Filtering images ref attributes...
+    const $this = $(ReactDOM.findDOMNode(this))
+    $this.find('img[data-ref]').map((idx, el) => {
+      const key = el.dataset.ref
+      const src = `${window.API_ROOT}/document/${doc.id}/files/${key}`
+      el.src = src
+    })
+  }
+
   handleEditorChange (e) {
     const { updateDocument, doc } = this.props
     updateDocument(doc, {content: e.target.getContent()})
@@ -36,6 +57,7 @@ export class DocumentContent extends React.Component {
     const { doc } = this.props
     if (doc.contentType.match(/^text\/html/)) {
       const config = {
+        inline: true,
         plugins: 'link image code',
         toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
         extended_valid_elements: 'img[class|src|border=0|alt|title|hspace|vspace|width|height|align|name|data-src|app-src]'

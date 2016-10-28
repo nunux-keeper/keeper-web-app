@@ -1,7 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
 import DocumentApi from 'api/document'
 import { errorHandler, payloadResponse } from 'store/helper'
-import { filterDataSrcAttribute } from 'helpers/DocumentToolkit'
 
 // ------------------------------------
 // Constants
@@ -64,7 +63,6 @@ export const fetchDocument = (id) => {
     console.debug('Fetching document:', id)
     dispatch(fetchDocumentRequest())
     return DocumentApi.get(id)
-    .then(filterDataSrcAttribute)
     .then((doc) => dispatch(fetchDocumentSuccess(doc)))
     .catch((err) => dispatch(fetchDocumentFailure(err)))
     .then(payloadResponse)
@@ -76,7 +74,6 @@ export const createDocument = (doc) => {
     console.debug('Creating document:', doc)
     dispatch(createDocumentRequest())
     return DocumentApi.create(doc)
-    .then(filterDataSrcAttribute)
     .then((_doc) => dispatch(createDocumentSuccess(_doc)))
     .catch((err) => dispatch(createDocumentFailure(err)))
     .then(payloadResponse)
@@ -93,7 +90,6 @@ export const updateDocument = (doc, payload) => {
       console.debug('Updating document:', doc.id, payload)
       dispatch(updateDocumentRequest())
       return DocumentApi.update(doc, payload)
-      .then(filterDataSrcAttribute)
       .then((_doc) => dispatch(updateDocumentSuccess(_doc)))
       .catch((err) => dispatch(updateDocumentFailure(err)))
       .then(payloadResponse)
@@ -121,7 +117,6 @@ export const restoreRemovedDocument = () => {
     console.debug('Restoring document:', documents.removed.id)
     dispatch(restoreDocumentRequest())
     return DocumentApi.restore(documents.removed)
-    .then(filterDataSrcAttribute)
     .then((_doc) => dispatch(restoreDocumentSuccess(_doc)))
     .catch((err) => dispatch(restoreDocumentFailure(err)))
     .then(payloadResponse)
@@ -133,7 +128,6 @@ export const restoreDocument = (doc) => {
     console.debug('Restoring document:', doc.id)
     dispatch(restoreDocumentRequest())
     return DocumentApi.restore(doc)
-    .then(filterDataSrcAttribute)
     .then((_doc) => dispatch(restoreDocumentSuccess(_doc)))
     .catch((err) => dispatch(restoreDocumentFailure(err)))
     .then(payloadResponse)
@@ -148,7 +142,6 @@ export const submitDocument = () => {
       dispatch(updateDocumentRequest())
       // TODO update only modified fields
       return DocumentApi.update(doc, doc)
-      .then(filterDataSrcAttribute)
       .then((_doc) => dispatch(updateDocumentSuccess(_doc)))
       .catch((err) => dispatch(updateDocumentFailure(err)))
       .then(payloadResponse)
@@ -156,7 +149,6 @@ export const submitDocument = () => {
       console.debug('Submiting new document:', doc)
       dispatch(createDocumentRequest())
       return DocumentApi.create(doc)
-      .then(filterDataSrcAttribute)
       .then((_doc) => dispatch(createDocumentSuccess(_doc)))
       .catch((err) => dispatch(createDocumentFailure(err)))
       .then(payloadResponse)
@@ -172,7 +164,6 @@ export const resetDocument = () => {
       // TODO avoid fetcing back the doc
       dispatch(fetchDocumentRequest())
       return DocumentApi.get(doc.id)
-      .then(filterDataSrcAttribute)
       .then((doc) => dispatch(fetchDocumentSuccess(doc)))
       .catch((err) => dispatch(fetchDocumentFailure(err)))
       .then(payloadResponse)
