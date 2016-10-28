@@ -87,7 +87,6 @@
   },
   "homepage": "https://gitlab.com/nunux-keeper/keeper-web-app#README",
   "dependencies": {
-    "better-npm-run": "0.0.8",
     "chance": "^1.0.1",
     "debug": "^2.2.0",
     "dotenv": "^2.0.0",
@@ -117,6 +116,7 @@
     "yargs": "^4.2.0"
   },
   "devDependencies": {
+    "better-npm-run": "0.0.8",
     "babel-cli": "^6.5.1",
     "babel-core": "^6.3.17",
     "babel-eslint": "^5.0.0-beta6",
