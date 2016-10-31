@@ -85,13 +85,19 @@ export class DocumentContent extends React.Component {
 
   renderViewMode () {
     const { doc } = this.props
-    return (
-      <div
-        ref='content'
-        className='readable'
-        dangerouslySetInnerHTML={{__html: doc.content}}
-      />
-    )
+    if (doc.contentType.match(/^text\/html/)) {
+      return (
+        <div
+          ref='content'
+          className='readable'
+          dangerouslySetInnerHTML={{__html: doc.content}}
+        />
+      )
+    } else {
+      return (
+        <pre ref='content'>{ doc.content }</pre>
+      )
+    }
   }
 
   render () {
