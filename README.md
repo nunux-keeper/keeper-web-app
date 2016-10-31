@@ -6,6 +6,7 @@ NUNUX Keeper Web App
 Nunux Keeper allow you to collect, organize, and display web documents. This
 project is the official web frontend.
 
+![Screenshot](screenshot.png)
 
 Table of Contents
 -----------------
