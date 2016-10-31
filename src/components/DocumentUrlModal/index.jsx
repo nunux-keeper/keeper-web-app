@@ -1,33 +1,37 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
-import { routerActions } from 'react-router-redux'
-import { actions as urlModalActions } from 'store/modules/urlModal'
+import { bindActions } from 'store/helper'
+
+import { routerActions as RouterActions } from 'react-router-redux'
+import { actions as UrlModalActions } from 'store/modules/urlModal'
 
 export class DocumentUrlModal extends React.Component {
   static propTypes = {
-    hideUrlModal: PropTypes.func.isRequired,
+    actions: PropTypes.object.isRequired,
     show: PropTypes.bool.isRequired,
-    push: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired
   };
 
   constructor (props) {
     super(props)
-    this.handleChange = this.handleChange.bind(this)
+    this.onChangeUrl = this.onChangeUrl.bind(this)
+    this.onChangeCreateMethod = this.onChangeCreateMethod.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.state = { url: '' }
+    this.state = {
+      url: '',
+      method: 'default'
+    }
   }
 
   componentDidUpdate (prevProps, prevState) {
     if (!prevProps.show && this.props.show) {
       const $modal = this.refs.modal
-      const { hideUrlModal } = this.props
+      const { actions } = this.props
       window.$($modal)
       .modal({
         detachable: false,
-        onHidden: hideUrlModal,
+        onHidden: actions.urlModal.hideUrlModal,
         onApprove: this.handleSubmit
       })
       .modal('show')
@@ -64,9 +68,34 @@ export class DocumentUrlModal extends React.Component {
                 name='url'
                 required
                 value={url}
-                onChange={this.handleChange}
+                onChange={this.onChangeUrl}
                 placeholder='Document url'
               />
+            </div>
+            <div className='inline fields'>
+              <div className='field'>
+                <div className='ui radio checkbox'>
+                  <input
+                    type='radio'
+                    name='method'
+                    value='default'
+                    onChange={this.onChangeCreateMethod}
+                    defaultChecked
+                  />
+                  <label>Extract content</label>
+                </div>
+              </div>
+              <div className='field'>
+                <div className='ui radio checkbox'>
+                  <input
+                    type='radio'
+                    name='method'
+                    value='bookmark'
+                    onChange={this.onChangeCreateMethod}
+                  />
+                  <label>Bookmark the URL</label>
+                </div>
+              </div>
             </div>
           </form>
         </div>
@@ -78,17 +107,22 @@ export class DocumentUrlModal extends React.Component {
     )
   }
 
-  handleChange (event) {
+  onChangeUrl (event) {
     this.setState({url: event.target.value})
+  }
+
+  onChangeCreateMethod (event) {
+    this.setState({method: event.target.value})
   }
 
   handleSubmit () {
     if (this.isValid) {
-      const {push} = this.props
-      const {url} = this.state
-      push({
+      const {actions} = this.props
+      const {url, method} = this.state
+      const u = encodeURIComponent(method !== 'default' ? `${method}+${url}` : url)
+      actions.router.push({
         pathname: '/document/create',
-        query: { url: encodeURIComponent(url) }
+        query: { url: u }
         // FIXME When modal documents view is crushed by the create view
         // state: { modal: true, returnTo: location }
       })
@@ -101,8 +135,9 @@ const mapStateToProps = (state) => ({
   show: state.urlModal.show
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, routerActions, urlModalActions), dispatch)
-)
+const mapActionsToProps = (dispatch) => (bindActions({
+  router: RouterActions,
+  urlModal: UrlModalActions
+}, dispatch))
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentUrlModal)
+export default connect(mapStateToProps, mapActionsToProps)(DocumentUrlModal)
