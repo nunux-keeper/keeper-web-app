@@ -14,7 +14,7 @@ ifeq ($(UNAME_M),armv7l)
 	BASEIMAGE=ncarlier/nodejs-arm
 endif
 
-DEPLOY_DIR:=/var/www/html/keeper-app.nunux.org
+DEPLOY_DIR:=/var/www/html/keeper.nunux.org
 
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
