@@ -10,8 +10,15 @@ import Modal from 'react-modal'
 import './styles.scss'
 
 const customStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.90)'
+  },
   content: {
-    padding: 0
+    padding: 0,
+    right: 'initial',
+    left: 'calc(50% - 450px)',
+    width: '900px',
+    border: '1px solid #4c4c4c'
   }
 }
 
@@ -21,7 +28,9 @@ const customMobileStyles = {
     bottom: 0,
     left: 0,
     right: 0,
-    padding: 0
+    padding: 0,
+    border: 'none',
+    borderRadius: 'initial'
   }
 }
 
