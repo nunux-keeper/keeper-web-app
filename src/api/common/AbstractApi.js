@@ -39,7 +39,13 @@ export default class AbstractApi {
     }
 
     return new Promise((resolve, reject) => {
-      window._keycloak.updateToken(30).success(resolve).error(reject)
+      window._keycloak.updateToken(30).success(resolve).error((err) => {
+        // Fatal error from keycloak server. Mainly due to CORS.
+        // Forced to reload the page.
+        // FIXME Find a better way to handle Keycloak errors.
+        console.error('Fatal error from Keycloak when updating the token', err)
+        location.reload()
+      })
     }).then((updated) => {
       if (updated || this.firstCall) {
         // Token was updated or it's the first API call.
