@@ -116,7 +116,7 @@ export class DocumentContextMenu extends React.Component {
     return (
       <div key={this.key('destroy')} className='item' onClick={this.handleDestroy}>
         <i className='trash icon'></i>
-        Remove for ever
+        Remove forever
       </div>
     )
   }
