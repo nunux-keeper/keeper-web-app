@@ -51,7 +51,7 @@ export class DocumentsView extends React.Component {
   }
 
   get contextMenu () {
-    const menuItems = this.label ? 'refresh,order,divider,editLabel,divider,deleteLabel' : 'refresh,order'
+    const menuItems = this.label ? 'refresh,order,divider,editLabel,shareLabel,divider,deleteLabel' : 'refresh,order'
     return (<DocumentsContextMenu items={menuItems} />)
   }
 

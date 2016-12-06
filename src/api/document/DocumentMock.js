@@ -1,9 +1,10 @@
 import Chance from 'chance'
+import InMemoryDb from '../common/InMemoryDb'
 import GraveyardMock from 'api/graveyard'
 
 const chance = new Chance()
 
-const getRandomDocument = (doc = {}) => {
+const createRandomDocument = (doc = {}) => {
   return Object.assign({
     id: chance.hash({length: 15}),
     title: chance.sentence({words: 5}),
@@ -21,58 +22,11 @@ const getRandomDocument = (doc = {}) => {
   }, doc)
 }
 
-class DocumentInMemoryDb {
-  constructor (nb = 25) {
-    console.log('Init. document in memory database...', nb)
-    this.db = []
-    for (let i = 0; i < nb; i++) {
-      this.db.push(getRandomDocument())
-    }
-  }
-
-  get (id) {
-    return this.db.find((d) => d.id === id)
-  }
-
-  add (doc) {
-    const newDoc = getRandomDocument(doc)
-    this.db = [newDoc, ...this.db]
-    return newDoc
-  }
-
-  restore (doc) {
-    this.db = [doc, ...this.db]
-    return doc
-  }
-
-  remove (doc) {
-    this.db = this.db.filter((d) => d.id !== doc.id)
-    return doc
-  }
-
-  search (from = 0, size = 20) {
-    return {
-      total: this.db.length,
-      hits: this.db.slice(from, from + size)
-    }
-  }
-
-  update (doc, update) {
-    let result = null
-    this.db = this.db.reduce((acc, item) => {
-      if (item.id === doc.id) {
-        result = Object.assign({}, item, update)
-        item = result
-      }
-      acc.push(item)
-      return acc
-    }, [])
-    return result
-  }
-}
-
 if (!window._db_documents) {
-  window._db_documents = new DocumentInMemoryDb()
+  window._db_documents = new InMemoryDb('document', {
+    nb: 25,
+    createRandomItem: createRandomDocument
+  })
 }
 
 export class DocumentMock {

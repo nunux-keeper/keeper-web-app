@@ -26,10 +26,12 @@ export class DocumentContent extends React.Component {
 
   componentDidMount () {
     this.filterImgDataRefAttr()
+    this.filterImgSrcSetAttr()
   }
 
   componentDidUpdate () {
     this.filterImgDataRefAttr()
+    this.filterImgSrcSetAttr()
   }
 
   filterImgDataRefAttr () {
@@ -40,6 +42,14 @@ export class DocumentContent extends React.Component {
       const key = el.dataset.ref
       const src = `${window.API_ROOT}/document/${doc.id}/files/${key}`
       el.src = src
+    })
+  }
+
+  filterImgSrcSetAttr () {
+    // Filtering images srcset  attributes...
+    const $this = $(ReactDOM.findDOMNode(this))
+    $this.find('img[srcset]').map((idx, el) => {
+      el.removeAttribute('srcset')
     })
   }
 

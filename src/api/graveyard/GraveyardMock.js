@@ -1,19 +1,9 @@
-class GraveyardInMemoryDb {
-  constructor (nb = 25) {
-    console.log('Init. graveyard in memory database...', nb)
-    this.db = []
-  }
+import InMemoryDb from '../common/InMemoryDb'
 
-  add (doc) {
-    this.db = [doc, ...this.db]
-    return doc
+class GraveyardInMemoryDb extends InMemoryDb {
+  constructor () {
+    super('graveyard', {nb: 0})
   }
-
-  remove (doc) {
-    this.db = this.db.filter((d) => d.id !== doc.id)
-    return doc
-  }
-
   search (from = 0, size = 20) {
     return {
       total: this.db.length,
