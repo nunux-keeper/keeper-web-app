@@ -4,5 +4,6 @@
   "auth-server-url": "https://login.nunux.org/auth",
   "ssl-required": "external",
   "resource": "nunux-keeper-app",
-  "public-client": true
+  "public-client": true,
+  "enable-cors": true
 }
