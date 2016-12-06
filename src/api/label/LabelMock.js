@@ -1,8 +1,9 @@
 import Chance from 'chance'
+import InMemoryDb from '../common/InMemoryDb'
 
 const chance = new Chance()
 
-const getRandomLabel = (label = {}) => {
+const createRandomLabel = (label = {}) => {
   return Object.assign({
     id: chance.hash({length: 15}),
     label: chance.sentence({words: 2}),
@@ -10,56 +11,11 @@ const getRandomLabel = (label = {}) => {
   }, label)
 }
 
-class LabelInMemoryDb {
-  constructor (nb = 5) {
-    console.log('Init. label in memory database...', nb)
-    this.db = []
-    this.db.push({id: 'test', label: 'test', color: '#F2711C'})
-    for (let i = 0; i < nb - 1; i++) {
-      this.db.push(getRandomLabel())
-    }
-  }
-
-  get (id) {
-    return this.db.find((d) => d.id === id)
-  }
-
-  add (label) {
-    const newLabel = getRandomLabel(label)
-    this.db = [newLabel, ...this.db]
-    return newLabel
-  }
-
-  restore (label) {
-    this.db = [label, ...this.db]
-    return label
-  }
-
-  remove (label) {
-    this.db = this.db.filter((l) => l.id !== label.id)
-    return label
-  }
-
-  all () {
-    return this.db
-  }
-
-  update (label, update) {
-    let result = null
-    this.db = this.db.reduce((acc, item) => {
-      if (item.id === label.id) {
-        result = Object.assign({}, item, update)
-        item = result
-      }
-      acc.push(item)
-      return acc
-    }, [])
-    return result
-  }
-}
-
 if (!window._db_labels) {
-  window._db_labels = new LabelInMemoryDb()
+  window._db_labels = new InMemoryDb('label', {
+    nb: 0,
+    createRandomItem: createRandomLabel
+  })
 }
 
 export class LabelMock {
@@ -98,12 +54,12 @@ export class LabelMock {
     })
   }
 
-  remove (doc) {
-    return Promise.resolve(this.db.remove(doc))
+  remove (label) {
+    return Promise.resolve(this.db.remove(label))
   }
 
-  restore (doc) {
-    return Promise.resolve(this.db.restore(doc))
+  restore (label) {
+    return Promise.resolve(this.db.restore(label))
   }
 }
 
