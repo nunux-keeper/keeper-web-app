@@ -6,6 +6,7 @@ import MainLayout from 'layouts/MainLayout'
 import NotFoundView from 'views/NotFoundView/NotFoundView'
 import HomeView from 'views/HomeView/HomeView'
 import LabelView from 'views/LabelView/LabelView'
+import ShareLabelView from 'views/ShareLabelView/ShareLabelView'
 import DocumentsView from 'views/DocumentsView/DocumentsView'
 import DocumentView from 'views/DocumentView/DocumentView'
 import BookmarkletView from 'views/BookmarkletView/BookmarkletView'
@@ -36,6 +37,7 @@ export default (store) => (
       <Route path='label/create' component={LabelView} />
       <Route path='label/:labelId' component={fetchLabelAndDocuments(DocumentsView)} />
       <Route path='label/:labelId/edit' component={fetchLabel(LabelView)} />
+      <Route path='label/:labelId/share' component={fetchLabel(ShareLabelView)} />
       <Route path='label/:labelId/:docId' component={fetchLabelAndDocument(DocumentView)} />
       <Route path='settings' component={SettingsView} />
     </Route>

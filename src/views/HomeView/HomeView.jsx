@@ -101,8 +101,8 @@ export const HomeView = (props) => (
           <h2 className='ui header'>Easy to integrate with other tools and services</h2>
           <div className='description'>
             <p>
-              Nunux Keeper can be easily be integrated with many other services thanks to its
-              true open <a href='https://api.nunux.org/keeper/doc/' target='_blank'>API</a> or&nbsp;
+              Nunux Keeper can be easily be integrated with many other services thanks to its true open&nbsp;
+              <a href='https://api.nunux.org/keeper/api-docs/?url=https://api.nunux.org/keeper/api-docs.json' target='_blank'>API</a> or&nbsp;
               <a href='https://github.com/ncarlier/node-keeper' target='_blank'>client library</a> or&nbsp;
               <a href='https://github.com/ncarlier/node-red-contrib-keeper' target='_blank'>NodeRed plugin</a>.
             </p>
@@ -120,7 +120,7 @@ export const HomeView = (props) => (
               <h4 className='ui inverted header'>About</h4>
               <div className='ui inverted link list'>
                 <a href='https://github.com/ncarlier/nunux-keeper' className='item'>Sources</a>
-                <a href='https://api.nunux.org/keeper/doc/' className='item'>Documentation</a>
+                <a href='https://api.nunux.org/keeper/api-docs/?url=https://api.nunux.org/keeper/api-docs.json' className='item'>Documentation</a>
                 <a href='http://ncarlier.github.io/' className='item'>Author</a>
                 <a href='https://flattr.com/submit/auto?user_id=ncarlier&amp;url=http%3A%2F%2Fkeeper.nunux.org%2F' className='item' target='_blank'>
                   Support this project!

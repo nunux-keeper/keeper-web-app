@@ -92,6 +92,19 @@ export class DocumentsContextMenu extends React.Component {
     )
   }
 
+  get shareLabelMenuItem () {
+    const { location } = this.props
+    if (this.label) {
+      return (
+        <Link key={this.key('share-label')} to={{ pathname: `/label/${this.label.id}/share`, state: {modal: true, returnTo: location, title: `Share label: ${this.label.label}`} }}
+          className='item'>
+          <i className='share alternate icon'></i>
+          Share Label
+        </Link>
+      )
+    }
+  }
+
   get dividerMenuItem () {
     return (<div key={this.key('divider' + Math.random())} className='ui divider'></div>)
   }
