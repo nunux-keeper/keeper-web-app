@@ -22,13 +22,15 @@ export class AppNotification extends React.Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    const { header, message, level } = this.props.notification
-    if (level !== 'error' && (header || message)) {
+    const { level, visible } = this.props.notification
+    if (visible !== prevProps.notification.visible) {
       if (this.timeout) {
         clearTimeout(this.timeout)
         this.timeout = null
       }
-      this.timeout = setTimeout(this.handleClose, 5000)
+      if (level !== 'error' && visible) {
+        this.timeout = setTimeout(this.handleClose, 5000)
+      }
     }
   }
 
@@ -87,7 +89,7 @@ export class AppNotification extends React.Component {
     let component
     if (visible) {
       component = (
-        <Message floating attached className={level} onDismiss={this.handleClose} style={this.styles} id='AppNotification' ref='msg'>
+        <Message floating attached className={level} onDismiss={this.handleClose} style={this.styles} id='AppNotification' >
           {this.header}
           <div className='content'>
             <p>{message}</p>
