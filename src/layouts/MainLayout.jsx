@@ -56,7 +56,7 @@ export class MainLayout extends React.Component {
         <Sidebar animation='push' visible={layout.sidebar.visible} >
           <AppMenu />
         </Sidebar>
-        <Sidebar.Pusher>
+        <Sidebar.Pusher dimmed={layout.sidebar.visible}>
           <div>
             {this.previousChildren || children}
             {this.renderModal()}
@@ -77,11 +77,11 @@ export class MainLayout extends React.Component {
         <AppMenu />
         <div className='main'>
           {this.previousChildren || children}
-          {this.renderModal()}
           <AppNotification />
           <DocumentTitleModal />
           <DocumentUrlModal />
         </div>
+        {this.renderModal()}
       </div>
     )
   }

@@ -2,6 +2,7 @@
   -webkit-perspective: 600;
   perspective: 600;
   opacity: 0;
+  z-index: 5;
 }
 
 .ReactModal__Overlay--after-open {

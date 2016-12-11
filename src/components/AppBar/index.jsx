@@ -78,7 +78,7 @@ export class AppBar extends React.Component {
 
   handleMenuClick () {
     const {actions} = this.props
-    actions.toggleSidebar()
+    actions.layout.toggleSidebar()
   }
 }
 

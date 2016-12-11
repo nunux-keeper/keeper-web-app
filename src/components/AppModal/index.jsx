@@ -7,6 +7,8 @@ import { routerActions as RouterActions } from 'react-router-redux'
 
 import Modal from 'react-modal'
 
+import { Sizes } from 'store/modules/layout'
+
 import './styles.css'
 
 const customStyles = {
@@ -62,7 +64,7 @@ export class AppModal extends React.Component {
 
   render () {
     const { children, layout } = this.props
-    const styles = layout.size === 1 ? customMobileStyles : customStyles
+    const styles = layout.size < Sizes.LARGE ? customMobileStyles : customStyles
     return (
       <Modal
         isOpen
