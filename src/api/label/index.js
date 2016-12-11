@@ -1,5 +1,9 @@
-if (__MOCK__) {
-  module.exports = require('./LabelMock')
+let impl
+
+if (process.env.MOCK === 'true') {
+  impl = require('./LabelMock')
 } else {
-  module.exports = require('./LabelApi')
+  impl = require('./LabelApi')
 }
+
+module.exports = impl

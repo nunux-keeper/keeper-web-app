@@ -3,6 +3,8 @@ import { routerMiddleware } from 'react-router-redux'
 import thunk from 'redux-thunk'
 import makeRootReducer from './reducers'
 
+const __DEBUG__ = false
+
 export default (initialState = {}, history) => {
   // ======================================================
   // Middleware Configuration

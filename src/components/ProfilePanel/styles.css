@@ -1,0 +1,27 @@
+.ProfilePanel {
+  padding: 0 0.5em;
+}
+
+.ProfilePanel a {
+  color: rgba(255,255,255,.5);
+  float: right;
+  margin-top: 0.5em;
+}
+
+.ProfilePanel a:hover {
+  color: white;
+}
+
+.ProfilePanel > span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.ProfilePanel > span strong {
+  display: block;
+}
+
+.ProfilePanel > span small {
+  color: rgba(255,255,255,.5);
+}
+

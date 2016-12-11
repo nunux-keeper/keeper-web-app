@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-import styles from './styles.scss'
+import './styles.css'
 
 import colors from './colors.json'
 
@@ -42,7 +42,7 @@ export default class ColorSwatch extends React.Component {
   }
 
   buildSwatch (color, i) {
-    const className = i === this.state.selected ? styles.selected : null
+    const className = i === this.state.selected ? 'selected' : null
     return (
       <button
         key={'clr-swatch-' + i}
@@ -55,7 +55,7 @@ export default class ColorSwatch extends React.Component {
 
   render () {
     return (
-      <div className={styles.swatch}>
+      <div className='ColorSwatch'>
         {this.props.colors.map(this.buildSwatch, this)}
       </div>
     )

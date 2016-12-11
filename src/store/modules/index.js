@@ -1,5 +1,5 @@
 import auth from './auth'
-import device from './device'
+import layout from './layout'
 import document from './document'
 import documents from './documents'
 import graveyard from './graveyard'
@@ -12,7 +12,7 @@ import urlModal from './urlModal'
 
 export default {
   auth,
-  device,
+  layout,
   document,
   documents,
   graveyard,

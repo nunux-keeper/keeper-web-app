@@ -1,0 +1,10 @@
+.modificationDate, .originLink {
+    font-size: smaller;
+    color: #808080;
+    font-style: italic;
+}
+
+.modificationDate {
+    float: right;
+}
+

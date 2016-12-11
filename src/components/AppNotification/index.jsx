@@ -2,12 +2,14 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { actions as notificationActions } from 'store/modules/notification'
+import { Message, Button } from 'semantic-ui-react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import './styles.scss'
+import './styles.css'
 
 export class AppNotification extends React.Component {
   static propTypes = {
-    device: PropTypes.object.isRequired,
+    layout: PropTypes.object.isRequired,
     notification: PropTypes.object.isRequired,
     hideNotification: PropTypes.func.isRequired
   };
@@ -34,9 +36,7 @@ export class AppNotification extends React.Component {
     const { header } = this.props.notification
     if (header) {
       return (
-        <div className='header'>
-          {header}
-        </div>
+        <Message.Header>{header}</Message.Header>
       )
     }
   }
@@ -45,13 +45,13 @@ export class AppNotification extends React.Component {
     const { actionLabel } = this.props.notification
     if (actionLabel) {
       return (
-        <button className='ui small inverted basic button' onClick={this.handleAction}>{actionLabel}</button>
+        <Button basic inverted size='small' content={actionLabel} onClick={this.handleAction} />
       )
     }
   }
 
   get styles () {
-    const { size } = this.props.device
+    const { size } = this.props.layout
     return size > 1 ? {
       position: 'fixed',
       bottom: 10,
@@ -79,38 +79,37 @@ export class AppNotification extends React.Component {
       clearTimeout(this.timeout)
       this.timeout = null
     }
-    console.debug('Closing notification...')
-    const $msg = this.refs.msg
-    window.$($msg).transition({
-      animation: 'fade',
-      onComplete: this.props.hideNotification
-    })
+    this.props.hideNotification()
   }
 
   render () {
-    const { header, message, level } = this.props.notification
-    if (header || message) {
-      return (
-        <div className={`ui floating attached ${level} message`} style={this.styles} ref='msg'>
-          <i className='close icon' onClick={this.handleClose}></i>
+    const { visible, message, level } = this.props.notification
+    let component
+    if (visible) {
+      component = (
+        <Message floating attached className={level} onDismiss={this.handleClose} style={this.styles} id='AppNotification' ref='msg'>
           {this.header}
           <div className='content'>
-            <p>
-              {message}
-            </p>
+            <p>{message}</p>
             {this.actionButton}
           </div>
-        </div>
+        </Message>
       )
-    } else {
-      return (<div></div>)
     }
+    return (
+      <ReactCSSTransitionGroup
+        transitionName='fade'
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={300}>
+        {component}
+      </ReactCSSTransitionGroup>
+    )
   }
 }
 
 const mapStateToProps = (state) => ({
   notification: state.notification,
-  device: state.device
+  layout: state.layout
 })
 
 const mapDispatchToProps = (dispatch) => (

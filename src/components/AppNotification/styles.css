@@ -1,0 +1,45 @@
+#AppNotification {
+  color: #FFF;
+}
+
+#AppNotification.error {
+  background-color: #8B0000;
+}
+
+#AppNotification.info {
+  background-color: #000;
+}
+
+#AppNotification .header {
+    color: #FFF;
+}
+
+#AppNotification .content {
+  display: flex;
+}
+
+#AppNotification .content p {
+  flex: 1 100%;
+}
+
+#AppNotification .content button {
+  align-self: flex-end;
+}
+
+.fade-enter {
+  opacity: 0.01;
+  transition: opacity 1s ease-in;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+}
+
+.fade-leave {
+  opacity: 1;
+  transition: opacity 1s ease-in;
+}
+
+.fade-leave.fade-leave-active {
+  opacity: 0.01;
+}

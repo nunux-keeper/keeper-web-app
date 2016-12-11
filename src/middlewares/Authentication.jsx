@@ -10,6 +10,7 @@ export function requireAuthentication (Component) {
     static propTypes = {
       initAuthentication: PropTypes.func.isRequired,
       fetchProfile: PropTypes.func.isRequired,
+      profile: PropTypes.object.isRequired,
       authenticated: PropTypes.bool
     };
 

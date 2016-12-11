@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-import './styles.scss'
+import './styles.css'
 
 export default class AppSignPanel extends React.Component {
   static propTypes = {
@@ -20,7 +20,7 @@ export default class AppSignPanel extends React.Component {
   render () {
     const { children, level } = this.props
     return (
-      <div className={`ui ${level} panel`}>
+      <div className={level} id='AppSignPanel'>
         <div className='content'>
           <div className='center'>
             <h2 className={`ui icon ${this.titleClassName} header`}>

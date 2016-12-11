@@ -1,5 +1,9 @@
-if (__MOCK__) {
-  module.exports = require('./SharingMock')
+let impl
+
+if (process.env.MOCK === 'true') {
+  impl = require('./SharingMock')
 } else {
-  module.exports = require('./SharingApi')
+  impl = require('./SharingApi')
 }
+
+module.exports = impl

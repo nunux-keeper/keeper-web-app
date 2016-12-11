@@ -1,5 +1,9 @@
-if (__MOCK__) {
-  module.exports = require('./ProfileMock')
+let impl
+
+if (process.env.MOCK === 'true') {
+  impl = require('./ProfileMock')
 } else {
-  module.exports = require('./ProfileApi')
+  impl = require('./ProfileApi')
 }
+
+module.exports = impl

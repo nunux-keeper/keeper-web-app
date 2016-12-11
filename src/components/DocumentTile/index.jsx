@@ -1,11 +1,14 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
+import { Label, Icon, Card, Button, Dropdown } from 'semantic-ui-react'
 
 import DocumentLabels from 'components/DocumentLabels'
 import DocumentContextMenu from 'components/DocumentContextMenu'
 
-import './styles.scss'
+import './styles.css'
+
+const API_ROOT = process.env.REACT_APP_API_ROOT
 
 export class DocumentTile extends React.Component {
   static propTypes = {
@@ -13,47 +16,40 @@ export class DocumentTile extends React.Component {
     value: PropTypes.object.isRequired
   };
 
-  componentDidMount () {
-    const $el = this.refs.doc
-    window.$($el).find('.dropdown').dropdown({
-      transition: 'drop'
-    })
-  }
-
   get contextualMenu () {
     const {value: doc} = this.props
     const menu = doc.ghost ? 'restore,destroy' : 'detail,share,divider,editTitle,divider,delete'
     return (
       <div className='contextual-menu'>
-        <div className='ui icon top right pointing dropdown circular button'>
-          <i className='ellipsis vertical icon'></i>
+        <Dropdown as={Button} icon='ellipsis vertical' simple circular pointing='top right' className='icon'>
           <DocumentContextMenu doc={doc} items={menu} />
-        </div>
+        </Dropdown>
       </div>
     )
   }
 
-  get shareLink () {
+  get shareRibbon () {
     const {value: doc} = this.props
     if (doc.share) {
       return (
-        <div className='ui blue ribbon label'>
-          <i className='share alternate icon'></i> Shared
-        </div>
+        <Label color='blue' ribbon>
+          <Icon name='share alternate' />
+          Shared
+        </Label>
       )
     }
   }
 
-  get fromLink () {
+  get meta () {
     const {value: doc} = this.props
     if (doc.origin) {
       return (
-        <span className='meta'>
+        <Card.Meta as='span'>
           from&nbsp;
           <a href={doc.origin} target='_blank' title={doc.origin}>
             {doc.origin}
           </a>
-        </span>
+        </Card.Meta>
       )
     }
   }
@@ -62,9 +58,10 @@ export class DocumentTile extends React.Component {
     const {location, value: doc} = this.props
     let $img = <span>No illustration</span>
     if (doc.attachments.length) {
-      const base = window.API_ROOT
+      const base = API_ROOT
       const att = doc.attachments[0]
-      $img = <img src={`${base}/document/${doc.id}/files/${att.key}?size=320x200`} onError={(e) => e.target.classList.add('broken')}/>
+      const src = `${base}/document/${doc.id}/files/${att.key}?size=320x200`
+      $img = <img src={src} alt='illustration' onError={(e) => e.target.classList.add('broken')}/>
     }
     if (doc.ghost) {
       return (
@@ -76,7 +73,7 @@ export class DocumentTile extends React.Component {
       const state = { modal: true, returnTo: location, title: doc.title }
       return (
         <Link to={{ pathname: `${location.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
-          {this.shareLink}
+          {this.shareRibbon}
           {$img}
         </Link>
       )
@@ -87,19 +84,28 @@ export class DocumentTile extends React.Component {
     const {location, value: doc} = this.props
     if (doc.ghost) {
       return (
-        <span className='header' title={doc.title}>
+        <Card.Header as='span' title={doc.title}>
           {doc.title}
-        </span>
+        </Card.Header>
       )
     } else {
       const state = { modal: true, returnTo: location, title: doc.title }
       return (
-        <Link
-          to={{ pathname: `${location.pathname}/${doc.id}`, state: state }}
-          title={doc.title}
-          className='header'>
+        <Card.Header as={Link} title={doc.title}
+          to={{ pathname: `${location.pathname}/${doc.id}`, state: state }}>
           {doc.title}
-        </Link>
+        </Card.Header>
+      )
+    }
+  }
+
+  get extra () {
+    const {value: doc} = this.props
+    if (doc.labels && doc.labels.length > 0) {
+      return (
+        <Card.Content extra>
+          <DocumentLabels doc={doc} editable={false} />
+        </Card.Content>
       )
     }
   }
@@ -107,17 +113,17 @@ export class DocumentTile extends React.Component {
   render () {
     const { value: doc } = this.props
     return (
-      <div className='ui card doc' id={`doc-${doc.id}`} ref='doc'>
-        <div title={doc.title}>
+      <Card className='DocumentTile' id={`doc-${doc.id}`}>
+        <div title={doc.title} className='illustration'>
           {this.illustration}
           {this.contextualMenu}
         </div>
-        <div className='content'>
+        <Card.Content>
           {this.header}
-          {this.fromLink}
-          <DocumentLabels doc={doc} editable={false} />
-        </div>
-      </div>
+          {this.meta}
+        </Card.Content>
+        {this.extra}
+      </Card>
     )
   }
 }

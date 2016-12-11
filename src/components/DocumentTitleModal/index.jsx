@@ -1,105 +1,120 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { Form, Button, Modal, Header, Message } from 'semantic-ui-react'
 
-import { actions as documentActions } from 'store/modules/document'
-import { actions as titleModalActions } from 'store/modules/titleModal'
+import { bindActions } from 'store/helper'
+
+import { actions as DocumentActions } from 'store/modules/document'
+import { actions as TitleModalActions } from 'store/modules/titleModal'
 
 export class DocumentTitleModal extends React.Component {
   static propTypes = {
-    doc: PropTypes.object,
-    hideTitleModal: PropTypes.func.isRequired,
-    updateDocument: PropTypes.func.isRequired
+    modal: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
+    doc: PropTypes.object.isRequired
   };
 
   constructor (props) {
     super(props)
-    this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.state = props.doc
+    this.handleClose = this.handleClose.bind(this)
+    this.handleTitleChange = this.handleTitleChange.bind(this)
+    this.state = {
+      title: ''
+    }
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.doc) {
-      this.setState(nextProps.doc)
+    if (nextProps.modal.doc) {
+      this.setState({title: nextProps.modal.doc.title})
     }
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    if (prevProps.doc === null && this.props.doc) {
-      const $modal = this.refs.modal
-      const { hideTitleModal } = this.props
-      window.$($modal)
-      .modal({
-        detachable: false,
-        onHidden: hideTitleModal,
-        onApprove: this.handleSubmit
-      })
-      .modal('show')
-      const $form = this.refs.form
-      window.$($form)
-      .form({
-        on: 'blur',
-        fields: {
-          title: ['empty']
-        }
-      })
+  get isValidTitle () {
+    return this.state.title !== ''
+  }
+
+  get titleForm () {
+    const { doc: {isProcessing}, modal: {doc} } = this.props
+    if (doc === null) {
+      return
     }
-  }
-
-  get isValid () {
-    const $form = this.refs.form
-    return $form && window.$($form).form('is valid')
-  }
-
-  render () {
-    const doc = this.state
-    if (!doc) return null
-    const disabled = this.isValid ? '' : 'disabled'
+    const error = this.state.err ? this.state.err.error : null
     return (
-      <div className='ui modal' ref='modal'>
-        <div className='header'>Update title</div>
-        <div className='content'>
-          <form className='ui form' onSubmit={this.handleSubmit} ref='form'>
-            <div className='field'>
-              <label>Title</label>
-              <input
-                type='text'
-                name='title'
-                required
-                value={doc.title}
-                onChange={this.handleChange}
-                placeholder='Document title'
-              />
-            </div>
-          </form>
-        </div>
-        <div className='actions'>
-          <div className='ui cancel button'>Cancel</div>
-          <div className={`ui primary approve button ${disabled}`}>Submit</div>
-        </div>
-      </div>
+      <Form onSubmit={this.handleSubmit} error={error !== null} loading={isProcessing}>
+        <Message
+          error
+          header='Unable to update document title'
+          content={error}
+        />
+        <Form.Input
+          name='title'
+          type='text'
+          label='Title'
+          placeholder='Document title'
+          value={this.state.title}
+          onChange={this.handleTitleChange}
+          error={!this.isValidTitle}
+          required
+        />
+      </Form>
     )
   }
 
-  handleChange (event) {
+  render () {
+    const {open} = this.props.modal
+    const disabled = !this.isValidTitle
+    return (
+      <Modal
+        open={open}
+        onClose={this.handleClose}
+        >
+        <Header icon='font' content='Update title' />
+        <Modal.Content>
+          {this.titleForm}
+        </Modal.Content>
+        <Modal.Actions>
+          <Button onClick={this.handleClose}>
+            Cancel
+          </Button>
+          <Button primary disabled={disabled} onClick={this.handleSubmit}>
+            Submit
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    )
+  }
+
+  handleTitleChange (event) {
     this.setState({title: event.target.value})
   }
 
-  handleSubmit () {
-    if (this.isValid) {
-      const { updateDocument, doc } = this.props
-      updateDocument(doc, {title: this.state.title})
+  handleClose () {
+    const { actions } = this.props
+    actions.titleModal.hideTitleModal()
+  }
+
+  handleSubmit (e) {
+    e.preventDefault()
+    if (!this.isValidTitle) {
+      return false
     }
+    const { actions, modal } = this.props
+    actions.document.updateDocument(modal.doc, this.state)
+    .then(() => this.handleClose(), (err) => {
+      this.setState({err})
+    })
   }
 }
 
 const mapStateToProps = (state) => ({
-  doc: state.titleModal.content
+  modal: state.titleModal,
+  doc: state.document
 })
 
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(Object.assign({}, documentActions, titleModalActions), dispatch)
-)
+const mapActionsToProps = (dispatch) => (bindActions({
+  document: DocumentActions,
+  titleModal: TitleModalActions
+}, dispatch))
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentTitleModal)
+export default connect(mapStateToProps, mapActionsToProps)(DocumentTitleModal)

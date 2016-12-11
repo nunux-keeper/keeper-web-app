@@ -23,7 +23,8 @@ export const actions = {
 export default handleActions({
   [SHOW_NOTIFICATION]: (state, {payload}) => {
     const {header, message, level, actionLabel, actionFn} = Object.assign({
-      level: 'info'
+      level: 'info',
+      visible: true
     }, payload)
     return Object.assign({}, state, {
       header, message, level, actionLabel, actionFn
@@ -31,14 +32,11 @@ export default handleActions({
   },
   [HIDE_NOTIFICATION]: (state) => {
     return Object.assign({}, state, {
-      header: null,
-      message: null,
-      level: null,
-      actionLabel: null,
-      actionFn: null
+      visible: false
     })
   }
 }, {
+  visible: false,
   header: null,
   message: null,
   level: null,

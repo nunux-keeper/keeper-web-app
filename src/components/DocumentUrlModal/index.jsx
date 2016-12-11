@@ -1,141 +1,147 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { Form, Button, Modal, Header, Message } from 'semantic-ui-react'
 
 import { bindActions } from 'store/helper'
 
 import { routerActions as RouterActions } from 'react-router-redux'
+import { actions as DocumentActions } from 'store/modules/document'
 import { actions as UrlModalActions } from 'store/modules/urlModal'
 
 export class DocumentUrlModal extends React.Component {
   static propTypes = {
+    modal: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
-    show: PropTypes.bool.isRequired,
-    location: PropTypes.object.isRequired
+    location: PropTypes.object.isRequired,
+    doc: PropTypes.object.isRequired
   };
 
   constructor (props) {
     super(props)
-    this.onChangeUrl = this.onChangeUrl.bind(this)
-    this.onChangeCreateMethod = this.onChangeCreateMethod.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleClose = this.handleClose.bind(this)
+    this.handleUrlChange = this.handleUrlChange.bind(this)
+    this.handleCreateMethodChange = this.handleCreateMethodChange.bind(this)
     this.state = {
       url: '',
       method: 'default'
     }
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    if (!prevProps.show && this.props.show) {
-      const $modal = this.refs.modal
-      const { actions } = this.props
-      window.$($modal)
-      .modal({
-        detachable: false,
-        onHidden: actions.urlModal.hideUrlModal,
-        onApprove: this.handleSubmit
-      })
-      .modal('show')
-      const $form = this.refs.form
-      window.$($form)
-      .form({
-        on: 'blur',
-        fields: {
-          url: ['url', 'empty']
-        }
-      })
-    }
+  get isValidUrl () {
+    return this.state.url !== ''
   }
 
-  get isValid () {
-    const $form = this.refs.form
-    return $form && window.$($form).form('is valid')
-  }
-
-  render () {
-    const { show } = this.props
-    if (!show) return null
-    const { url } = this.state
-    const disabled = this.isValid ? '' : 'disabled'
+  get urlForm () {
+    const { doc: {isProcessing} } = this.props
+    const error = this.state.err ? this.state.err.error : null
     return (
-      <div className='ui modal' ref='modal'>
-        <div className='header'>Create document from an URL</div>
-        <div className='content'>
-          <form className='ui form' onSubmit={this.handleSubmit} ref='form'>
-            <div className='field'>
-              <label>URL</label>
-              <input
-                type='url'
-                name='url'
-                required
-                value={url}
-                onChange={this.onChangeUrl}
-                placeholder='Document url'
-              />
-            </div>
-            <div className='inline fields'>
-              <div className='field'>
-                <div className='ui radio checkbox'>
-                  <input
-                    type='radio'
-                    name='method'
-                    value='default'
-                    onChange={this.onChangeCreateMethod}
-                    defaultChecked
-                  />
-                  <label>Extract content</label>
-                </div>
-              </div>
-              <div className='field'>
-                <div className='ui radio checkbox'>
-                  <input
-                    type='radio'
-                    name='method'
-                    value='bookmark'
-                    onChange={this.onChangeCreateMethod}
-                  />
-                  <label>Bookmark the URL</label>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div className='actions'>
-          <div className='ui cancel button'>Cancel</div>
-          <div className={`ui primary approve button ${disabled}`}>Submit</div>
-        </div>
-      </div>
+      <Form onSubmit={this.handleSubmit} error={error !== null} loading={isProcessing}>
+        <Message
+          error
+          header='Unable to create document'
+          content={error}
+        />
+        <Form.Input
+          name='url'
+          type='url'
+          label='Document URL'
+          placeholder='Document title'
+          value={this.state.url}
+          onChange={this.handleUrlChange}
+          error={!this.isValidUrl}
+          required
+        />
+        <Form.Field>
+          <label>Method</label>
+          <Form.Group inline>
+            <Form.Radio
+              label='Extract content'
+              name='method'
+              value='default'
+              checked={this.state.method === 'default'}
+              onChange={this.handleCreateMethodChange} />
+            <Form.Radio
+              label='Bookmark the URL'
+              name='method'
+              value='bookmark'
+              checked={this.state.method === 'bookmark'}
+              onChange={this.handleCreateMethodChange} />
+          </Form.Group>
+        </Form.Field>
+      </Form>
     )
   }
 
-  onChangeUrl (event) {
+  render () {
+    const { open } = this.props.modal
+    const disabled = !this.isValidUrl
+    return (
+      <Modal
+        open={open}
+        onClose={this.handleClose}
+        >
+        <Header icon='linkify' content='Create document from an URL' />
+        <Modal.Content>
+          {this.urlForm}
+        </Modal.Content>
+        <Modal.Actions>
+          <Button onClick={this.handleClose}>
+            Cancel
+          </Button>
+          <Button primary disabled={disabled} onClick={this.handleSubmit}>
+            Submit
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    )
+  }
+
+  handleUrlChange (event) {
     this.setState({url: event.target.value})
   }
 
-  onChangeCreateMethod (event) {
-    this.setState({method: event.target.value})
+  handleCreateMethodChange (event, {value}) {
+    this.setState({ method: value })
   }
 
-  handleSubmit () {
-    if (this.isValid) {
-      const {actions} = this.props
-      const {url, method} = this.state
-      const u = encodeURIComponent(method !== 'default' ? `${method}+${url}` : url)
+  handleClose () {
+    const { actions } = this.props
+    actions.urlModal.hideUrlModal()
+  }
+
+  handleSubmit (e) {
+    e.preventDefault()
+    if (!this.isValidUrl) {
+      return false
+    }
+
+    const {url, method} = this.state
+    const u = method !== 'default' ? `${method}+${url}` : url
+
+    const {actions} = this.props
+    actions.document.createDocument({origin: u})
+    .then((doc) => {
       actions.router.push({
-        pathname: '/document/create',
-        query: { url: u }
+        pathname: `/document/${doc.id}`
         // FIXME When modal documents view is crushed by the create view
         // state: { modal: true, returnTo: location }
       })
-    }
+      actions.urlModal.hideUrlModal()
+    }, (err) => {
+      this.setState({err})
+    })
   }
 }
 
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
-  show: state.urlModal.show
+  modal: state.urlModal,
+  doc: state.document
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({
+  document: DocumentActions,
   router: RouterActions,
   urlModal: UrlModalActions
 }, dispatch))

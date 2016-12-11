@@ -3,22 +3,24 @@ import { connect } from 'react-redux'
 
 import { bindActions } from 'store/helper'
 
-import { routerActions as RouterActions } from 'react-router-redux'
+import { routerActions } from 'react-router-redux'
+import { actions as layoutActions } from 'store/modules/layout'
 
-import { Sizes } from 'store/modules/device'
+import { Sizes } from 'store/modules/layout'
 
-import './styles.scss'
+import { Menu } from 'semantic-ui-react'
+
+import './styles.css'
 
 export class AppBar extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
     children: PropTypes.node,
-    contextMenu: PropTypes.node,
     title: PropTypes.node.isRequired,
     modal: PropTypes.bool,
     styles: PropTypes.object,
     location: PropTypes.object.isRequired,
-    device: PropTypes.object.isRequired
+    layout: PropTypes.object.isRequired
   };
 
   static defaultProps = {
@@ -31,65 +33,32 @@ export class AppBar extends React.Component {
     this.handleMenuClick = this.handleMenuClick.bind(this)
   }
 
-  componentDidMount () {
-    const $el = this.refs.bar
-    window.$($el).find('.dropdown').dropdown({
-      transition: 'drop'
-    })
-  }
-
-  componentDidUpdate (prevProps) {
-    if (prevProps.contextMenu !== this.props.contextMenu) {
-      const $el = this.refs.bar
-      window.$($el).find('.dropdown').dropdown({
-        transition: 'drop'
-      })
-    }
-  }
-
   get sidebarIcon () {
     const { modal } = this.props
     if (modal) {
       return (
-        <a className='item' onClick={this.handleCloseClick}>
-          <i className='remove icon'></i>
-        </a>
+        <Menu.Item as='a' icon='remove' onClick={this.handleCloseClick} />
       )
     } else {
-      const { device } = this.props
-      if (device.size < Sizes.LARGE) {
+      const { layout } = this.props
+      if (layout.size < Sizes.LARGE) {
         return (
-          <a className='item' onClick={this.handleMenuClick}>
-            <i className='sidebar icon'></i>
-          </a>
+          <Menu.Item as='a' icon='sidebar' onClick={this.handleMenuClick} />
         )
       }
     }
   }
 
-  get contextMenu () {
-    const { contextMenu } = this.props
-    if (contextMenu) {
-      return (
-        <div className='ui dropdown icon right item'>
-          <i className='ellipsis vertical icon'></i>
-          {contextMenu}
-        </div>
-      )
-    }
-  }
-
   render () {
-    const { children, styles, title } = this.props
+    const { children, title, styles } = this.props
     return (
-      <div className='ui top inverted borderless menu' style={styles} ref='bar'>
+      <Menu inverted borderless style={styles} id='AppBar'>
         {this.sidebarIcon}
-        <div className='item title'>{title}</div>
-        <div className='right menu'>
-          {children}
-          {this.contextMenu}
-        </div>
-      </div>
+        <Menu.Item name='title' className='title'>
+          {title}
+        </Menu.Item>
+        {children}
+      </Menu>
     )
   }
 
@@ -108,20 +77,20 @@ export class AppBar extends React.Component {
   }
 
   handleMenuClick () {
-    window.$('.ui.sidebar').sidebar({
-      context: window.$('#main')
-    }).sidebar('toggle')
+    const {actions} = this.props
+    actions.toggleSidebar()
   }
 }
 
 const mapStateToProps = (state) => ({
   label: state.label,
   location: state.router.locationBeforeTransitions,
-  device: state.device
+  layout: state.layout
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({
-  router: RouterActions
+  router: routerActions,
+  layout: layoutActions
 }, dispatch))
 
 export default connect(mapStateToProps, mapActionsToProps)(AppBar)

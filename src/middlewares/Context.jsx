@@ -75,7 +75,7 @@ export function fetchDocuments (Component) {
       if (!(location.state && location.state.backFromModal)) {
         fetchDocuments({
           label: params.labelId,
-          ... location.query
+          ...location.query
         })
         if (!params.labelId) {
           discardLabel()
@@ -89,12 +89,12 @@ export function fetchDocuments (Component) {
       if (params.labelId !== nextProps.params.labelId) {
         fetchDocuments({
           label: nextProps.params.labelId,
-          ... nextProps.location.query
+          ...nextProps.location.query
         })
       } else if (location.search !== nextProps.location.search) {
         fetchDocuments({
           label: params.labelId,
-          ... nextProps.location.query
+          ...nextProps.location.query
         })
       }
     }
@@ -161,7 +161,7 @@ export function fetchGraveyard (Component) {
       if (!(location.state && location.state.backFromModal)) {
         fetchGhosts({
           label: params.labelId,
-          ... location.query
+          ...location.query
         })
       }
     }
@@ -172,7 +172,7 @@ export function fetchGraveyard (Component) {
       if (location.search !== nextProps.location.search) {
         fetchGhosts({
           label: params.labelId,
-          ... nextProps.location.query
+          ...nextProps.location.query
         })
       }
     }
