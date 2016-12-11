@@ -39,10 +39,6 @@ export class DocumentsView extends React.Component {
       NProgress.start()
     } else if (wasProcessing && !isProcessing) {
       NProgress.done()
-      this.props.actions.notification.showNotification({
-        level: 'info',
-        header: 'Document restored from trash'
-      })
     }
     document.title = this.title
   }
@@ -90,7 +86,7 @@ export class DocumentsView extends React.Component {
               <Dropdown.Item icon='linkify' text='From URL' onClick={actions.urlModal.showUrlModal} />
             </Dropdown.Menu>
           </Dropdown>
-          <Dropdown as='div' icon='ellipsis vertical' className='right item icon'>
+          <Dropdown as={Menu.Item} icon='ellipsis vertical' simple className='right'>
             <DocumentsContextMenu items={this.contextMenuItems} />
           </Dropdown>
         </Menu.Menu>
