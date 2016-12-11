@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { routerActions as RouterActions } from 'react-router-redux'
+import { Form, Button, Checkbox } from 'semantic-ui-react'
 
 import { bindActions } from '../../store/helper'
+
+import { routerActions as RouterActions } from 'react-router-redux'
 import { actions as LabelsActions } from '../../store/modules/labels'
 import { actions as SharingActions } from '../../store/modules/sharing'
 import { actions as NotificationActions } from '../../store/modules/notification'
@@ -31,22 +33,7 @@ export class ShareLabelView extends React.Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
-    this.handleStartDateChange = this.handleStartDateChange.bind(this)
-    this.handleEndDateChange = this.handleEndDateChange.bind(this)
-    this.handlePubChange = this.handlePubChange.bind(this)
-  }
-
-  componentDidMount () {
-    const $form = this.refs.form
-    window.$($form)
-    .form({
-      on: 'blur',
-      fields: {
-        startDate: ['empty'],
-        endDate: ['empty'],
-        pub: ['empty']
-      }
-    })
+    this.handleChange = this.handleChange.bind(this)
   }
 
   componentDidUpdate (prevProps) {
@@ -72,62 +59,70 @@ export class ShareLabelView extends React.Component {
     )
   }
 
-  get isValid () {
-    const $form = this.refs.form
-    return $form && window.$($form).form('is valid')
+  get isValidStartDate () {
+    const { startDate } = this.state
+    return startDate !== ''
+  }
+
+  get isValidEndDate () {
+    const { endDate } = this.state
+    return endDate !== ''
+  }
+
+  get isValidForm () {
+    return this.isValidStartDate && this.isValidEndDate
   }
 
   get shareLabelForm () {
     const { startDate, endDate, pub } = this.state
     const { labels, sharing } = this.props
-    const loading = labels.isProcessing || sharing.isProcessing ? 'loading' : ''
-    const disabled = this.isValid ? '' : 'disabled'
+    const loading = labels.isProcessing || sharing.isProcessing
+    const disabled = !this.isValidForm
     return (
-      <div>
-        <form className={`ui form ${loading}`} onSubmit={this.handleSubmit} ref='form'>
-          <div className='field'>
-            <label>Start date</label>
-            <input
-              required
-              type='date'
-              name='startDate'
-              value={startDate}
-              onChange={this.handleStartDateChange}
-            />
-          </div>
-          <div className='field'>
-            <label>End date</label>
-            <input
-              required
-              type='date'
-              name='endDate'
-              value={endDate}
-              onChange={this.handleEndDateChange}
-            />
-          </div>
-          <div className='field'>
-            <label>Public</label>
-            <input
-              type='checkbox'
-              name='pub'
-              value={pub}
-              onChange={this.handlePubChange}
-            />
-          </div>
-        </form>
-        <button className={`ui right floated button primary ${disabled}`} onClick={this.handleSubmit}>
-          Submit
-        </button>
-        <button className='ui right floated button' onClick={this.handleCancel}>
-          Cancel
-        </button>
-      </div>
+      <Form loading={loading} onSubmit={this.handleSubmit} >
+        <Form.Input
+          name='startDate'
+          type='datetime'
+          control='input'
+          label='Start date'
+          placeholder='Start date'
+          value={startDate}
+          onChange={this.handleChange}
+          error={!this.isValidStartDate}
+          required
+        />
+        <Form.Input
+          name='endDate'
+          type='datetime'
+          control='input'
+          label='End date'
+          placeholder='End date'
+          value={endDate}
+          onChange={this.handleChange}
+          error={!this.isValidEndDate}
+          required
+        />
+        <Form.Field>
+          <label>Public</label>
+          <Checkbox
+            name='pub'
+            value={pub}
+            onChange={this.handleChange}
+            toggle
+          />
+        </Form.Field>
+
+        <Form.Group>
+          <Button secondary onClick={this.handleCancel}>Cancel</Button>
+          <Button primary type='submit' disabled={disabled}>Submit</Button>
+        </Form.Group>
+      </Form>
     )
   }
 
   handleSubmit (e) {
     e.preventDefault()
-    if (!this.isValid) {
+    if (!this.isValidForm) {
       return false
     }
     const { actions, sharing } = this.props
@@ -167,23 +162,15 @@ export class ShareLabelView extends React.Component {
     }
   }
 
-  handleStartDateChange (event) {
-    this.setState({startDate: event.target.value})
-  }
-
-  handleEndDateChange (event) {
-    this.setState({endDate: event.target.value})
-  }
-
-  handlePubChange (event) {
-    this.setState({pub: event.target.value})
+  handleChange (event) {
+    this.setState({[event.target.name]: event.target.value})
   }
 
   render () {
     return (
       <div className='view'>
         {this.header}
-        <div className='ui main'>
+        <div className='viewContent'>
           {this.shareLabelForm}
         </div>
       </div>
