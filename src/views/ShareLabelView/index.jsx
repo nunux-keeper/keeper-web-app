@@ -1,20 +1,30 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Form, Button, Checkbox } from 'semantic-ui-react'
+import { Form, Button } from 'semantic-ui-react'
 
 import { bindActions } from '../../store/helper'
 
 import { routerActions as RouterActions } from 'react-router-redux'
-import { actions as LabelsActions } from '../../store/modules/labels'
+import { actions as LabelActions } from '../../store/modules/label'
 import { actions as SharingActions } from '../../store/modules/sharing'
 import { actions as NotificationActions } from '../../store/modules/notification'
 
 import AppBar from '../../components/AppBar'
 
+const durationConfiguration = [
+  { text: 'No duration', value: 'no' },
+  { text: 'For 24h', value: '24h' },
+  { text: 'For a week', value: '1w' },
+  { text: 'For a month', value: '1m' },
+  { text: 'Tomorrow', value: 't' },
+  { text: 'In a week', value: 'w' },
+  { text: 'Custom', value: 'custom' }
+]
+
 export class ShareLabelView extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
-    labels: PropTypes.object,
+    label: PropTypes.object,
     sharing: PropTypes.object,
     location: PropTypes.object.isRequired
   };
@@ -26,14 +36,17 @@ export class ShareLabelView extends React.Component {
       this.state = {...sharing}
     } else {
       this.state = {
-        startDate: new Date(),
-        endDate: null,
-        pub: false
+        startDate: '',
+        endDate: '',
+        pub: false,
+        duration: 'no'
       }
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleChangeCheckbox = this.handleChangeCheckbox.bind(this)
+    this.handleChangeDatetime = this.handleChangeDatetime.bind(this)
   }
 
   componentDidUpdate (prevProps) {
@@ -41,8 +54,10 @@ export class ShareLabelView extends React.Component {
   }
 
   get title () {
-    const label = this.props.labels.current
-    return `Share label: ${label.label}`
+    if (this.props.label.current) {
+      const label = this.props.label.current
+      return `Share label: ${label.label}`
+    }
   }
 
   get isModalDisplayed () {
@@ -59,62 +74,51 @@ export class ShareLabelView extends React.Component {
     )
   }
 
-  get isValidStartDate () {
-    const { startDate } = this.state
-    return startDate !== ''
-  }
-
-  get isValidEndDate () {
-    const { endDate } = this.state
-    return endDate !== ''
-  }
-
-  get isValidForm () {
-    return this.isValidStartDate && this.isValidEndDate
-  }
-
   get shareLabelForm () {
-    const { startDate, endDate, pub } = this.state
-    const { labels, sharing } = this.props
-    const loading = labels.isProcessing || sharing.isProcessing
-    const disabled = !this.isValidForm
+    const { startDate, endDate, pub, duration } = this.state
+    const { label, sharing } = this.props
+    const loading = label.isProcessing || sharing.isProcessing
+    const styles = duration !== 'custom' ? {display: 'none'} : null
     return (
       <Form loading={loading} onSubmit={this.handleSubmit} >
-        <Form.Input
-          name='startDate'
-          type='datetime'
-          control='input'
-          label='Start date'
-          placeholder='Start date'
-          value={startDate}
+        <Form.Select
+          name='duration'
+          label='Sharing duration'
+          value={duration}
+          options={durationConfiguration}
           onChange={this.handleChange}
-          error={!this.isValidStartDate}
-          required
         />
-        <Form.Input
-          name='endDate'
-          type='datetime'
-          control='input'
-          label='End date'
-          placeholder='End date'
-          value={endDate}
-          onChange={this.handleChange}
-          error={!this.isValidEndDate}
-          required
-        />
-        <Form.Field>
-          <label>Public</label>
-          <Checkbox
-            name='pub'
-            value={pub}
-            onChange={this.handleChange}
-            toggle
+        <Form.Group widths='2' style={styles}>
+          <Form.Input
+            name='startDate'
+            type='datetime-local'
+            control='input'
+            label='Start date'
+            placeholder='Start date'
+            value={startDate}
+            onChange={this.handleChangeDatetime}
           />
-        </Form.Field>
+          <Form.Input
+            name='endDate'
+            type='datetime-local'
+            control='input'
+            label='End date'
+            placeholder='End date'
+            value={endDate}
+            onChange={this.handleChangeDatetime}
+          />
+        </Form.Group>
+        <Form.Checkbox
+          name='pub'
+          label='Public'
+          value='public'
+          checked={pub}
+          onChange={this.handleChangeCheckbox}
+        />
 
         <Form.Group>
           <Button secondary onClick={this.handleCancel}>Cancel</Button>
-          <Button primary type='submit' disabled={disabled}>Submit</Button>
+          <Button primary type='submit'>Submit</Button>
         </Form.Group>
       </Form>
     )
@@ -122,11 +126,8 @@ export class ShareLabelView extends React.Component {
 
   handleSubmit (e) {
     e.preventDefault()
-    if (!this.isValidForm) {
-      return false
-    }
     const { actions, sharing } = this.props
-    if (sharing.current) {
+    if (!sharing.current) {
       actions.sharing.createSharing(this.state).then((sharing) => {
         actions.router.push(`/label/${sharing.targetLabel}`)
         actions.notification.showNotification({message: 'Label shared'})
@@ -138,7 +139,8 @@ export class ShareLabelView extends React.Component {
         })
       })
     } else {
-      actions.sharing.updateSharing(this.state).then((sharing) => {
+      const { startDate, endDate, pub } = this.state
+      actions.sharing.updateSharing({startDate, endDate, pub}).then((sharing) => {
         actions.router.push(`/label/${sharing.targetLabel}`)
         actions.notification.showNotification({message: 'Label sharing updated'})
       }).catch((err) => {
@@ -152,7 +154,8 @@ export class ShareLabelView extends React.Component {
     return false
   }
 
-  handleCancel () {
+  handleCancel (e) {
+    e.preventDefault()
     const { actions, location: loc } = this.props
     const { state } = loc
     if (state && state.returnTo) {
@@ -160,9 +163,18 @@ export class ShareLabelView extends React.Component {
     } else {
       actions.router.push('/document')
     }
+    return false
   }
 
-  handleChange (event) {
+  handleChange (event, {name, value}) {
+    this.setState({[name]: value})
+  }
+
+  handleChangeCheckbox (event, {name, checked}) {
+    this.setState({[name]: checked})
+  }
+
+  handleChangeDatetime (event) {
     this.setState({[event.target.name]: event.target.value})
   }
 
@@ -180,13 +192,13 @@ export class ShareLabelView extends React.Component {
 
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
-  labels: state.labels,
-  sharing: state.labels
+  label: state.label,
+  sharing: state.sharing
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({
   notification: NotificationActions,
-  labels: LabelsActions,
+  label: LabelActions,
   sharing: SharingActions,
   router: RouterActions
 }, dispatch))

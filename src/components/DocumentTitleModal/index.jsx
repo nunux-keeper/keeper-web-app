@@ -18,7 +18,7 @@ export class DocumentTitleModal extends React.Component {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleClose = this.handleClose.bind(this)
-    this.handleTitleChange = this.handleTitleChange.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.state = {
       title: ''
     }
@@ -53,7 +53,7 @@ export class DocumentTitleModal extends React.Component {
           label='Title'
           placeholder='Document title'
           value={this.state.title}
-          onChange={this.handleTitleChange}
+          onChange={this.handleChange}
           error={!this.isValidTitle}
           required
         />
@@ -85,8 +85,8 @@ export class DocumentTitleModal extends React.Component {
     )
   }
 
-  handleTitleChange (event) {
-    this.setState({title: event.target.value})
+  handleChange (event, {name, value}) {
+    this.setState({[name]: value})
   }
 
   handleClose () {

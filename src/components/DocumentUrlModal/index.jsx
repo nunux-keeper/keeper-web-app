@@ -20,8 +20,7 @@ export class DocumentUrlModal extends React.Component {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleClose = this.handleClose.bind(this)
-    this.handleUrlChange = this.handleUrlChange.bind(this)
-    this.handleCreateMethodChange = this.handleCreateMethodChange.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.state = {
       url: '',
       method: 'default'
@@ -48,7 +47,7 @@ export class DocumentUrlModal extends React.Component {
           label='Document URL'
           placeholder='Document title'
           value={this.state.url}
-          onChange={this.handleUrlChange}
+          onChange={this.handleChange}
           error={!this.isValidUrl}
           required
         />
@@ -60,13 +59,13 @@ export class DocumentUrlModal extends React.Component {
               name='method'
               value='default'
               checked={this.state.method === 'default'}
-              onChange={this.handleCreateMethodChange} />
+              onChange={this.handleChange} />
             <Form.Radio
               label='Bookmark the URL'
               name='method'
               value='bookmark'
               checked={this.state.method === 'bookmark'}
-              onChange={this.handleCreateMethodChange} />
+              onChange={this.handleChange} />
           </Form.Group>
         </Form.Field>
       </Form>
@@ -97,12 +96,8 @@ export class DocumentUrlModal extends React.Component {
     )
   }
 
-  handleUrlChange (event) {
-    this.setState({url: event.target.value})
-  }
-
-  handleCreateMethodChange (event, {value}) {
-    this.setState({ method: value })
+  handleChange (event, {name, value}) {
+    this.setState({[name]: value})
   }
 
   handleClose () {

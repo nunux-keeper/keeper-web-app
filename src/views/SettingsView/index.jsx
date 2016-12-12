@@ -41,7 +41,7 @@ export default class SettingsView extends React.Component {
     return (
       <div className='view'>
         {this.header}
-        <div className='ui main'>
+        <div className='viewContent'>
           {this.settings}
         </div>
       </div>

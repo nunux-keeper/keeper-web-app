@@ -16,7 +16,7 @@ export class AppBar extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
     children: PropTypes.node,
-    title: PropTypes.node.isRequired,
+    title: PropTypes.node,
     modal: PropTypes.bool,
     styles: PropTypes.object,
     location: PropTypes.object.isRequired,
@@ -24,6 +24,7 @@ export class AppBar extends React.Component {
   };
 
   static defaultProps = {
+    title: '',
     modal: false
   };
 

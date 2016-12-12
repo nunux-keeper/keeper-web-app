@@ -5,7 +5,7 @@ import { Form, Button } from 'semantic-ui-react'
 import { bindActions } from 'store/helper'
 
 import { routerActions as RouterActions } from 'react-router-redux'
-import { actions as LabelsActions } from 'store/modules/labels'
+import { actions as LabelActions } from 'store/modules/label'
 import { actions as NotificationActions } from 'store/modules/notification'
 
 import ColorSwatch from 'components/ColorSwatch'
@@ -14,7 +14,7 @@ import AppBar from 'components/AppBar'
 export class LabelView extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
-    labels: PropTypes.object,
+    label: PropTypes.object,
     location: PropTypes.object.isRequired
   };
 
@@ -26,13 +26,22 @@ export class LabelView extends React.Component {
         color: '#8E44AD'
       }
     } else {
-      this.state = {...props.labels.current}
+      this.state = {...props.label.current}
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.handleColorChoose = this.handleColorChoose.bind(this)
-    this.handleColorChange = this.handleColorChange.bind(this)
-    this.handleLabelChange = this.handleLabelChange.bind(this)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (
+      !nextProps.label.isFetching &&
+      !nextProps.label.isProcessing &&
+      nextProps.label.current
+    ) {
+      this.setState(nextProps.label.current)
+    }
   }
 
   componentDidUpdate (prevProps) {
@@ -42,8 +51,8 @@ export class LabelView extends React.Component {
   get title () {
     if (this.isCreateForm) {
       return 'New label'
-    } else if (this.props.labels.current) {
-      const { current: {label} } = this.props.labels
+    } else if (this.props.label.current) {
+      const { current: {label} } = this.props.label
       return `Edit label: ${label}`
     }
   }
@@ -74,7 +83,7 @@ export class LabelView extends React.Component {
 
   get labelForm () {
     const { color, label } = this.state
-    const { isProcessing } = this.props.labels
+    const { isProcessing } = this.props.label
     const loading = isProcessing
     const disabled = !this.isValidLabel
     return (
@@ -86,7 +95,7 @@ export class LabelView extends React.Component {
           label='Label name'
           placeholder='Label Name'
           value={label}
-          onChange={this.handleLabelChange}
+          onChange={this.handleChange}
           error={!this.isValidLabel}
           required
         />
@@ -96,7 +105,7 @@ export class LabelView extends React.Component {
             name='color'
             type='color'
             value={color}
-            onChange={this.handleColorChange}
+            onChange={this.handleChange}
             required
           />
           <ColorSwatch value={color} onColorChange={this.handleColorChoose} />
@@ -116,7 +125,7 @@ export class LabelView extends React.Component {
     }
     const { actions } = this.props
     if (this.isCreateForm) {
-      actions.labels.createLabel(this.state).then((label) => {
+      actions.label.createLabel(this.state).then((label) => {
         actions.router.push(`/label/${label.id}`)
         actions.notification.showNotification({message: 'Label created'})
       }).catch((err) => {
@@ -127,8 +136,8 @@ export class LabelView extends React.Component {
         })
       })
     } else {
-      const { current } = this.props.labels
-      actions.labels.updateLabel(current, this.state).then((label) => {
+      const { current } = this.props.label
+      actions.label.updateLabel(current, this.state).then((label) => {
         actions.router.push(`/label/${label.id}`)
         actions.notification.showNotification({message: 'Label updated'})
       }).catch((err) => {
@@ -142,7 +151,8 @@ export class LabelView extends React.Component {
     return false
   }
 
-  handleCancel () {
+  handleCancel (e) {
+    e.preventDefault()
     const { actions, location: loc } = this.props
     const { state } = loc
     if (state && state.returnTo) {
@@ -150,18 +160,15 @@ export class LabelView extends React.Component {
     } else {
       actions.router.push('/document')
     }
+    return false
   }
 
-  handleLabelChange (event) {
-    this.setState({label: event.target.value})
-  }
-
-  handleColorChange (event) {
-    this.setState({color: event.target.value})
+  handleChange (event) {
+    this.setState({[event.target.name]: event.target.value})
   }
 
   handleColorChoose (color) {
-    this.setState({color: color})
+    this.setState({color})
   }
 
   render () {
@@ -178,12 +185,12 @@ export class LabelView extends React.Component {
 
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
-  labels: state.labels
+  label: state.label
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({
   notification: NotificationActions,
-  labels: LabelsActions,
+  label: LabelActions,
   router: RouterActions
 }, dispatch))
 

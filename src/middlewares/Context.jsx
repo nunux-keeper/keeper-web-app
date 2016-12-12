@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { actions as labelsActions } from 'store/modules/labels'
+import { actions as labelActions } from 'store/modules/label'
 import { actions as documentsActions } from 'store/modules/documents'
 import { actions as documentActions } from 'store/modules/document'
 import { actions as graveyardActions } from 'store/modules/graveyard'
@@ -105,7 +105,7 @@ export function fetchDocuments (Component) {
   }
 
   const mapDispatchToProps = (dispatch) => (
-    bindActionCreators(Object.assign({}, documentsActions, labelsActions), dispatch)
+    bindActionCreators(Object.assign({}, documentsActions, labelActions), dispatch)
   )
 
   return connect(null, mapDispatchToProps)(DocumentsAwareComponent)
@@ -136,7 +136,7 @@ export function fetchLabel (Component) {
     }
   }
 
-  return connect(null, labelsActions)(LabelAwareComponent)
+  return connect(null, labelActions)(LabelAwareComponent)
 }
 
 export function fetchLabelAndDocument (Component) {

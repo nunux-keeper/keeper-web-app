@@ -3,6 +3,7 @@ import layout from './layout'
 import document from './document'
 import documents from './documents'
 import graveyard from './graveyard'
+import label from './label'
 import labels from './labels'
 import sharing from './sharing'
 import notification from './notification'
@@ -16,6 +17,7 @@ export default {
   document,
   documents,
   graveyard,
+  label,
   labels,
   sharing,
   notification,

@@ -8,7 +8,7 @@ import { bindActions } from 'store/helper'
 import { routerActions as RouterActions } from 'react-router-redux'
 import { actions as DocumentsActions } from 'store/modules/documents'
 import { actions as GraveyardActions } from 'store/modules/graveyard'
-import { actions as LabelsActions } from 'store/modules/labels'
+import { actions as LabelActions } from 'store/modules/label'
 import { actions as NotificationActions } from 'store/modules/notification'
 
 export class DocumentsContextMenu extends React.Component {
@@ -16,7 +16,7 @@ export class DocumentsContextMenu extends React.Component {
     actions: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     documents: PropTypes.object.isRequired,
-    labels: PropTypes.object.isRequired,
+    label: PropTypes.object.isRequired,
     items: PropTypes.string
   };
 
@@ -34,8 +34,8 @@ export class DocumentsContextMenu extends React.Component {
   }
 
   get label () {
-    const { labels } = this.props
-    return labels.current
+    const { label } = this.props
+    return label.current
   }
 
   get refreshMenuItem () {
@@ -152,7 +152,7 @@ export class DocumentsContextMenu extends React.Component {
 
   handleRemoveLabel () {
     const { actions } = this.props
-    actions.labels.removeLabel(this.label)
+    actions.label.removeLabel(this.label)
     .then((label) => {
       actions.router.push({pathname: '/document'})
       actions.notification.showNotification({
@@ -171,7 +171,7 @@ export class DocumentsContextMenu extends React.Component {
 
   handleUndoRemoveLabel () {
     const { actions } = this.props
-    actions.labels.restoreRemovedLabel().then((label) => {
+    actions.label.restoreRemovedLabel().then((label) => {
       actions.router.push({pathname: `/label/${label.id}`})
       actions.notification.showNotification({header: 'Label restored'})
     }).catch((err) => {
@@ -200,13 +200,13 @@ export class DocumentsContextMenu extends React.Component {
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
   documents: state.documents,
-  labels: state.labels
+  label: state.label
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({
   documents: DocumentsActions,
   graveyard: GraveyardActions,
-  labels: LabelsActions,
+  label: LabelActions,
   notification: NotificationActions,
   router: RouterActions
 }, dispatch))
