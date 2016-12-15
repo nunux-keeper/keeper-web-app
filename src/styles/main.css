@@ -510,6 +510,9 @@ body.dimmable.undetached.dimmed .pusher {
   display: block !important;
   visibility: visible !important; }
 
+.ui.form .fields {
+  margin: 0 !important; }
+
 #homepage #features {
   padding: 2em; }
 

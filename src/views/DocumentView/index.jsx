@@ -98,7 +98,7 @@ export class DocumentView extends React.Component {
     const menuItems = this.isCreateMode ? 'editTitle' : 'raw,share,divider,editTitle,edit,divider,delete'
     if (!isFetching && doc) {
       return (
-        <Menu.Item as={Dropdown} className='right hack ellipsis-v'>
+        <Menu.Item as={Dropdown} className='hack ellipsis-v'>
           <DocumentContextMenu doc={doc} items={menuItems} direction='left' />
         </Menu.Item>
       )
