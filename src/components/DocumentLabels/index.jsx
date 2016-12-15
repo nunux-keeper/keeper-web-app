@@ -52,8 +52,8 @@ export class DocumentLabels extends React.Component {
   }
 
   renderEditMode () {
-    const { labels } = this.props
-    // const value = doc.labels ? doc.labels : []
+    const { labels, doc } = this.props
+    const value = doc.labels ? doc.labels : []
     const options = labels.items.map((l) => {
       const color = {color: l.color}
       return {
@@ -82,6 +82,7 @@ export class DocumentLabels extends React.Component {
         options={options}
         placeholder='No label'
         renderLabel={renderLabel}
+        defaultValue={value}
         onChange={this.handleChange}
       />
     )
