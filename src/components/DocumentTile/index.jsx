@@ -19,9 +19,10 @@ export class DocumentTile extends React.Component {
   get contextualMenu () {
     const {value: doc} = this.props
     const menu = doc.ghost ? 'restore,destroy' : 'detail,share,divider,editTitle,divider,delete'
+    const trigger = <Button circular icon='ellipsis vertical' />
     return (
       <div className='contextual-menu'>
-        <Dropdown as={Button} icon='ellipsis vertical' simple circular pointing='top right' className='icon'>
+        <Dropdown trigger={trigger} pointing='top right' className='hack'>
           <DocumentContextMenu doc={doc} items={menu} />
         </Dropdown>
       </div>

@@ -1,12 +1,42 @@
-/*
-Sematic UI bugfix:
-https://github.com/Semantic-Org/Semantic-UI/issues/2851
-*/
+// Workaround for the following bug:
+// https://github.com/Semantic-Org/Semantic-UI/issues/2851
 body.dimmable.undetached.dimmed {
   .pushable {
     transform: none;
   }
   .pusher {
     position: static;
+  }
+}
+
+// Workaround for the following bug:
+// https://github.com/Semantic-Org/Semantic-UI-React/pull/659
+.ui.menu .item.hack {
+  > i.dropdown.icon {
+    margin: 0;
+    font-family: Icons;
+  }
+}
+.ui.top.right.dropdown.hack {
+  > i.dropdown.icon {
+    display: none;
+  }
+}
+
+.ui.top.right.dropdown.hack,
+.ui.menu .item.hack {
+  &.plus > i.dropdown.icon {
+    &:before {
+      content: "\f067";
+    }
+  }
+  &.ellipsis-v > i.dropdown.icon {
+    &:before {
+      content: "\f142";
+    }
+  }
+  &.visible .menu.transition {
+    display: block!important;
+    visibility: visible!important;
   }
 }

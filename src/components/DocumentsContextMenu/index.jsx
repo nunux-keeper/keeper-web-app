@@ -45,7 +45,6 @@ export class DocumentsContextMenu extends React.Component {
         key={this.key('refresh')}
         onClick={this.handleRefresh}
         text='Refresh'
-        description='ctrl+r'
       />
     )
   }

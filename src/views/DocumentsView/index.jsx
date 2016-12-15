@@ -78,17 +78,17 @@ export class DocumentsView extends React.Component {
       <AppBar title={$title} styles={bg} >
         <Menu.Menu className='right'>
           <SearchBarItem placeholder={`Search in "${this.title}"...`} />
-          <Dropdown as={Menu.Item} icon='plus' simple className='right'>
+          <Menu.Item as={Dropdown} className='right hack plus'>
             <Dropdown.Menu>
               <Dropdown.Header content='New document' />
               <Dropdown.Divider />
               <Dropdown.Item as={Link} icon='write' text='From skratch' to={createLink}/>
               <Dropdown.Item icon='linkify' text='From URL' onClick={actions.urlModal.showUrlModal} />
             </Dropdown.Menu>
-          </Dropdown>
-          <Dropdown as={Menu.Item} icon='ellipsis vertical' simple className='right'>
+          </Menu.Item>
+          <Menu.Item as={Dropdown} className='right hack ellipsis-v'>
             <DocumentsContextMenu items={this.contextMenuItems} />
-          </Dropdown>
+          </Menu.Item>
         </Menu.Menu>
       </AppBar>
     )

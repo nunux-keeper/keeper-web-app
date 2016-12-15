@@ -484,15 +484,31 @@ th {
   .readable hr {
     margin-bottom: 1em; }
 
-/*
-Sematic UI bugfix:
-https://github.com/Semantic-Org/Semantic-UI/issues/2851
-*/
 body.dimmable.undetached.dimmed .pushable {
   transform: none; }
 
 body.dimmable.undetached.dimmed .pusher {
   position: static; }
+
+.ui.menu .item.hack > i.dropdown.icon {
+  margin: 0;
+  font-family: Icons; }
+
+.ui.top.right.dropdown.hack > i.dropdown.icon {
+  display: none; }
+
+.ui.top.right.dropdown.hack.plus > i.dropdown.icon:before,
+.ui.menu .item.hack.plus > i.dropdown.icon:before {
+  content: "\f067"; }
+
+.ui.top.right.dropdown.hack.ellipsis-v > i.dropdown.icon:before,
+.ui.menu .item.hack.ellipsis-v > i.dropdown.icon:before {
+  content: "\f142"; }
+
+.ui.top.right.dropdown.hack.visible .menu.transition,
+.ui.menu .item.hack.visible .menu.transition {
+  display: block !important;
+  visibility: visible !important; }
 
 #homepage #features {
   padding: 2em; }
