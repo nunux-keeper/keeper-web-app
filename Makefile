@@ -1,7 +1,7 @@
 .SILENT :
 .PHONY : up down install
 
-USERNAME:=ncarlier
+USERNAME:=nunux-keeper
 APPNAME:=keeper-web-app
 env?=dev
 
