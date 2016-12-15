@@ -18,3 +18,9 @@
 #AppBar .item.search {
   flex: 1 0 auto;
 }
+
+@media screen and (max-width: 512px) {
+  #AppBar > .item.title {
+    display: none;
+  }
+}
