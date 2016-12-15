@@ -3,7 +3,7 @@ import { routerMiddleware } from 'react-router-redux'
 import thunk from 'redux-thunk'
 import makeRootReducer from './reducers'
 
-const __DEBUG__ = false
+const __DEBUG__ = process.env.REACT_APP_DEBUG === 'true'
 
 export default (initialState = {}, history) => {
   // ======================================================
