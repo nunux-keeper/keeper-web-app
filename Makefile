@@ -34,5 +34,5 @@ down:
 install: build
 	echo "Install generated files at deployment location..."
 	mkdir -p $(DEPLOY_DIR)
-	$(DOCKER) run --rm -v $(DEPLOY_DIR):$(VOLUME_CONTAINER_PATH)/dist $(IMAGE) run deploy:prod
+	$(DOCKER) run --rm -v $(DEPLOY_DIR):$(VOLUME_CONTAINER_PATH)/build $(IMAGE) run build
 
