@@ -24,7 +24,7 @@
   "bugs": {
     "url": "https://gitlab.com/nunux-keeper/keeper-web-app/issues"
   },
-  "homepage": "https://gitlab.com/nunux-keeper/keeper-web-app#README",
+  "homepage": "https://keeper.nunux.org",
   "dependencies": {
     "chance": "^1.0.4",
     "node-sass": "^3.13.1",
