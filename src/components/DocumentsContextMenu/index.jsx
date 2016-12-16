@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
+import { Dropdown } from 'semantic-ui-react'
 
 import { bindActions } from 'store/helper'
 
 import { routerActions as RouterActions } from 'react-router-redux'
 import { actions as DocumentsActions } from 'store/modules/documents'
 import { actions as GraveyardActions } from 'store/modules/graveyard'
-import { actions as LabelsActions } from 'store/modules/labels'
+import { actions as LabelActions } from 'store/modules/label'
 import { actions as NotificationActions } from 'store/modules/notification'
 
 export class DocumentsContextMenu extends React.Component {
@@ -15,7 +16,7 @@ export class DocumentsContextMenu extends React.Component {
     actions: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     documents: PropTypes.object.isRequired,
-    labels: PropTypes.object.isRequired,
+    label: PropTypes.object.isRequired,
     items: PropTypes.string
   };
 
@@ -33,29 +34,32 @@ export class DocumentsContextMenu extends React.Component {
   }
 
   get label () {
-    const { labels } = this.props
-    return labels.current
+    const { label } = this.props
+    return label.current
   }
 
   get refreshMenuItem () {
     return (
-      <div key={this.key('refresh')} className='item' onClick={this.handleRefresh}>
-        <i className='refresh icon'></i>
-        Refresh
-      </div>
+      <Dropdown.Item
+        icon='refresh'
+        key={this.key('refresh')}
+        onClick={this.handleRefresh}
+        text='Refresh'
+      />
     )
   }
 
   get orderMenuItem () {
     const { documents } = this.props
     const asc = documents.params && documents.params.order === 'asc'
-    const txt = asc ? 'From most recent' : 'From oldest'
-    const css = asc ? 'ascending' : 'descending'
+    const text = asc ? 'From most recent' : 'From oldest'
+    const order = asc ? 'ascending' : 'descending'
     return (
-      <div key={this.key('order')} className='item' onClick={this.handleOrderSwitch}>
-        <i className={`sort numeric ${css}  icon`}></i>
-        {txt}
-      </div>
+      <Dropdown.Item
+        icon={`sort numeric ${order}`}
+        key={this.key('order')}
+        onClick={this.handleOrderSwitch}
+        text={text} />
     )
   }
 
@@ -63,11 +67,12 @@ export class DocumentsContextMenu extends React.Component {
     const { location } = this.props
     if (this.label) {
       return (
-        <Link key={this.key('edit-label')} to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: location, title: `Edit label: ${this.label.label}`} }}
-          className='item'>
-          <i className='tag icon'></i>
-          Edit Label
-        </Link>
+        <Dropdown.Item
+          icon='tag'
+          as={Link}
+          key={this.key('edit-label')}
+          to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: location, title: `Edit label: ${this.label.label}`} }}
+          text='Edit label' />
       )
     }
   }
@@ -75,20 +80,24 @@ export class DocumentsContextMenu extends React.Component {
   get deleteLabelMenuItem () {
     if (this.label) {
       return (
-        <a key={this.key('delete-label')} className='item' onClick={this.handleRemoveLabel}>
-          <i className='trash icon'></i>
-          Delete Label
-        </a>
+        <Dropdown.Item
+          icon='trash'
+          as='a'
+          key={this.key('delete-label')}
+          onClick={this.handleRemoveLabel}
+          text='Delete label' />
       )
     }
   }
 
   get emptyGraveyardMenuItem () {
     return (
-      <a key={this.key('empty-graveyard')} className='item' onClick={this.handleEmptyGraveyard}>
-        <i className='trash icon'></i>
-        Empty the trash
-      </a>
+      <Dropdown.Item
+        icon='trash'
+        as='a'
+        key={this.key('empty-graveyard')}
+        onClick={this.handleEmptyGraveyard}
+        text='Empty the trash' />
     )
   }
 
@@ -96,17 +105,18 @@ export class DocumentsContextMenu extends React.Component {
     const { location } = this.props
     if (this.label) {
       return (
-        <Link key={this.key('share-label')} to={{ pathname: `/label/${this.label.id}/share`, state: {modal: true, returnTo: location, title: `Share label: ${this.label.label}`} }}
-          className='item'>
-          <i className='share alternate icon'></i>
-          Share Label
-        </Link>
+        <Dropdown.Item
+          icon='share alternate'
+          as={Link}
+          key={this.key('share-label')}
+          to={{ pathname: `/label/${this.label.id}/share`, state: {modal: true, returnTo: location, title: `Share label: ${this.label.label}`} }}
+          text='Share label' />
       )
     }
   }
 
   get dividerMenuItem () {
-    return (<div key={this.key('divider' + Math.random())} className='ui divider'></div>)
+    return (<Dropdown.Divider key={this.key('divider' + Math.random())} />)
   }
 
   get menu () {
@@ -118,9 +128,9 @@ export class DocumentsContextMenu extends React.Component {
 
   render () {
     return (
-      <div className='menu'>
+      <Dropdown.Menu>
         {this.menu}
-      </div>
+      </Dropdown.Menu>
     )
   }
 
@@ -141,7 +151,7 @@ export class DocumentsContextMenu extends React.Component {
 
   handleRemoveLabel () {
     const { actions } = this.props
-    actions.labels.removeLabel(this.label)
+    actions.label.removeLabel(this.label)
     .then((label) => {
       actions.router.push({pathname: '/document'})
       actions.notification.showNotification({
@@ -160,7 +170,7 @@ export class DocumentsContextMenu extends React.Component {
 
   handleUndoRemoveLabel () {
     const { actions } = this.props
-    actions.labels.restoreRemovedLabel().then((label) => {
+    actions.label.restoreRemovedLabel().then((label) => {
       actions.router.push({pathname: `/label/${label.id}`})
       actions.notification.showNotification({header: 'Label restored'})
     }).catch((err) => {
@@ -189,13 +199,13 @@ export class DocumentsContextMenu extends React.Component {
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
   documents: state.documents,
-  labels: state.labels
+  label: state.label
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({
   documents: DocumentsActions,
   graveyard: GraveyardActions,
-  labels: LabelsActions,
+  label: LabelActions,
   notification: NotificationActions,
   router: RouterActions
 }, dispatch))

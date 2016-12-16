@@ -68,7 +68,7 @@ export const fetchSharingList = () => {
 
 export const fetchSharing = () => {
   return (dispatch, getState) => {
-    const {sharing, labels: {current: label}} = getState()
+    const {sharing, label: {current: label}} = getState()
     if (sharing.isFetching || sharing.isProcessing) {
       console.warn('Unable to fetch sharing. An action is pending...')
       return Promise.resolve(null)
@@ -84,7 +84,7 @@ export const fetchSharing = () => {
 
 export const createSharing = (sharing) => {
   return (dispatch, getState) => {
-    const {labels: {current: label}} = getState()
+    const {label: {current: label}} = getState()
     console.debug('Creating sharing:', sharing)
     dispatch(createSharingRequest())
     return SharingApi.create(label, sharing)
@@ -96,7 +96,7 @@ export const createSharing = (sharing) => {
 
 export const updateSharing = (payload) => {
   return (dispatch, getState) => {
-    const {sharing, labels: {current: label}} = getState()
+    const {sharing, label: {current: label}} = getState()
     if (sharing.isFetching || sharing.isProcessing) {
       console.warn('Unable to update sharing. An action is pending...')
       return Promise.resolve(null)
@@ -112,7 +112,7 @@ export const updateSharing = (payload) => {
 
 export const removeSharing = () => {
   return (dispatch, getState) => {
-    const {labels: {current: label}} = getState()
+    const {label: {current: label}} = getState()
     console.debug('Removing sharing:', label.sharing)
     dispatch(removeSharingRequest())
     return SharingApi.remove(label)

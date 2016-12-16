@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { actions as labelsActions } from 'store/modules/labels'
+import { actions as labelActions } from 'store/modules/label'
 import { actions as documentsActions } from 'store/modules/documents'
 import { actions as documentActions } from 'store/modules/document'
 import { actions as graveyardActions } from 'store/modules/graveyard'
@@ -75,7 +75,7 @@ export function fetchDocuments (Component) {
       if (!(location.state && location.state.backFromModal)) {
         fetchDocuments({
           label: params.labelId,
-          ... location.query
+          ...location.query
         })
         if (!params.labelId) {
           discardLabel()
@@ -89,12 +89,12 @@ export function fetchDocuments (Component) {
       if (params.labelId !== nextProps.params.labelId) {
         fetchDocuments({
           label: nextProps.params.labelId,
-          ... nextProps.location.query
+          ...nextProps.location.query
         })
       } else if (location.search !== nextProps.location.search) {
         fetchDocuments({
           label: params.labelId,
-          ... nextProps.location.query
+          ...nextProps.location.query
         })
       }
     }
@@ -105,7 +105,7 @@ export function fetchDocuments (Component) {
   }
 
   const mapDispatchToProps = (dispatch) => (
-    bindActionCreators(Object.assign({}, documentsActions, labelsActions), dispatch)
+    bindActionCreators(Object.assign({}, documentsActions, labelActions), dispatch)
   )
 
   return connect(null, mapDispatchToProps)(DocumentsAwareComponent)
@@ -136,7 +136,7 @@ export function fetchLabel (Component) {
     }
   }
 
-  return connect(null, labelsActions)(LabelAwareComponent)
+  return connect(null, labelActions)(LabelAwareComponent)
 }
 
 export function fetchLabelAndDocument (Component) {
@@ -161,7 +161,7 @@ export function fetchGraveyard (Component) {
       if (!(location.state && location.state.backFromModal)) {
         fetchGhosts({
           label: params.labelId,
-          ... location.query
+          ...location.query
         })
       }
     }
@@ -172,7 +172,7 @@ export function fetchGraveyard (Component) {
       if (location.search !== nextProps.location.search) {
         fetchGhosts({
           label: params.labelId,
-          ... nextProps.location.query
+          ...nextProps.location.query
         })
       }
     }

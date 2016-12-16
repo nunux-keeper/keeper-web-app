@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
+import { Dropdown, Label, Icon } from 'semantic-ui-react'
 
 import { actions as documentActions } from 'store/modules/document'
 
@@ -19,36 +20,7 @@ export class DocumentLabels extends React.Component {
 
   constructor (props) {
     super(props)
-    this.onChange = this.onChange.bind(this)
-  }
-
-  componentDidMount () {
-    const { editable } = this.props
-    if (editable) {
-      const $el = this.refs.labels
-      window.$($el).dropdown({
-        transition: 'drop',
-        onChange: this.onChange
-      })
-    }
-  }
-
-  componentDidUpdate (prevProps, prevState) {
-    if (!prevProps.editable && this.props.editable) {
-      const $el = this.refs.labels
-      window.$($el).dropdown({
-        transition: 'drop',
-        onChange: this.onChange
-      })
-    }
-  }
-
-  onChange (value, text, $selectedItem) {
-    const { updateDocument, doc } = this.props
-    const payload = {
-      labels: value.split(',')
-    }
-    updateDocument(doc, payload)
+    this.handleChange = this.handleChange.bind(this)
   }
 
   renderViewMode () {
@@ -65,47 +37,68 @@ export class DocumentLabels extends React.Component {
       const key = `label-${doc.id}-${l.id}`
       const to = {pathname: `/label/${l.id}`}
       return (
-        <Link key={key} to={to} className='ui label'>
-          <i className='circle icon' style={color}></i>
+        <Label as={Link} key={key} to={to} >
+          <Icon name='circle' style={color} />
           {l.label}
-        </Link>
+        </Label>
       )
     })
 
     return (
-      <div className='ui mini labels' ref='labels'>{$labels}</div>
+      <Label.Group size='mini'>
+        {$labels}
+      </Label.Group>
     )
   }
 
   renderEditMode () {
-    const { doc, labels } = this.props
-    const value = doc.labels ? doc.labels.join() : null
-    const items = labels.items.map((l) => {
-      const key = `label-${doc.id}-${l.id}`
+    const { labels, doc } = this.props
+    const value = doc.labels ? doc.labels : []
+    const options = labels.items.map((l) => {
       const color = {color: l.color}
-      return (
-        <div className='item' data-value={l.id} key={key}>
-          <i className='circle icon' style={color}></i>
-          {l.label}
-        </div>
-      )
+      return {
+        text: l.label,
+        value: l.id,
+        color: l.color,
+        content: <div><Icon name='circle' style={color} /> {l.label}</div>
+      }
     })
+    const renderLabel = (label, index, props) => {
+      const color = {color: label.color}
+      return (
+        <Label>
+          <Icon name='circle' style={color} />
+          {label.text}
+        </Label>
+      )
+    }
 
     return (
-      <div className='ui fluid multiple search selection dropdown' ref='labels'>
-        <input type='hidden' name='label' value={value} />
-        <i className='dropdown icon'></i>
-        <div className='default text'>No labels</div>
-        <div className='menu'>
-          {items}
-        </div>
-      </div>
+      <Dropdown
+        search
+        multiple
+        selection
+        fluid
+        options={options}
+        placeholder='No label'
+        renderLabel={renderLabel}
+        defaultValue={value}
+        onChange={this.handleChange}
+      />
     )
   }
 
   render () {
     const { editable } = this.props
     return editable ? this.renderEditMode() : this.renderViewMode()
+  }
+
+  handleChange (event, {value}) {
+    const { updateDocument, doc } = this.props
+    const payload = {
+      labels: value
+    }
+    updateDocument(doc, payload)
   }
 
   resolveLabel (id) {

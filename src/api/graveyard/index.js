@@ -1,5 +1,9 @@
-if (__MOCK__) {
-  module.exports = require('./GraveyardMock')
+let impl
+
+if (process.env.MOCK === 'true') {
+  impl = require('./GraveyardMock')
 } else {
-  module.exports = require('./GraveyardApi')
+  impl = require('./GraveyardApi')
 }
+
+module.exports = impl

@@ -1,20 +1,20 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import AppNavigation from 'components/AppNavigation'
+import AppMenu from 'components/AppMenu'
 import AppModal from 'components/AppModal'
 import AppNotification from 'components/AppNotification'
 import DocumentTitleModal from 'components/DocumentTitleModal'
 import DocumentUrlModal from 'components/DocumentUrlModal'
+import { Sizes } from 'store/modules/layout'
+import { Sidebar } from 'semantic-ui-react'
 
-import { Sizes } from 'store/modules/device'
-
-import '../styles/main.scss'
+import './styles.css'
 
 export class MainLayout extends React.Component {
   static propTypes = {
     children: PropTypes.node,
     location: PropTypes.object,
-    device: PropTypes.object.isRequired
+    layout: PropTypes.object.isRequired
   };
 
   componentWillReceiveProps (nextProps) {
@@ -34,7 +34,7 @@ export class MainLayout extends React.Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return nextProps.location !== this.props.location ||
-      nextProps.device !== this.props.device
+      nextProps.layout !== this.props.layout
   }
 
   renderModal () {
@@ -48,30 +48,53 @@ export class MainLayout extends React.Component {
     }
   }
 
-  render () {
-    const { children, device } = this.props
-    // Navigation bar status depends of the device size.
-    const visible = device.size === Sizes.LARGE
-    const clazz = visible ? 'pushed' : 'pusher'
+  renderMobileLayout () {
+    const { children, layout } = this.props
 
     return (
-      <div id='main' className='ui pushable'>
-        <AppNavigation visible={visible}/>
-        <div className={clazz}>
+      <Sidebar.Pushable id='MobileLayout'>
+        <Sidebar animation='push' visible={layout.sidebar.visible} >
+          <AppMenu />
+        </Sidebar>
+        <Sidebar.Pusher dimmed={layout.sidebar.visible}>
+          <div>
+            {this.previousChildren || children}
+            {this.renderModal()}
+            <AppNotification />
+            <DocumentTitleModal />
+            <DocumentUrlModal />
+          </div>
+        </Sidebar.Pusher>
+      </Sidebar.Pushable>
+    )
+  }
+
+  renderDesktopLayout () {
+    const { children } = this.props
+
+    return (
+      <div id='DesktopLayout'>
+        <AppMenu />
+        <div className='main'>
           {this.previousChildren || children}
-          {this.renderModal()}
           <AppNotification />
           <DocumentTitleModal />
           <DocumentUrlModal />
         </div>
+        {this.renderModal()}
       </div>
     )
+  }
+
+  render () {
+    const { layout } = this.props
+    return layout.size < Sizes.LARGE ? this.renderMobileLayout() : this.renderDesktopLayout()
   }
 }
 
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
-  device: state.device
+  layout: state.layout
 })
 
 export default connect(mapStateToProps)(MainLayout)

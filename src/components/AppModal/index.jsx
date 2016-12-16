@@ -7,7 +7,9 @@ import { routerActions as RouterActions } from 'react-router-redux'
 
 import Modal from 'react-modal'
 
-import './styles.scss'
+import { Sizes } from 'store/modules/layout'
+
+import './styles.css'
 
 const customStyles = {
   overlay: {
@@ -39,7 +41,7 @@ export class AppModal extends React.Component {
     actions: PropTypes.object.isRequired,
     children: PropTypes.node.isRequired,
     returnTo: PropTypes.object,
-    device: PropTypes.object.isRequired
+    layout: PropTypes.object.isRequired
   };
 
   constructor (props) {
@@ -61,13 +63,14 @@ export class AppModal extends React.Component {
   }
 
   render () {
-    const { children, device } = this.props
-    const styles = device.size === 1 ? customMobileStyles : customStyles
+    const { children, layout } = this.props
+    const styles = layout.size < Sizes.LARGE ? customMobileStyles : customStyles
     return (
       <Modal
         isOpen
         style={styles}
-        onRequestClose={this.handleClose}>
+        onRequestClose={this.handleClose}
+        contentLabel='Modal'>
         {children}
       </Modal>
     )
@@ -75,7 +78,7 @@ export class AppModal extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  device: state.device
+  layout: state.layout
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({

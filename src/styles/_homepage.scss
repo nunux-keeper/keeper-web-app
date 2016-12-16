@@ -1,0 +1,118 @@
+#homepage {
+  #features {
+    padding: 2em;
+  }
+  .hidden.menu {
+    display: none;
+  }
+
+  .masthead.segment {
+    background-image: url("/images/bg.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center top;
+    min-height: 700px;
+    padding: 1em 0em;
+  }
+  .masthead {
+    .logo.item img {
+      margin-right: 1em;
+    }
+    .ui.menu {
+      margin-left: 0.5em;
+      border: none;
+    }
+    .ui.primary.button {
+      margin-top: 3em;
+    }
+    h1.ui.header {
+      margin-top: 3em;
+      margin-bottom: 0em;
+      font-size: 4em;
+      font-weight: normal;
+      text-shadow: 2px 2px 5px #000;
+      .content {
+        text-align: left;
+        .sub.header {
+          text-shadow: 2px 2px 1px #000;
+          color:#fff;
+        }
+        small {
+          font-size: small;
+        }
+      }
+    }
+    h2 {
+      font-size: 1.7em;
+      font-weight: normal;
+    }
+  }
+
+  .ui.vertical.stripe {
+    padding: 8em 0em;
+    h3 {
+      font-size: 2em;
+    }
+    .button + h3, p + h3 {
+      margin-top: 3em;
+    }
+    .floated.image {
+      clear: both;
+    }
+    p {
+      font-size: 1.33em;
+    }
+    .horizontal.divider {
+      margin: 3em 0em;
+    }
+  }
+
+  .quote.stripe.segment {
+    padding: 0em;
+    .grid .column {
+      padding-top: 5em;
+      padding-bottom: 5em;
+    }
+  }
+
+  .footer.segment {
+    padding: 5em 0em;
+  }
+
+  .secondary.pointing.menu .toc.item {
+    display: none;
+  }
+
+  .ui.menu:not(.vertical) .right.item {
+    margin-left: auto!important;
+  }
+}
+@media only screen and (max-width: 700px) {
+  #homepage {
+    .ui.fixed.menu {
+      display: none !important;
+    }
+    .secondary.pointing.menu {
+      .item, .menu {
+        display: none;
+      }
+      .toc.item {
+        display: block;
+      }
+    }
+    .masthead.segment {
+      min-height: 350px;
+    }
+    .masthead {
+      h1.ui.header {
+        font-size: 2em;
+        margin-top: 1.5em;
+      }
+      h2 {
+        margin-top: 0.5em;
+        font-size: 1.5em;
+      }
+    }
+  }
+}
+

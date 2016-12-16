@@ -1,0 +1,20 @@
+
+#AppMenu {
+  border: none;
+  border-radius: 0;
+}
+
+#AppMenu > .header.item {
+  background: #2185d0;
+  color: rgba(255,255,255,.9);
+  margin: 0;
+  padding: 1em 0;
+  border-radius: 0;
+}
+
+#AppMenu > .header.item h2 {
+  width: 100%;
+  color: rgba(255,255,255,.5);
+  font-variant: small-caps;
+}
+

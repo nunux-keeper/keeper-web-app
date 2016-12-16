@@ -23,14 +23,14 @@ export const actions = {
 export default handleActions({
   [SHOW_URL_MODAL]: (state) => {
     return Object.assign({}, state, {
-      show: true
+      open: true
     })
   },
   [HIDE_URL_MODAL]: (state) => {
     return Object.assign({}, state, {
-      show: false
+      open: false
     })
   }
 }, {
-  show: false
+  open: false
 })

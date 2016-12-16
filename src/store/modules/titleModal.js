@@ -23,14 +23,16 @@ export const actions = {
 export default handleActions({
   [SHOW_TITLE_MODAL]: (state, action) => {
     return Object.assign({}, state, {
-      content: action.payload
+      doc: action.payload,
+      open: true
     })
   },
   [HIDE_TITLE_MODAL]: (state, action) => {
     return Object.assign({}, state, {
-      content: null
+      open: false
     })
   }
 }, {
-  content: null
+  open: false,
+  doc: null
 })

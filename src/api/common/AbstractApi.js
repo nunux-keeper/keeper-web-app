@@ -3,6 +3,7 @@ import fetch from 'isomorphic-fetch'
 export default class AbstractApi {
   constructor () {
     this.firstCall = true
+    this.apiRoot = process.env.REACT_APP_API_ROOT
   }
 
   buildQueryString (query) {
@@ -22,7 +23,7 @@ export default class AbstractApi {
   }
 
   resolveUrl (url, query) {
-    return window.API_ROOT + url + this.buildQueryString(query)
+    return this.apiRoot + url + this.buildQueryString(query)
   }
 
   fetch (url, params) {

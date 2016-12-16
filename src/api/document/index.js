@@ -1,5 +1,9 @@
-if (__MOCK__) {
-  module.exports = require('./DocumentMock')
+let impl
+
+if (process.env.MOCK === 'true') {
+  impl = require('./DocumentMock')
 } else {
-  module.exports = require('./DocumentApi')
+  impl = require('./DocumentApi')
 }
+
+module.exports = impl

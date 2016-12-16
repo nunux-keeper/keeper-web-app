@@ -8,7 +8,7 @@ class InMemoryDb {
       nb: 5,
       createRandomItem: (obj = {}) => Object.assign({id: chance.hash({length: 15})}, obj)
     }, options)
-    console.log('Init. ${name} in memory database...')
+    console.log(`Init. ${name} in memory database...`)
     this.db = Array.from(new Array(this.options.nb), () => this.options.createRandomItem())
   }
 

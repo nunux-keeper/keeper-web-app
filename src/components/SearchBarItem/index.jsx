@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { routerActions } from 'react-router-redux'
+import { Menu, Input } from 'semantic-ui-react'
 
 export class SearchBarItem extends React.Component {
   static propTypes = {
@@ -40,18 +41,15 @@ export class SearchBarItem extends React.Component {
   render () {
     const {placeholder} = this.props
     return (
-      <div className='search item'>
-        <div className='ui icon input'>
-          <input
-            type='text'
-            placeholder={placeholder}
-            value={this.state.q}
-            onChange={this.handleChange}
-            onKeyDown={this.handleUpdateSearchQuery}
-          />
-          <i className='search link icon'></i>
-        </div>
-      </div>
+      <Menu.Item className='search'>
+        <Input
+          icon='search'
+          placeholder={placeholder}
+          value={this.state.q}
+          onChange={this.handleChange}
+          onKeyDown={this.handleUpdateSearchQuery}
+        />
+      </Menu.Item>
     )
   }
 }

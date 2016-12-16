@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { Image, Icon } from 'semantic-ui-react'
 
-import moment from 'moment'
+import { default as Timeago } from 'timeago.js'
 
-import styles from './styles.scss'
+import './styles.css'
 
 class ProfilePanel extends React.Component {
   static propTypes = {
@@ -14,20 +15,18 @@ class ProfilePanel extends React.Component {
     const { current } = this.props.profile
     if (current) {
       const gravatar = `https://www.gravatar.com/avatar/${current.hash}`
-      const since = moment(current.date).fromNow(true)
+      const memberAgo = new Timeago().format(current.date)
       return (
-        <div className={styles.profile}>
-          <img className='ui avatar image' src={gravatar} />
+        <div className='ProfilePanel'>
+          <Image avatar src={gravatar} alt='You on Gravatar' />
           <span>
             <strong>{current.name}</strong>
-            <small>Member since {since}</small>
+            <small>Member {memberAgo}</small>
           </span>
-          <a
-            target='_blank'
+          <a target='_blank'
             href='https://login.nunux.org/auth/realms/nunux.org/account?referrer=nunux-keeper-app'
-            title='Manage your profile'
-          >
-            <i className='icon user'></i>
+            title='Manage your profile'>
+            <Icon name='user' />
           </a>
         </div>
       )

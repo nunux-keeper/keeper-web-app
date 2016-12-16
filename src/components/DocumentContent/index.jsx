@@ -1,11 +1,13 @@
-/*global $:true*/
 import React, { PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { Form } from 'semantic-ui-react'
 import TinyMCE from 'react-tinymce'
 
 import { actions as documentActions } from 'store/modules/document'
+
+const API_ROOT = process.env.REACT_APP_API_ROOT
 
 export class DocumentContent extends React.Component {
   static propTypes = {
@@ -37,18 +39,18 @@ export class DocumentContent extends React.Component {
   filterImgDataRefAttr () {
     const { doc } = this.props
     // Filtering images ref attributes...
-    const $this = $(ReactDOM.findDOMNode(this))
-    $this.find('img[data-ref]').map((idx, el) => {
+    const $this = ReactDOM.findDOMNode(this)
+    $this.querySelectorAll('img[data-ref]').forEach((el) => {
       const key = el.dataset.ref
-      const src = `${window.API_ROOT}/document/${doc.id}/files/${key}`
+      const src = `${API_ROOT}/document/${doc.id}/files/${key}`
       el.src = src
     })
   }
 
   filterImgSrcSetAttr () {
     // Filtering images srcset  attributes...
-    const $this = $(ReactDOM.findDOMNode(this))
-    $this.find('img[srcset]').map((idx, el) => {
+    const $this = ReactDOM.findDOMNode(this)
+    $this.querySelectorAll('img[srcset]').forEach((el) => {
       el.removeAttribute('srcset')
     })
   }
@@ -81,14 +83,14 @@ export class DocumentContent extends React.Component {
       )
     } else {
       return (
-        <div className='ui form'>
-          <div className='field'>
+        <Form as='div'>
+          <Form.Field>
             <textarea
               value={doc.content}
               onChange={this.handleContentChange}>
             </textarea>
-          </div>
-        </div>
+          </Form.Field>
+        </Form>
       )
     }
   }

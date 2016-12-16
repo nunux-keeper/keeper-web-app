@@ -1,0 +1,63 @@
+
+#DesktopLayout {
+  height: 100vh;
+}
+
+#DesktopLayout #AppMenu {
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 260px !important;
+  overflow-y: auto;
+  margin: 0;
+  z-index: 2;
+  box-shadow: 0 0 20px rgba(34,36,38,.15);
+}
+
+#DesktopLayout > .main {
+  margin-left: 260px;
+  height: 100vh;
+}
+
+.ReactModalPortal .view {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+}
+
+#MobileLayout .view,
+#DesktopLayout .view {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100vh;
+}
+
+.ReactModalPortal .view > #AppBar,
+#MobileLayout .view > #AppBar,
+#DesktopLayout .view > #AppBar {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.ReactModalPortal .view > .viewContent,
+#MobileLayout .view > .viewContent,
+#DesktopLayout .view > .viewContent {
+  flex: 1;
+  overflow: auto;
+  background: #fff;
+  position: relative;
+}
+
+#MobileLayout .view > .documents,
+#MobileLayout .view > .trash,
+#DesktopLayout .view > .documents,
+#DesktopLayout .view > .trash {
+  background: #ECECEC;
+}
+
+.viewContent {
+  padding: 1em;
+}

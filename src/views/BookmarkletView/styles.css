@@ -1,0 +1,13 @@
+.bookmarklet .ui.top.menu {
+  border-radius: 0;
+  margin: 0;
+}
+.bookmarklet .dropzone {
+  height: 160px;
+  text-align: center;
+  padding: 2em;
+}
+.bookmarklet .dropzone.over {
+  background-color: blue;
+}
+

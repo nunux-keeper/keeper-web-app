@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
+import { Dropdown } from 'semantic-ui-react'
 
 import { bindActions } from 'store/helper'
 
@@ -40,14 +41,13 @@ export class DocumentContextMenu extends React.Component {
     const { pathname } = this.props.location
     const doc = this.props.doc
     return (
-      <Link
+      <Dropdown.Item
+        icon='zoom'
+        as={Link}
         key={this.key('detail')}
         to={{ pathname: `${pathname}/${doc.id}` }}
         title={doc.title}
-        className='item'>
-        <i className='zoom icon'></i>
-        View
-      </Link>
+        text='View' />
     )
   }
 
@@ -55,74 +55,75 @@ export class DocumentContextMenu extends React.Component {
     const doc = this.props.doc
     const base = window.API_ROOT
     return (
-      <a href={`${base}/document/${doc.id}?raw`}
+      <Dropdown.Item
+        icon='file code outline'
+        as='a'
         key={this.key('raw')}
+        href={`${base}/document/${doc.id}?raw`}
         title='View RAW document'
-        className='item'
-        target='_blank'>
-        <i className='file code outline icon'></i>
-        View RAW
-      </a>
+        target='_blank'
+        text='View RAW' />
     )
   }
 
   get editTitleMenuItem () {
     return (
-      <div key={this.key('title')} className='item' onClick={this.handleEditTitle}>
-        <i className='font icon'></i>
-        Edit title
-      </div>
+      <Dropdown.Item
+        icon='font'
+        as='div'
+        key={this.key('title')}
+        onClick={this.handleEditTitle}
+        text='Edit title' />
     )
   }
 
   get editMenuItem () {
     const { actions } = this.props
     return (
-      <div key={this.key('edit')} className='item' onClick={actions.document.toggleDocumentEditMode}>
-        <i className='edit icon'></i>
-        Edit mode
-      </div>
-    )
-  }
-
-  get shareMenuItem () {
-    return (
-      <div key={this.key('share')} className='item' >
-        <i className='share alternate icon'></i>
-        Share
-      </div>
+      <Dropdown.Item
+        icon='edit'
+        as='div'
+        key={this.key('edit')}
+        onClick={actions.document.toggleDocumentEditMode}
+        text='Edit mode' />
     )
   }
 
   get deleteMenuItem () {
     return (
-      <div key={this.key('delete')} className='item' onClick={this.handleRemove}>
-        <i className='trash icon'></i>
-        Delete
-      </div>
+      <Dropdown.Item
+        icon='trash'
+        as='div'
+        key={this.key('delete')}
+        onClick={this.handleRemove}
+        text='Delete' />
     )
   }
 
   get restoreMenuItem () {
     return (
-      <div key={this.key('restore')} className='item' onClick={this.handleRestore}>
-        <i className='history icon'></i>
-        Restore
-      </div>
+      <Dropdown.Item
+        icon='history'
+        as='div'
+        key={this.key('restore')}
+        onClick={this.handleRestore}
+        text='Restore' />
     )
   }
 
   get destroyMenuItem () {
     return (
-      <div key={this.key('destroy')} className='item' onClick={this.handleDestroy}>
-        <i className='trash icon'></i>
-        Remove forever
-      </div>
+      <Dropdown.Item
+        icon='trash'
+        as='div'
+        key={this.key('destroy')}
+        onClick={this.handleDestroy}
+        text='Remove forever' />
     )
   }
 
   get dividerMenuItem () {
-    return (<div key={this.key('divider' + Math.random())} className='ui divider'></div>)
+    return (<Dropdown.Divider key={this.key('divider' + Math.random())} />)
   }
 
   get menu () {
@@ -134,9 +135,9 @@ export class DocumentContextMenu extends React.Component {
 
   render () {
     return (
-      <div className='menu'>
+      <Dropdown.Menu>
         {this.menu}
-      </div>
+      </Dropdown.Menu>
     )
   }
 

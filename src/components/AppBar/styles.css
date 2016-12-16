@@ -1,0 +1,26 @@
+
+#AppBar .item {
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#AppBar > .item.title {
+  flex: 0 1 auto;
+  white-space: nowrap;
+  overflow-x: overlay;
+}
+
+#AppBar > .right.menu {
+  flex: 1 1 auto;
+  justify-content: flex-end;
+  margin-left: 0 !important;
+}
+
+#AppBar .item.search {
+  flex: 1 0 auto;
+}
+
+@media screen and (max-width: 512px) {
+  #AppBar > .item.title {
+    display: none;
+  }
+}

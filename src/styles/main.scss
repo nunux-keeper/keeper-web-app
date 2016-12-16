@@ -1,74 +1,36 @@
-:global {
-  @import 'base';
-  @import 'scroll';
-  @import 'vendor/normalize';
-  @import 'vendor/nprogress';
-  @import 'readable';
-  @import 'bugfix';
+@import 'base';
+@import 'scroll';
+@import 'vendor/normalize';
+@import 'readable';
+@import 'bugfix';
+@import 'homepage';
 
-  // Some best-practice CSS that's useful for most apps
-  // Just remove them if they're not what you want
-  html {
-    box-sizing: border-box;
-    font-family: 'Roboto', sans-serif;
-  }
+// Some best-practice CSS that's useful for most apps
+// Just remove them if they're not what you want
+html {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
 
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    min-width: inherit;
-  }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-width: inherit;
+}
 
-  *, *:before, *:after {
-    box-sizing: inherit;
-  }
+*, *:before, *:after {
+  box-sizing: inherit;
+}
 
-  img {
-    max-width: 100%;
-  }
+img {
+  max-width: 100%;
+}
 
-  #root {
-    height: inherit;
-  }
-
-  #welcome {
-    height: inherit;
-    h2 {
-      color: #fff;
-    }
-  }
-
-  #main {
-    height: inherit;
-    > .pusher {
-      height: inherit;
-    }
-    > .pushed {
-      height: inherit;
-      padding-left: 260px;
-    }
-  }
-  #main, .ReactModalPortal {
-    .view {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      position: relative;
-      > .top.menu {
-        margin-bottom: 0;
-        border-radius: 0;
-      }
-      > .main {
-        flex: 1;
-        overflow: auto;
-        padding: 1em;
-        background: #fff;
-        position: relative;
-        &.documents, &.trash {
-          background: #ECECEC;
-        }
-      }
-    }
+#welcome {
+  height: inherit;
+  h2 {
+    color: #fff;
   }
 }
+
