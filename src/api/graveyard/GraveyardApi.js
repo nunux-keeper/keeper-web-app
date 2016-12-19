@@ -9,19 +9,19 @@ export class GraveyardApi extends AbstractApi {
     } else if (label) {
       q = `labels:${label}`
     }
-    return this.fetch('/graveyard', {
+    return this.fetch('/graveyard/documents', {
       query: {q, from, size, order}
     })
   }
 
   empty () {
-    return this.fetch('/graveyard', {
+    return this.fetch('/graveyard/documents', {
       method: 'delete'
     })
   }
 
   remove (doc) {
-    return this.fetch(`/graveyard/${doc.id}`, {
+    return this.fetch(`/graveyard/documents/${doc.id}`, {
       method: 'delete'
     })
   }

@@ -6,25 +6,25 @@ export class SharingApi extends AbstractApi {
   }
 
   get (label) {
-    return this.fetch(`/label/${label.id}/sharing`)
+    return this.fetch(`/labels/${label.id}/sharing`)
   }
 
   create (label, sharing) {
-    return this.fetch(`/label/${label.id}/sharing`, {
+    return this.fetch(`/labels/${label.id}/sharing`, {
       method: 'post',
       body: JSON.stringify(sharing)
     })
   }
 
   update (label, update) {
-    return this.fetch(`/label/${label.id}/sharing`, {
+    return this.fetch(`/labels/${label.id}/sharing`, {
       method: 'put',
       body: JSON.stringify(update)
     })
   }
 
   remove (label) {
-    return this.fetch(`/label/${label.id}/sharing`, {
+    return this.fetch(`/labels/${label.id}/sharing`, {
       method: 'delete'
     })
   }

@@ -17,6 +17,7 @@ export class AppBar extends React.Component {
     actions: PropTypes.object.isRequired,
     children: PropTypes.node,
     title: PropTypes.node,
+    hideTitleOnMobile: PropTypes.bool,
     modal: PropTypes.bool,
     styles: PropTypes.object,
     location: PropTypes.object.isRequired,
@@ -25,6 +26,7 @@ export class AppBar extends React.Component {
 
   static defaultProps = {
     title: '',
+    hideTitleOnMobile: false,
     modal: false
   };
 
@@ -50,14 +52,24 @@ export class AppBar extends React.Component {
     }
   }
 
+  get title () {
+    const { hideTitleOnMobile, title, layout } = this.props
+    if (layout.size === Sizes.SMALL && hideTitleOnMobile) {
+      return null
+    }
+    return (
+      <Menu.Item name='title' className='title'>
+        {title}
+      </Menu.Item>
+    )
+  }
+
   render () {
-    const { children, title, styles } = this.props
+    const { children, styles } = this.props
     return (
       <Menu inverted borderless style={styles} id='AppBar'>
         {this.sidebarIcon}
-        <Menu.Item name='title' className='title'>
-          {title}
-        </Menu.Item>
+        {this.title}
         {children}
       </Menu>
     )

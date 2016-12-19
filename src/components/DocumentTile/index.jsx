@@ -61,7 +61,7 @@ export class DocumentTile extends React.Component {
     if (doc.attachments.length) {
       const base = API_ROOT
       const att = doc.attachments[0]
-      const src = `${base}/document/${doc.id}/files/${att.key}?size=320x200`
+      const src = `${base}/documents/${doc.id}/files/${att.key}?size=320x200`
       $img = <img src={src} alt='illustration' onError={(e) => e.target.classList.add('broken')}/>
     }
     if (doc.ghost) {

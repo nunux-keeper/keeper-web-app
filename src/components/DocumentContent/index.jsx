@@ -42,7 +42,7 @@ export class DocumentContent extends React.Component {
     const $this = ReactDOM.findDOMNode(this)
     $this.querySelectorAll('img[data-ref]').forEach((el) => {
       const key = el.dataset.ref
-      const src = `${API_ROOT}/document/${doc.id}/files/${key}`
+      const src = `${API_ROOT}/documents/${doc.id}/files/${key}`
       el.src = src
     })
   }

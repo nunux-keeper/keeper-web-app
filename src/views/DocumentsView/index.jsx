@@ -75,7 +75,7 @@ export class DocumentsView extends React.Component {
     const $title = <span><Icon name={icon} />{this.title} {$totalLabel}</span>
 
     return (
-      <AppBar title={$title} styles={bg} >
+      <AppBar title={$title} styles={bg} hideTitleOnMobile >
         <Menu.Menu className='right'>
           <SearchBarItem placeholder={`Search in "${this.title}"...`} />
           <Menu.Item as={Dropdown} className='right hack plus'>

@@ -9,38 +9,38 @@ export class DocumentApi extends AbstractApi {
     } else if (label) {
       q = `labels:${label}`
     }
-    return this.fetch('/document', {
+    return this.fetch('/documents', {
       query: {q, from, size, order}
     })
   }
 
   get (id) {
-    return this.fetch(`/document/${id}`)
+    return this.fetch(`/documents/${id}`)
   }
 
   create (doc) {
-    return this.fetch('/document', {
+    return this.fetch('/documents', {
       method: 'post',
       body: JSON.stringify(doc)
     })
   }
 
   update (doc, update) {
-    return this.fetch(`/document/${doc.id}`, {
+    return this.fetch(`/documents/${doc.id}`, {
       method: 'put',
       body: JSON.stringify(update)
     })
   }
 
   remove (doc) {
-    return this.fetch(`/document/${doc.id}`, {
+    return this.fetch(`/documents/${doc.id}`, {
       method: 'delete'
     })
   }
 
   restore (doc) {
-    return this.fetch(`/document/${doc.id}/restore`, {
-      method: 'post'
+    return this.fetch(`/graveyard/documents/${doc.id}`, {
+      method: 'put'
     })
   }
 }
