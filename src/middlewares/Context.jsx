@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { actions as labelActions } from 'store/modules/label'
+import { actions as sharingActions } from 'store/modules/sharing'
 import { actions as documentsActions } from 'store/modules/documents'
 import { actions as documentActions } from 'store/modules/document'
 import { actions as graveyardActions } from 'store/modules/graveyard'
@@ -137,6 +138,48 @@ export function fetchLabel (Component) {
   }
 
   return connect(null, labelActions)(LabelAwareComponent)
+}
+
+export function fetchLabelAndSharing (Component) {
+  class SharingAwareComponent extends React.Component {
+    static propTypes = {
+      params: PropTypes.object.isRequired,
+      fetchSharing: PropTypes.func.isRequired,
+      fetchLabel: PropTypes.func.isRequired
+    };
+
+    componentDidMount () {
+      const { fetchLabel, fetchSharing } = this.props
+      const { labelId } = this.props.params
+      fetchLabel(labelId)
+        .then((label) => {
+          if (label.sharing) {
+            fetchSharing()
+          }
+        })
+    }
+
+    componentWillReceiveProps (nextProps) {
+      const { params, fetchLabel, fetchSharing } = this.props
+      if (params.labelId !== nextProps.params.labelId) {
+        fetchLabel(nextProps.params.labelId)
+          .then((label) => {
+            if (label.sharing) {
+              fetchSharing()
+            }
+          })
+      }
+    }
+
+    render () {
+      return (<Component {...this.props}/>)
+    }
+  }
+
+  const mapDispatchToProps = (dispatch) => (
+    bindActionCreators(Object.assign({}, sharingActions, labelActions), dispatch)
+  )
+  return connect(null, mapDispatchToProps)(SharingAwareComponent)
 }
 
 export function fetchLabelAndDocument (Component) {

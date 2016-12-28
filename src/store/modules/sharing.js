@@ -101,7 +101,7 @@ export const updateSharing = (payload) => {
       console.warn('Unable to update sharing. An action is pending...')
       return Promise.resolve(null)
     }
-    console.debug('Updating sharing:', sharing)
+    console.debug('Updating sharing:', payload)
     dispatch(updateSharingRequest())
     return SharingApi.update(label, payload)
     .then((_sharing) => dispatch(updateSharingSuccess(_sharing)))

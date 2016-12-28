@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Form, Button } from 'semantic-ui-react'
 
 import { bindActions } from '../../store/helper'
+import DateHelper from '../../helpers/DateHelper'
 
 import { routerActions as RouterActions } from 'react-router-redux'
 import { actions as LabelActions } from '../../store/modules/label'
@@ -21,6 +22,52 @@ const durationConfiguration = [
   { text: 'Custom', value: 'custom' }
 ]
 
+const getDatesForDuration = function (duration) {
+  const result = {
+    startDate: null,
+    endDate: null
+  }
+  // eslint-disable-next-line
+  switch (duration) {
+    case 'no':
+      result.startDate = DateHelper.build().get()
+      break
+    case '24h':
+      result.startDate = DateHelper.build().get()
+      result.endDate = DateHelper.build().addDays(1).get()
+      break
+    case '1w':
+      result.startDate = DateHelper.build().get()
+      result.endDate = DateHelper.build().addDays(7).get()
+      break
+    case '1m':
+      result.startDate = DateHelper.build().get()
+      result.endDate = DateHelper.build().addDays(30).get()
+      break
+    case 't':
+      result.startDate = DateHelper.build().addDays(1).get()
+      break
+    case 'w':
+      result.startDate = DateHelper.build().addDays(7).get()
+      break
+  }
+  return result
+}
+
+const getDisplayableDate = function (date) {
+  switch (true) {
+    case date === null:
+      return ''
+    case typeof date === 'string':
+      return date.split('.')[0]
+    case date instanceof Date:
+      return date.toISOString().split('.')[0]
+    default:
+      console.error('Unable to make date displayable', date)
+      return ''
+  }
+}
+
 export class ShareLabelView extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
@@ -33,7 +80,10 @@ export class ShareLabelView extends React.Component {
     super(props)
     const sharing = this.props.sharing.current
     if (sharing) {
-      this.state = {...sharing}
+      this.state = {
+        ...sharing,
+        duration: 'custom'
+      }
     } else {
       this.state = {
         startDate: '',
@@ -44,9 +94,22 @@ export class ShareLabelView extends React.Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
-    this.handleChange = this.handleChange.bind(this)
+    this.handleChangeDuration = this.handleChangeDuration.bind(this)
     this.handleChangeCheckbox = this.handleChangeCheckbox.bind(this)
     this.handleChangeDatetime = this.handleChangeDatetime.bind(this)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (
+      !nextProps.sharing.isFetching &&
+      !nextProps.sharing.isProcessing &&
+      nextProps.sharing.current
+    ) {
+      this.setState({
+        ...nextProps.sharing.current,
+        duration: 'custom'
+      })
+    }
   }
 
   componentDidUpdate (prevProps) {
@@ -86,7 +149,7 @@ export class ShareLabelView extends React.Component {
           label='Sharing duration'
           value={duration}
           options={durationConfiguration}
-          onChange={this.handleChange}
+          onChange={this.handleChangeDuration}
         />
         <Form.Group widths='2' style={styles}>
           <Form.Input
@@ -95,7 +158,7 @@ export class ShareLabelView extends React.Component {
             control='input'
             label='Start date'
             placeholder='Start date'
-            value={startDate}
+            value={getDisplayableDate(startDate)}
             onChange={this.handleChangeDatetime}
           />
           <Form.Input
@@ -104,7 +167,7 @@ export class ShareLabelView extends React.Component {
             control='input'
             label='End date'
             placeholder='End date'
-            value={endDate}
+            value={getDisplayableDate(endDate)}
             onChange={this.handleChangeDatetime}
           />
         </Form.Group>
@@ -128,7 +191,8 @@ export class ShareLabelView extends React.Component {
     e.preventDefault()
     const { actions, sharing } = this.props
     if (!sharing.current) {
-      actions.sharing.createSharing(this.state).then((sharing) => {
+      const { startDate, endDate, pub } = this.state
+      actions.sharing.createSharing({startDate, endDate, pub}).then((sharing) => {
         actions.router.push(`/label/${sharing.targetLabel}`)
         actions.notification.showNotification({message: 'Label shared'})
       }).catch((err) => {
@@ -166,8 +230,10 @@ export class ShareLabelView extends React.Component {
     return false
   }
 
-  handleChange (event, {name, value}) {
-    this.setState({[name]: value})
+  handleChangeDuration (event, {name, value}) {
+    const update = (value !== 'custom') ? getDatesForDuration(value) : {}
+    update[name] = value
+    this.setState(update)
   }
 
   handleChangeCheckbox (event, {name, checked}) {
@@ -175,7 +241,14 @@ export class ShareLabelView extends React.Component {
   }
 
   handleChangeDatetime (event) {
-    this.setState({[event.target.name]: event.target.value})
+    let value = event.target.value
+    if (value && value !== '') {
+      value = new Date(value.replace(/-/g, '/').replace('T', ' '))
+    } else {
+      value = null
+    }
+
+    this.setState({[event.target.name]: value})
   }
 
   render () {

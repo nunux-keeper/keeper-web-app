@@ -19,6 +19,7 @@ import {
   fetchDocument,
   fetchDocuments,
   fetchLabel,
+  fetchLabelAndSharing,
   fetchLabelAndDocument,
   fetchLabelAndDocuments,
   fetchGraveyard
@@ -36,7 +37,7 @@ export default (store) => (
       <Route path='label/create' component={LabelView} />
       <Route path='label/:labelId' component={fetchLabelAndDocuments(DocumentsView)} />
       <Route path='label/:labelId/edit' component={fetchLabel(LabelView)} />
-      <Route path='label/:labelId/share' component={fetchLabel(ShareLabelView)} />
+      <Route path='label/:labelId/share' component={fetchLabelAndSharing(ShareLabelView)} />
       <Route path='label/:labelId/:docId' component={fetchLabelAndDocument(DocumentView)} />
       <Route path='settings' component={SettingsView} />
     </Route>
