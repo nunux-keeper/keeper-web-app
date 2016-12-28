@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import { Label, Icon, Card, Button, Dropdown } from 'semantic-ui-react'
+import { Card, Button, Dropdown } from 'semantic-ui-react'
 
+import DocumentRibbon from 'components/DocumentRibbon'
 import DocumentLabels from 'components/DocumentLabels'
 import DocumentContextMenu from 'components/DocumentContextMenu'
 
@@ -27,18 +28,6 @@ export class DocumentTile extends React.Component {
         </Dropdown>
       </div>
     )
-  }
-
-  get shareRibbon () {
-    const {value: doc} = this.props
-    if (doc.share) {
-      return (
-        <Label color='blue' ribbon>
-          <Icon name='share alternate' />
-          Shared
-        </Label>
-      )
-    }
   }
 
   get meta () {
@@ -74,7 +63,6 @@ export class DocumentTile extends React.Component {
       const state = { modal: true, returnTo: location, title: doc.title }
       return (
         <Link to={{ pathname: `${location.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
-          {this.shareRibbon}
           {$img}
         </Link>
       )
@@ -117,6 +105,7 @@ export class DocumentTile extends React.Component {
       <Card className='DocumentTile' id={`doc-${doc.id}`}>
         <div title={doc.title} className='illustration'>
           {this.illustration}
+          <DocumentRibbon doc={doc} />
           {this.contextualMenu}
         </div>
         <Card.Content>
