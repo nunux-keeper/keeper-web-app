@@ -11,6 +11,7 @@ import DocumentView from 'views/DocumentView'
 import BookmarkletView from 'views/BookmarkletView'
 import GraveyardView from 'views/GraveyardView'
 import SettingsView from 'views/SettingsView'
+import SharingListView from 'views/SharingListView'
 
 import { requireAuthentication } from 'middlewares/Authentication'
 
@@ -22,6 +23,7 @@ import {
   fetchLabelAndSharing,
   fetchLabelAndDocument,
   fetchLabelAndDocuments,
+  fetchSharing,
   fetchGraveyard
 } from 'middlewares/Context'
 
@@ -39,6 +41,7 @@ export default (store) => (
       <Route path='label/:labelId/edit' component={fetchLabel(LabelView)} />
       <Route path='label/:labelId/share' component={fetchLabelAndSharing(ShareLabelView)} />
       <Route path='label/:labelId/:docId' component={fetchLabelAndDocument(DocumentView)} />
+      <Route path='sharing' component={fetchSharing(SharingListView)} />
       <Route path='settings' component={SettingsView} />
     </Route>
     <Redirect from='*' to='/document' />

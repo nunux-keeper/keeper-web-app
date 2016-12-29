@@ -232,3 +232,22 @@ export function fetchGraveyard (Component) {
   return connect(null, mapDispatchToProps)(GraveyardAwareComponent)
 }
 
+export function fetchSharing (Component) {
+  class SharingListAwareComponent extends React.Component {
+    static propTypes = {
+      fetchSharingList: PropTypes.func.isRequired
+    };
+
+    componentDidMount () {
+      const { fetchSharingList } = this.props
+      fetchSharingList()
+    }
+
+    render () {
+      return (<Component {...this.props}/>)
+    }
+  }
+
+  return connect(null, sharingActions)(SharingListAwareComponent)
+}
+

@@ -102,6 +102,10 @@ export class AppMenu extends React.Component {
             </Menu.Item>
           </Menu.Menu>
         </Menu.Item>
+        <Menu.Item as={Link} to={{ pathname: '/sharing' }} onClick={this.handleItemClick}>
+          Sharing
+          <Icon name='share alternate' />
+        </Menu.Item>
         <Menu.Item as={Link} to={{ pathname: '/trash' }} onClick={this.handleItemClick}>
           Trash
           <Icon name='trash' />

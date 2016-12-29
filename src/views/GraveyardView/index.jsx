@@ -52,7 +52,7 @@ export class GraveyardView extends React.Component {
     const $totalLabel = total ? <small>[{total}]</small> : null
     const $title = <span><Icon name='trash' />{this.title} {$totalLabel}</span>
     return (
-      <AppBar title={$title} styles={bg} >
+      <AppBar title={$title} styles={bg} hideTitleOnMobile >
         <Menu.Menu className='right'>
           <SearchBarItem placeholder={`Search in "${this.title}"...`} />
           <Menu.Item as='a' icon='trash' onClick={this.handleEmptyGraveyard} title='Empty the trash' />

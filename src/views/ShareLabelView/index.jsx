@@ -73,7 +73,7 @@ export class ShareLabelView extends React.Component {
     actions: PropTypes.object.isRequired,
     label: PropTypes.object,
     sharing: PropTypes.object,
-    location: PropTypes.object.isRequired
+    loc: PropTypes.object.isRequired
   };
 
   constructor (props) {
@@ -124,7 +124,7 @@ export class ShareLabelView extends React.Component {
   }
 
   get isModalDisplayed () {
-    const routerState = this.props.location.state
+    const routerState = this.props.loc.state
     return routerState && routerState.modal
   }
 
@@ -189,11 +189,16 @@ export class ShareLabelView extends React.Component {
 
   handleSubmit (e) {
     e.preventDefault()
-    const { actions, sharing } = this.props
+    const { actions, sharing, loc } = this.props
     if (!sharing.current) {
       const { startDate, endDate, pub } = this.state
       actions.sharing.createSharing({startDate, endDate, pub}).then((sharing) => {
-        actions.router.push(`/label/${sharing.targetLabel}`)
+        const { state } = loc
+        if (state && state.returnTo) {
+          actions.router.push(state.returnTo)
+        } else {
+          actions.router.push(`/label/${sharing.targetLabel}`)
+        }
         actions.notification.showNotification({message: 'Label shared'})
       }).catch((err) => {
         actions.notification.showNotification({
@@ -205,7 +210,12 @@ export class ShareLabelView extends React.Component {
     } else {
       const { startDate, endDate, pub } = this.state
       actions.sharing.updateSharing({startDate, endDate, pub}).then((sharing) => {
-        actions.router.push(`/label/${sharing.targetLabel}`)
+        const { state } = loc
+        if (state && state.returnTo) {
+          actions.router.push(state.returnTo)
+        } else {
+          actions.router.push(`/label/${sharing.targetLabel}`)
+        }
         actions.notification.showNotification({message: 'Label sharing updated'})
       }).catch((err) => {
         actions.notification.showNotification({
@@ -220,7 +230,7 @@ export class ShareLabelView extends React.Component {
 
   handleCancel (e) {
     e.preventDefault()
-    const { actions, location: loc } = this.props
+    const { actions, loc } = this.props
     const { state } = loc
     if (state && state.returnTo) {
       actions.router.push(state.returnTo)
@@ -264,7 +274,7 @@ export class ShareLabelView extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  location: state.router.locationBeforeTransitions,
+  loc: state.router.locationBeforeTransitions,
   label: state.label,
   sharing: state.sharing
 })
