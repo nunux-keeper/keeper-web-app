@@ -1,40 +1,47 @@
 .SILENT :
-.PHONY : help volume mount update build clean cleanup start stop rm shell logs
+.PHONY : help network volume mount update build clean cleanup start stop rm shell logs push pull tag
 
-# Docker configuartion regarding the system architecture
+# Docker configuration regarding the system architecture
 DOCKER=docker
 DOCKERFILE=Dockerfile
 BASEIMAGE?=debian:jessie
-BASEIMAGE_?=$(BASEIMAGE)
-VOLUME_IMAGE?=busybox
+VOLUME_IMAGE=busybox
 UNAME_M := $(shell uname -m)
 ifeq ($(UNAME_M),armv7l)
 	DOCKERFILE=Dockerfile.arm
 	APPNAME=$(APPNAME)-arm
-	BASEIMAGE=armbuild/debian:jessie
+	ARM_BASEIMAGE?=armhfbuild/$(BASEIMAGE)
 	VOLUME_IMAGE=armbuild/busybox
 endif
 
+NETWORK?=keeper-vlan
+
 # Get IP of the running container
-IP:=`sudo docker inspect --format '{{ .NetworkSettings.IPAddress }}' $(APPNAME)`
+IP:=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' $(APPNAME)`
+
+# Default registry
+REGISTRY?=
+
+# Default version
+VERSION?=latest
 
 # Default username
 USERNAME?=ncarlier
 
 # Default image name
-IMAGE?=$(USERNAME)/$(APPNAME)
+IMAGE?=$(REGISTRY)$(USERNAME)/$(APPNAME):$(VERSION)
 
 # Custom flags
-RUN_CUSTOM_FLAGS?=-P
+RUN_CUSTOM_FLAGS?=
 # Default Docker run flags
-RUN_FLAGS?=-d -h $(APPNAME) --name $(APPNAME) $(RUN_CUSTOM_FLAGS)
+RUN_FLAGS?=-d -h $(APPNAME) --name $(APPNAME) --net=$(NETWORK) $(RUN_CUSTOM_FLAGS)
 # Default Docker run command
 RUN_CMD?=
 
 # Custom flags
 SHELL_CUSTOM_FLAGS?=$(RUN_CUSTOM_FLAGS)
 # Default Docker run flags for shell access
-SHELL_FLAGS?=--rm -it -h $(APPNAME) --entrypoint="/bin/bash" $(SHELL_CUSTOM_FLAGS)
+SHELL_FLAGS?=--rm -it -h $(APPNAME) --name $(APPNAME) --entrypoint="/bin/bash" $(SHELL_CUSTOM_FLAGS)
 # Default Docker run command for shell access
 SHELL_CMD?=-c /bin/bash
 
@@ -64,8 +71,13 @@ help:
 Dockerfile.arm:
 ifeq ($(UNAME_M),armv7l)
 	echo "Building $(APPNAME) ARM dockerfile..."
-	sed -e 's|$(BASEIMAGE_)|$(BASEIMAGE)|' Dockerfile > Dockerfile.arm
+	sed -e 's|$(BASEIMAGE)|$(ARM_BASEIMAGE)|' Dockerfile > Dockerfile.arm
 endif
+
+## Build the network
+network:
+	echo "Building network: $(NETWORK)..."
+	$(DOCKER) network create $(NETWORK)
 
 ## Build the volume image
 volume:
@@ -122,4 +134,19 @@ shell:
 logs:
 	echo "Logs of the $(APPNAME) container..."
 	$(DOCKER) logs -f $(APPNAME)
+
+## Push docker image to the registry
+push:
+	echo "Pushing $(IMAGE) ..."
+	$(DOCKER) push $(IMAGE)
+
+## Pull docker image from the registry
+pull:
+	echo "Pulling $(IMAGE) ..."
+	$(DOCKER) pull $(IMAGE)
+
+## Tag docker image
+tag:
+	echo "Tagging $(IMAGE) as latest ..."
+	$(DOCKER) tag $(IMAGE) $(REGISTRY)$(USERNAME)/$(APPNAME):latest
 
