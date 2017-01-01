@@ -8,10 +8,10 @@ env?=dev
 RUN_CUSTOM_FLAGS?=-p 3000:3000
 
 # Docker configuartion regarding the system architecture
-BASEIMAGE=node:5-onbuild
+BASEIMAGE=node:6-onbuild
 UNAME_M:=$(shell uname -m)
 ifeq ($(UNAME_M),armv7l)
-	BASEIMAGE=ncarlier/nodejs-arm
+	ARM_BASEIMAGE=hypriot/rpi-node/6-onbuild
 endif
 
 DEPLOY_DIR:=/var/www/html/keeper.nunux.org

@@ -4,7 +4,7 @@
   "description": "Nunux Keeper webapp.",
   "main": "src/index.jsx",
   "engines": {
-    "node": ">=5.0.0",
+    "node": ">=6.0.0",
     "npm": "^3.0.0"
   },
   "scripts": {
