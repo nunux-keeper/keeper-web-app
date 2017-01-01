@@ -129,7 +129,7 @@ export class SharingListView extends React.Component {
     } else if (!isFetching && items.length === 0) {
       return (
         <AppSignPanel>
-          <Icon name='ban' />
+          <Icon name='share alternate' />
           No sharing.
         </AppSignPanel>
       )

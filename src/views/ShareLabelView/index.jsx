@@ -171,13 +171,18 @@ export class ShareLabelView extends React.Component {
             onChange={this.handleChangeDatetime}
           />
         </Form.Group>
-        <Form.Checkbox
-          name='pub'
-          label='Public'
-          value='public'
-          checked={pub}
-          onChange={this.handleChangeCheckbox}
-        />
+        <Form.Field>
+          <label>Sharing options</label>
+          <Form.Group inline>
+            <Form.Checkbox
+              name='pub'
+              label='Public'
+              value='public'
+              checked={pub}
+              onChange={this.handleChangeCheckbox}
+            />
+          </Form.Group>
+        </Form.Field>
 
         <Form.Group>
           <Button secondary onClick={this.handleCancel}>Cancel</Button>
