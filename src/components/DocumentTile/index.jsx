@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
-import { connect } from 'react-redux'
 import { Card, Button, Dropdown } from 'semantic-ui-react'
 
 import DocumentRibbon from 'components/DocumentRibbon'
@@ -11,10 +10,11 @@ import './styles.css'
 
 const API_ROOT = process.env.REACT_APP_API_ROOT
 
-export class DocumentTile extends React.Component {
+export default class DocumentTile extends React.Component {
   static propTypes = {
-    location: PropTypes.object.isRequired,
+    base: PropTypes.object.isRequired,
     value: PropTypes.object.isRequired,
+    sharing: PropTypes.string,
     menu: PropTypes.string
   };
 
@@ -45,14 +45,24 @@ export class DocumentTile extends React.Component {
     }
   }
 
+  get illustrationUrl () {
+    const {value: doc, sharing} = this.props
+    if (doc.attachments.length) {
+      const att = doc.attachments[0]
+      if (sharing) {
+        return `${API_ROOT}/sharing/${sharing}/${doc.id}/files/${att.key}?size=320x200`
+      } else {
+        return `${API_ROOT}/documents/${doc.id}/files/${att.key}?size=320x200`
+      }
+    }
+    return null
+  }
+
   get illustration () {
-    const {location, value: doc} = this.props
+    const {base, value: doc} = this.props
     let $img = <span>No illustration</span>
     if (doc.attachments.length) {
-      const base = API_ROOT
-      const att = doc.attachments[0]
-      const src = `${base}/documents/${doc.id}/files/${att.key}?size=320x200`
-      $img = <img src={src} alt='illustration' onError={(e) => e.target.classList.add('broken')}/>
+      $img = <img src={this.illustrationUrl} alt='illustration' onError={(e) => e.target.classList.add('broken')}/>
     }
     if (doc.ghost) {
       return (
@@ -61,9 +71,9 @@ export class DocumentTile extends React.Component {
         </div>
       )
     } else {
-      const state = { modal: true, returnTo: location, title: doc.title }
+      const state = { modal: true, returnTo: base, title: doc.title }
       return (
-        <Link to={{ pathname: `${location.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
+        <Link to={{ pathname: `${base.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
           {$img}
         </Link>
       )
@@ -71,7 +81,7 @@ export class DocumentTile extends React.Component {
   }
 
   get header () {
-    const {location, value: doc} = this.props
+    const {base, value: doc} = this.props
     if (doc.ghost) {
       return (
         <Card.Header as='span' title={doc.title}>
@@ -79,10 +89,10 @@ export class DocumentTile extends React.Component {
         </Card.Header>
       )
     } else {
-      const state = { modal: true, returnTo: location, title: doc.title }
+      const state = { modal: true, returnTo: base, title: doc.title }
       return (
         <Card.Header as={Link} title={doc.title}
-          to={{ pathname: `${location.pathname}/${doc.id}`, state: state }}>
+          to={{ pathname: `${base.pathname}/${doc.id}`, state: state }}>
           {doc.title}
         </Card.Header>
       )
@@ -119,8 +129,3 @@ export class DocumentTile extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  location: state.router.locationBeforeTransitions
-})
-
-export default connect(mapStateToProps)(DocumentTile)

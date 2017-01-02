@@ -93,13 +93,26 @@ export class DocumentView extends React.Component {
     }
   }
 
+  get contextMenuItems () {
+    const { isFetching, current: doc } = this.props.document
+    switch (true) {
+      case this.isCreateMode:
+        return 'editTitle'
+      case isFetching || !doc:
+        return ''
+      case !doc.sharing:
+        return 'raw,share,divider,editTitle,edit,divider,delete'
+      default:
+        return 'raw'
+    }
+  }
+
   get contextMenu () {
     const { isFetching, current: doc } = this.props.document
-    const menuItems = this.isCreateMode ? 'editTitle' : 'raw,share,divider,editTitle,edit,divider,delete'
     if (!isFetching && doc) {
       return (
         <Menu.Item as={Dropdown} className='hack ellipsis-v'>
-          <DocumentContextMenu doc={doc} items={menuItems} direction='left' />
+          <DocumentContextMenu doc={doc} items={this.contextMenuItems} direction='left' />
         </Menu.Item>
       )
     }

@@ -16,8 +16,8 @@ export class DocumentRibbon extends React.Component {
     const sharedLabels = this.sharedLabels
     if (sharedLabels.length) {
       const { doc } = this.props
-      const sharing = sharedLabels.find((l) => l.current) || sharedLabels[0]
-      const to = {pathname: `/sharing/${sharing.id}/${doc.id}`}
+      const label = sharedLabels.find((l) => l.current) || sharedLabels[0]
+      const to = {pathname: `/sharing/${label.sharing}/${doc.id}`}
       return (
         <Label as={Link} color='blue' ribbon to={to} className='DocumentRibbon' title='View shared document'>
           <Icon name='share alternate' />

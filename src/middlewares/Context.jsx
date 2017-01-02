@@ -205,10 +205,9 @@ export function fetchGraveyard (Component) {
 
     componentDidMount () {
       console.debug('GraveyardAwareComponent::componentDidMount')
-      const { params, location, fetchGhosts } = this.props
+      const { location, fetchGhosts } = this.props
       if (!(location.state && location.state.backFromModal)) {
         fetchGhosts({
-          label: params.labelId,
           ...location.query
         })
       }
@@ -216,10 +215,9 @@ export function fetchGraveyard (Component) {
 
     componentWillReceiveProps (nextProps) {
       console.debug('GraveyardAwareComponent::componentWillReceiveProps')
-      const { params, location, fetchGhosts } = this.props
+      const { location, fetchGhosts } = this.props
       if (location.search !== nextProps.location.search) {
         fetchGhosts({
-          label: params.labelId,
           ...nextProps.location.query
         })
       }

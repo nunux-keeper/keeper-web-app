@@ -59,7 +59,8 @@ export default handleActions({
   [FETCH_DOCUMENTS]: (state, action) => {
     const update = {
       isProcessing: action.payload.params != null,
-      isFetching: action.payload.params != null
+      isFetching: action.payload.params != null,
+      error: null
     }
     const {error, response, params} = action.payload
     if (error) {
