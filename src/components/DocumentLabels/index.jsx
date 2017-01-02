@@ -37,7 +37,7 @@ export class DocumentLabels extends React.Component {
       const key = `label-${doc.id}-${l.id}`
       const to = {pathname: `/labels/${l.id}`}
       return (
-        <Label as={Link} key={key} to={to} >
+        <Label as={Link} key={key} to={to} title={`Go to ${l.label} label page`} >
           <Icon name='circle' style={color} />
           {l.label}
         </Label>

@@ -56,11 +56,27 @@ export class AppMenu extends React.Component {
         as={Link}
         key={`label-${label.id}`}
         onClick={this.handleItemClick}
+        title={`View label: ${label.label}`}
         to={{ pathname: `/labels/${label.id}` }} >
         {label.label}
-        <Icon name='tag' />
+        {this.getLabelIcon(label)}
       </Menu.Item>
     )
+  }
+
+  getLabelIcon (label) {
+    if (label.sharing) {
+      return (
+        <Icon.Group size='large'>
+          <Icon name='tag' />
+          <Icon corner name='share alternate' />
+        </Icon.Group>
+        )
+    } else {
+      return (
+        <Icon name='tag' size='large' />
+        )
+    }
   }
 
   handleItemClick (event) {
@@ -85,9 +101,12 @@ export class AppMenu extends React.Component {
           </Header>
           <ProfilePanel />
         </Menu.Item>
-        <Menu.Item as={Link} to={{ pathname: '/documents' }} onClick={this.handleItemClick}>
+        <Menu.Item as={Link}
+          title='View all documents'
+          to={{ pathname: '/documents' }}
+          onClick={this.handleItemClick}>
           Documents
-          <Icon name='grid layout' />
+          <Icon name='grid layout' size='large' />
         </Menu.Item>
         <Menu.Item>
           <Menu.Header>Labels</Menu.Header>
@@ -98,21 +117,33 @@ export class AppMenu extends React.Component {
               onClick={this.handleItemClick}
               title='Create new label'>
               Create a label
-              <Icon name='plus' />
+              <Icon.Group size='large'>
+                <Icon name='tag' />
+                <Icon corner name='add' />
+              </Icon.Group>
             </Menu.Item>
           </Menu.Menu>
         </Menu.Item>
-        <Menu.Item as={Link} to={{ pathname: '/sharing' }} onClick={this.handleItemClick}>
+        <Menu.Item as={Link}
+          title='View sharing'
+          to={{ pathname: '/sharing' }}
+          onClick={this.handleItemClick}>
           Sharing
-          <Icon name='share alternate' />
+          <Icon name='share alternate' size='large' />
         </Menu.Item>
-        <Menu.Item as={Link} to={{ pathname: '/trash' }} onClick={this.handleItemClick}>
+        <Menu.Item as={Link}
+          title='View trash content'
+          to={{ pathname: '/trash' }}
+          onClick={this.handleItemClick}>
           Trash
-          <Icon name='trash' />
+          <Icon name='trash' size='large' />
         </Menu.Item>
-        <Menu.Item as={Link} to={{ pathname: '/settings' }} onClick={this.handleItemClick}>
+        <Menu.Item as={Link}
+          title='View your settings'
+          to={{ pathname: '/settings' }}
+          onClick={this.handleItemClick}>
           Settings
-          <Icon name='settings' />
+          <Icon name='settings' size='large' />
         </Menu.Item>
       </Menu>
     )

@@ -11,6 +11,9 @@
   padding: 1em 0;
   border-radius: 0;
 }
+#AppMenu .icons {
+  float: right;
+}
 
 #AppMenu > .header.item h2 {
   width: 100%;

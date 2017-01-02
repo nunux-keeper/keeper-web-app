@@ -80,7 +80,7 @@ export class DocumentsView extends React.Component {
   get headerAltButton () {
     const { actions } = this.props
     return (
-      <Menu.Item as={Dropdown} className='right hack plus'>
+      <Menu.Item as={Dropdown} className='right hack plus' title='Add new document'>
         <Dropdown.Menu>
           <Dropdown.Header content='New document' />
           <Dropdown.Divider />
