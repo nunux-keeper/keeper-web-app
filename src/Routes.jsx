@@ -23,6 +23,7 @@ import {
   fetchLabelAndSharing,
   fetchLabelAndDocument,
   fetchLabelAndDocuments,
+  fetchSharedDocument,
   fetchSharing,
   fetchGraveyard
 } from 'middlewares/Context'
@@ -33,17 +34,19 @@ export default (store) => (
     <Route component={requireAuthentication(MainLayout)}>
       <Route path='bookmarklet' component={BookmarkletView} />
       <Route path='trash' component={fetchGraveyard(GraveyardView)} />
-      <Route path='document' component={fetchDocuments(DocumentsView)} />
-      <Route path='document/create' component={createNewDocument(DocumentView)} />
-      <Route path='document/:docId' component={fetchDocument(DocumentView)} />
-      <Route path='label/create' component={LabelView} />
-      <Route path='label/:labelId' component={fetchLabelAndDocuments(DocumentsView)} />
-      <Route path='label/:labelId/edit' component={fetchLabel(LabelView)} />
-      <Route path='label/:labelId/share' component={fetchLabelAndSharing(ShareLabelView)} />
-      <Route path='label/:labelId/:docId' component={fetchLabelAndDocument(DocumentView)} />
+      <Route path='documents' component={fetchDocuments(DocumentsView)} />
+      <Route path='documents/create' component={createNewDocument(DocumentView)} />
+      <Route path='documents/:docId' component={fetchDocument(DocumentView)} />
+      <Route path='labels/create' component={LabelView} />
+      <Route path='labels/:labelId' component={fetchLabelAndDocuments(DocumentsView)} />
+      <Route path='labels/:labelId/edit' component={fetchLabel(LabelView)} />
+      <Route path='labels/:labelId/share' component={fetchLabelAndSharing(ShareLabelView)} />
+      <Route path='labels/:labelId/:docId' component={fetchLabelAndDocument(DocumentView)} />
       <Route path='sharing' component={fetchSharing(SharingListView)} />
+      <Route path='sharing/:sharingId' component={fetchDocuments(DocumentsView)} />
+      <Route path='sharing/:sharingId/:docId' component={fetchSharedDocument(DocumentView)} />
       <Route path='settings' component={SettingsView} />
     </Route>
-    <Redirect from='*' to='/document' />
+    <Redirect from='*' to='/documents' />
   </Route>
 )

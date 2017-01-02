@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
+import { bindActions } from 'store/helper'
+
 import { actions as labelActions } from 'store/modules/label'
 import { actions as sharingActions } from 'store/modules/sharing'
 import { actions as documentsActions } from 'store/modules/documents'
@@ -66,35 +68,37 @@ export function fetchDocuments (Component) {
     static propTypes = {
       params: PropTypes.object.isRequired,
       location: PropTypes.object.isRequired,
-      fetchDocuments: PropTypes.func.isRequired,
-      discardLabel: PropTypes.func.isRequired
+      actions: PropTypes.object.isRequired
     };
 
     componentDidMount () {
       console.debug('DocumentsAwareComponent::componentDidMount')
-      const { params, location, fetchDocuments, discardLabel } = this.props
+      const { params, location, actions } = this.props
       if (!(location.state && location.state.backFromModal)) {
-        fetchDocuments({
+        actions.documents.fetchDocuments({
           label: params.labelId,
+          sharing: params.sharingId,
           ...location.query
         })
         if (!params.labelId) {
-          discardLabel()
+          actions.label.discardLabel()
         }
       }
     }
 
     componentWillReceiveProps (nextProps) {
       console.debug('DocumentsAwareComponent::componentWillReceiveProps')
-      const { params, location, fetchDocuments } = this.props
-      if (params.labelId !== nextProps.params.labelId) {
-        fetchDocuments({
+      const { params, location, actions } = this.props
+      if (params.labelId !== nextProps.params.labelId || params.sharingId !== nextProps.params.sharingId) {
+        actions.documents.fetchDocuments({
           label: nextProps.params.labelId,
+          sharing: nextProps.params.sharingId,
           ...nextProps.location.query
         })
       } else if (location.search !== nextProps.location.search) {
-        fetchDocuments({
+        actions.documents.fetchDocuments({
           label: params.labelId,
+          sharing: params.sharingId,
           ...nextProps.location.query
         })
       }
@@ -105,11 +109,12 @@ export function fetchDocuments (Component) {
     }
   }
 
-  const mapDispatchToProps = (dispatch) => (
-    bindActionCreators(Object.assign({}, documentsActions, labelActions), dispatch)
-  )
+  const mapActionsToProps = (dispatch) => (bindActions({
+    documents: documentsActions,
+    label: labelActions
+  }, dispatch))
 
-  return connect(null, mapDispatchToProps)(DocumentsAwareComponent)
+  return connect(null, mapActionsToProps)(DocumentsAwareComponent)
 }
 
 export function fetchLabel (Component) {
@@ -249,5 +254,26 @@ export function fetchSharing (Component) {
   }
 
   return connect(null, sharingActions)(SharingListAwareComponent)
+}
+
+export function fetchSharedDocument (Component) {
+  class SharedDocumentAwareComponent extends React.Component {
+    static propTypes = {
+      params: PropTypes.object.isRequired,
+      fetchDocument: PropTypes.func.isRequired
+    };
+
+    componentDidMount () {
+      const { fetchDocument } = this.props
+      const { sharingId, docId } = this.props.params
+      fetchDocument(docId, sharingId)
+    }
+
+    render () {
+      return (<Component {...this.props}/>)
+    }
+  }
+
+  return connect(null, documentActions)(SharedDocumentAwareComponent)
 }
 

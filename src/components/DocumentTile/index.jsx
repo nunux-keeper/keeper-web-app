@@ -14,12 +14,13 @@ const API_ROOT = process.env.REACT_APP_API_ROOT
 export class DocumentTile extends React.Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
-    value: PropTypes.object.isRequired
+    value: PropTypes.object.isRequired,
+    menu: PropTypes.string
   };
 
   get contextualMenu () {
     const {value: doc} = this.props
-    const menu = doc.ghost ? 'restore,destroy' : 'detail,share,divider,editTitle,divider,delete'
+    const menu = doc.ghost ? 'restore,destroy' : this.props.menu
     const trigger = <Button circular icon='ellipsis vertical' />
     return (
       <div className='contextual-menu'>

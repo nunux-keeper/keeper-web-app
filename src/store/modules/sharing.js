@@ -110,13 +110,12 @@ export const updateSharing = (payload) => {
   }
 }
 
-export const removeSharing = () => {
+export const removeSharing = (sharing) => {
   return (dispatch, getState) => {
-    const {label: {current: label}} = getState()
-    console.debug('Removing sharing:', label.sharing)
+    console.debug('Removing sharing:', sharing)
     dispatch(removeSharingRequest())
-    return SharingApi.remove(label)
-    .then(() => dispatch(removeSharingSuccess(label.sharing)))
+    return SharingApi.remove({id: sharing.targetLabel})
+    .then(() => dispatch(removeSharingSuccess(sharing)))
     .catch((err) => dispatch(removeSharingFailure(err)))
     .then(payloadResponse)
   }

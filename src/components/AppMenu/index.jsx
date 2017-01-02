@@ -56,7 +56,7 @@ export class AppMenu extends React.Component {
         as={Link}
         key={`label-${label.id}`}
         onClick={this.handleItemClick}
-        to={{ pathname: `/label/${label.id}` }} >
+        to={{ pathname: `/labels/${label.id}` }} >
         {label.label}
         <Icon name='tag' />
       </Menu.Item>
@@ -85,7 +85,7 @@ export class AppMenu extends React.Component {
           </Header>
           <ProfilePanel />
         </Menu.Item>
-        <Menu.Item as={Link} to={{ pathname: '/document' }} onClick={this.handleItemClick}>
+        <Menu.Item as={Link} to={{ pathname: '/documents' }} onClick={this.handleItemClick}>
           Documents
           <Icon name='grid layout' />
         </Menu.Item>
@@ -94,7 +94,7 @@ export class AppMenu extends React.Component {
           <Menu.Menu>
             {this.labels}
             <Menu.Item as={Link}
-              to={{ pathname: '/label/create', state: {modal: true, returnTo: location, title: 'Create new label'} }}
+              to={{ pathname: '/labels/create', state: {modal: true, returnTo: location, title: 'Create new label'} }}
               onClick={this.handleItemClick}
               title='Create new label'>
               Create a label

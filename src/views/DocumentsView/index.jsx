@@ -43,49 +43,101 @@ export class DocumentsView extends React.Component {
     document.title = this.title
   }
 
+  get isLabelsRoute () {
+    return /^\/labels\//.test(this.props.location.pathname)
+  }
+
+  get isSharingRoute () {
+    return /^\/sharing\//.test(this.props.location.pathname)
+  }
+
   get label () {
     const { label } = this.props
-    return label.current
+    return label.current ? label.current : {label: 'Undefined'}
   }
 
   get title () {
-    return this.label ? this.label.label : 'All documents'
+    switch (true) {
+      case this.isLabelsRoute:
+        return this.label.label
+      case this.isSharingRoute:
+        return 'Sharing'
+      default:
+        return 'All documents'
+    }
   }
 
   get contextMenuItems () {
-    return this.label ? 'refresh,order,divider,editLabel,shareLabel,divider,deleteLabel' : 'refresh,order'
+    return this.isLabelsRoute
+      ? 'refresh,order,divider,editLabel,shareLabel,divider,deleteLabel'
+      : 'refresh,order'
   }
 
-  get header () {
-    const { location, actions, documents: {total} } = this.props
-    const bg = this.label ? {backgroundColor: this.label.color} : {}
+  get contextMenuItem () {
+    return this.isSharingRoute
+      ? 'detail'
+      : 'detail,share,divider,editTitle,divider,delete'
+  }
+
+  get headerStyle () {
+    switch (true) {
+      case this.isLabelsRoute:
+        return {backgroundColor: this.label.color}
+      case this.isSharingRoute:
+        return {backgroundColor: '#1678c2'}
+      default:
+        return {}
+    }
+  }
+
+  get headerIcon () {
+    switch (true) {
+      case this.isLabelsRoute:
+        return 'tag'
+      case this.isSharingRoute:
+        return 'share alternate'
+      default:
+        return 'grid layout'
+    }
+  }
+
+  get headerCreateButton () {
+    if (this.isSharingRoute) {
+      return null
+    }
+    const { location, actions } = this.props
     const createLink = {
-      pathname: '/document/create',
+      pathname: '/documents/create',
       state: { modal: true, returnTo: location }
     }
-    var icon = 'grid layout'
-    if (this.label) {
-      icon = 'tag'
+    if (this.isLabelsRoute) {
       createLink.query = {
         labels: [this.label.id]
       }
     }
 
+    return (
+      <Menu.Item as={Dropdown} className='right hack plus'>
+        <Dropdown.Menu>
+          <Dropdown.Header content='New document' />
+          <Dropdown.Divider />
+          <Dropdown.Item as={Link} icon='write' text='From skratch' to={createLink}/>
+          <Dropdown.Item icon='linkify' text='From URL' onClick={actions.urlModal.showUrlModal} />
+        </Dropdown.Menu>
+      </Menu.Item>
+    )
+  }
+
+  get header () {
+    const { documents: {total} } = this.props
     const $totalLabel = total ? <small>[{total}]</small> : null
-    const $title = <span><Icon name={icon} />{this.title} {$totalLabel}</span>
+    const $title = <span><Icon name={this.headerIcon} />{this.title} {$totalLabel}</span>
 
     return (
-      <AppBar title={$title} styles={bg} hideTitleOnMobile >
+      <AppBar title={$title} styles={this.headerStyle} hideTitleOnMobile >
         <Menu.Menu className='right'>
           <SearchBarItem placeholder={`Search in "${this.title}"...`} />
-          <Menu.Item as={Dropdown} className='right hack plus'>
-            <Dropdown.Menu>
-              <Dropdown.Header content='New document' />
-              <Dropdown.Divider />
-              <Dropdown.Item as={Link} icon='write' text='From skratch' to={createLink}/>
-              <Dropdown.Item icon='linkify' text='From URL' onClick={actions.urlModal.showUrlModal} />
-            </Dropdown.Menu>
-          </Menu.Item>
+          {this.headerCreateButton}
           <Menu.Item as={Dropdown} className='right hack ellipsis-v'>
             <DocumentsContextMenu items={this.contextMenuItems} />
           </Menu.Item>
@@ -100,7 +152,7 @@ export class DocumentsView extends React.Component {
       return (
         <AppSignPanel level='error'>
           <Icon name='bug' />
-          An error occurred!
+          {error.error || 'An error occurred!'}
         </AppSignPanel>
       )
     } else if (!isFetching && items.length === 0) {
@@ -111,7 +163,7 @@ export class DocumentsView extends React.Component {
         </AppSignPanel>
       )
     } else {
-      const $items = items.map((doc) => <DocumentTile key={'doc-' + doc.id} value={doc} />)
+      const $items = items.map((doc) => <DocumentTile key={'doc-' + doc.id} value={doc} menu={this.contextMenuItem}/>)
       const sizes = ['one', 'three', 'five']
       const size = sizes[this.props.layout.size - 1]
       return (

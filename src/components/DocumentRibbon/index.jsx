@@ -30,7 +30,7 @@ export class DocumentRibbon extends React.Component {
 
   get sharedLabels () {
     const { labels, label, doc } = this.props
-    if (labels.items) {
+    if (labels.items && doc.labels) {
       return doc.labels.map((l) => labels.items.find((_l) => _l.id === l))
         .filter((l) => l && l.sharing)
         .map((l) => {

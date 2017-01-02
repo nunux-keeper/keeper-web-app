@@ -59,7 +59,7 @@ export class DocumentContextMenu extends React.Component {
         icon='file code outline'
         as='a'
         key={this.key('raw')}
-        href={`${base}/document/${doc.id}?raw`}
+        href={`${base}/documents/${doc.id}?raw`}
         title='View RAW document'
         target='_blank'
         text='View RAW' />

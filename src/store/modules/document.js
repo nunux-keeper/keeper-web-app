@@ -58,11 +58,11 @@ export const restoreDocumentSuccess = createAction(RESTORE_DOCUMENT, (doc) => {
 
 export const toggleDocumentEditMode = createAction(EDIT_DOCUMENT)
 
-export const fetchDocument = (id) => {
+export const fetchDocument = (id, sharing) => {
   return (dispatch, getState) => {
     console.debug('Fetching document:', id)
     dispatch(fetchDocumentRequest())
-    return DocumentApi.get(id)
+    return DocumentApi.get(id, sharing)
     .then((doc) => dispatch(fetchDocumentSuccess(doc)))
     .catch((err) => dispatch(fetchDocumentFailure(err)))
     .then(payloadResponse)

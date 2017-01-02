@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Dimmer, Loader, Icon, Table, Label } from 'semantic-ui-react'
+import { Dimmer, Loader, Icon, Table, Label, Button } from 'semantic-ui-react'
 
 import { bindActions } from 'store/helper'
 
 import { actions as SharingActions } from 'store/modules/sharing'
+import { actions as NotificationActions } from 'store/modules/notification'
 
 import AppBar from 'components/AppBar'
 import AppSignPanel from 'components/AppSignPanel'
@@ -47,7 +48,7 @@ export class SharingListView extends React.Component {
     )
   }
 
-  getDurationLabel (sharing) {
+  getRowDurationLabel (sharing) {
     const d = {
       start: {
         date: new Date(sharing.startDate)
@@ -67,7 +68,7 @@ export class SharingListView extends React.Component {
 
     let $duration = <div>from <time dateTime={d.start.iso}>{d.start.loc}</time> to <time dateTime={d.end.iso}>{d.end.loc}</time></div>
     switch (true) {
-      case d.end.date < new Date():
+      case d.end.date && d.end.date < new Date():
         $duration = <div><Icon name='attention' /> outdated</div>
         break
       case d.start.date < new Date():
@@ -88,30 +89,56 @@ export class SharingListView extends React.Component {
     return $duration
   }
 
+  getRowButtons (sharing, label) {
+    if (!label) {
+      return <b>-</b>
+    }
+    const { loc } = this.props
+    return (
+      <div>
+        <Button
+          compact
+          icon='remove'
+          content='delete'
+          onClick={() => this.handleDeleteSharing(sharing)}
+        />
+        <Button as={Link}
+          compact
+          icon='edit'
+          content='edit'
+          to={{pathname: `/labels/${sharing.targetLabel}/share`, state: {modal: true, returnTo: loc, title: `Share label: ${label.label}`}}}
+        />
+        <Button as={Link}
+          compact
+          content='view'
+          icon='share'
+          to={{pathname: `/sharing/${sharing.id}`}}
+        />
+      </div>
+    )
+  }
+
   getRow (sharing) {
-    const { labels, loc } = this.props
+    const { labels } = this.props
     const l = labels.items.find((l) => l.id === sharing.targetLabel)
     const color = l ? {color: l.color} : {}
     const $label = l
-      ? <Label as={Link} to={{pathname: `/label/${l.id}`}} ><Icon name='circle' style={color} />{l.label}</Label>
+      ? <Label as={Link} to={{pathname: `/labels/${l.id}`}} ><Icon name='circle' style={color} />{l.label}</Label>
       : <div><Icon name='attention' /> missing label</div>
     const $pub = sharing.pub ? <Icon color='green' name='checkmark' size='large' /> : null
     const error = !l
     const warning = sharing.endDate && new Date(sharing.endDate) < new Date()
-    const $link = l
-      ? <Link to={{pathname: `/label/${l.id}/share`, state: {modal: true, returnTo: loc, title: `Share label: ${l.label}`}}}>edit</Link>
-      : null
     return (
       <Table.Row key={`sharing-${sharing.id}`} warning={warning} error={error}>
         <Table.Cell>
           {$label}
         </Table.Cell>
         <Table.Cell>
-          {this.getDurationLabel(sharing)}
+          {this.getRowDurationLabel(sharing)}
         </Table.Cell>
         <Table.Cell textAlign='center'>{$pub}</Table.Cell>
-        <Table.Cell selectable textAlign='center'>
-          {$link}
+        <Table.Cell collapsing textAlign='center'>
+          {this.getRowButtons(sharing, l)}
         </Table.Cell>
       </Table.Row>
     )
@@ -123,7 +150,7 @@ export class SharingListView extends React.Component {
       return (
         <AppSignPanel level='error'>
           <Icon name='bug' />
-          An error occurred!
+          {error.error || 'An error occurred!'}
         </AppSignPanel>
       )
     } else if (!isFetching && items.length === 0) {
@@ -142,7 +169,7 @@ export class SharingListView extends React.Component {
               <Table.HeaderCell>Label</Table.HeaderCell>
               <Table.HeaderCell>Duration</Table.HeaderCell>
               <Table.HeaderCell>Public</Table.HeaderCell>
-              <Table.HeaderCell textAlign='center'>-</Table.HeaderCell>
+              <Table.HeaderCell textAlign='center'>Actions</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -167,6 +194,19 @@ export class SharingListView extends React.Component {
       </div>
     )
   }
+
+  handleDeleteSharing (sharing) {
+    const { actions } = this.props
+    actions.sharing.removeSharing(sharing).then((sharing) => {
+      actions.notification.showNotification({message: 'Sharing removed'})
+    }).catch((err) => {
+      actions.notification.showNotification({
+        header: 'Unable to remove sharing',
+        message: err.error,
+        level: 'error'
+      })
+    })
+  }
 }
 
 const mapStateToProps = (state) => ({
@@ -176,7 +216,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({
-  sharing: SharingActions
+  sharing: SharingActions,
+  notification: NotificationActions
 }, dispatch))
 
 export default connect(mapStateToProps, mapActionsToProps)(SharingListView)

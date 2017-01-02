@@ -13,7 +13,7 @@ import { actions as NotificationActions } from '../../store/modules/notification
 import AppBar from '../../components/AppBar'
 
 const durationConfiguration = [
-  { text: 'No duration', value: 'no' },
+  { text: 'Forever', value: 'forever' },
   { text: 'For 24h', value: '24h' },
   { text: 'For a week', value: '1w' },
   { text: 'For a month', value: '1m' },
@@ -29,7 +29,7 @@ const getDatesForDuration = function (duration) {
   }
   // eslint-disable-next-line
   switch (duration) {
-    case 'no':
+    case 'forever':
       result.startDate = DateHelper.build().get()
       break
     case '24h':
@@ -89,7 +89,7 @@ export class ShareLabelView extends React.Component {
         startDate: '',
         endDate: '',
         pub: false,
-        duration: 'no'
+        duration: 'forever'
       }
     }
     this.handleSubmit = this.handleSubmit.bind(this)

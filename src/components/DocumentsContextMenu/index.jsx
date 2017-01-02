@@ -71,7 +71,7 @@ export class DocumentsContextMenu extends React.Component {
           icon='tag'
           as={Link}
           key={this.key('edit-label')}
-          to={{ pathname: `/label/${this.label.id}/edit`, state: {modal: true, returnTo: location, title: `Edit label: ${this.label.label}`} }}
+          to={{ pathname: `/labels/${this.label.id}/edit`, state: {modal: true, returnTo: location, title: `Edit label: ${this.label.label}`} }}
           text='Edit label' />
       )
     }
@@ -109,7 +109,7 @@ export class DocumentsContextMenu extends React.Component {
           icon='share alternate'
           as={Link}
           key={this.key('share-label')}
-          to={{ pathname: `/label/${this.label.id}/share`, state: {modal: true, returnTo: location, title: `Share label: ${this.label.label}`} }}
+          to={{ pathname: `/labels/${this.label.id}/share`, state: {modal: true, returnTo: location, title: `Share label: ${this.label.label}`} }}
           text='Share label' />
       )
     }
@@ -153,7 +153,7 @@ export class DocumentsContextMenu extends React.Component {
     const { actions } = this.props
     actions.label.removeLabel(this.label)
     .then((label) => {
-      actions.router.push({pathname: '/document'})
+      actions.router.push({pathname: '/documents'})
       actions.notification.showNotification({
         message: 'Label deleted',
         actionLabel: 'undo',
@@ -171,7 +171,7 @@ export class DocumentsContextMenu extends React.Component {
   handleUndoRemoveLabel () {
     const { actions } = this.props
     actions.label.restoreRemovedLabel().then((label) => {
-      actions.router.push({pathname: `/label/${label.id}`})
+      actions.router.push({pathname: `/labels/${label.id}`})
       actions.notification.showNotification({header: 'Label restored'})
     }).catch((err) => {
       actions.notification.showNotification({

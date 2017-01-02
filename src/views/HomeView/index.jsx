@@ -38,7 +38,7 @@ export const HomeView = (props) => (
               <div className='sub header'>Your personal content curation service</div>
             </div>
           </h1>
-          <a className='ui huge primary button' href='/document'>
+          <a className='ui huge primary button' href='/documents'>
             View my documents <i className='right arrow icon'></i>
           </a>
         </div>
