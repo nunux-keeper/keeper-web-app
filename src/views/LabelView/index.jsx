@@ -59,7 +59,7 @@ export class LabelView extends React.Component {
 
   get isCreateForm () {
     const pathname = this.props.location.pathname
-    return pathname === '/label/create'
+    return pathname === '/labels/create'
   }
 
   get isModalDisplayed () {
@@ -126,7 +126,7 @@ export class LabelView extends React.Component {
     const { actions } = this.props
     if (this.isCreateForm) {
       actions.label.createLabel(this.state).then((label) => {
-        actions.router.push(`/label/${label.id}`)
+        actions.router.push(`/labels/${label.id}`)
         actions.notification.showNotification({message: 'Label created'})
       }).catch((err) => {
         actions.notification.showNotification({
@@ -138,7 +138,7 @@ export class LabelView extends React.Component {
     } else {
       const { current } = this.props.label
       actions.label.updateLabel(current, this.state).then((label) => {
-        actions.router.push(`/label/${label.id}`)
+        actions.router.push(`/labels/${label.id}`)
         actions.notification.showNotification({message: 'Label updated'})
       }).catch((err) => {
         actions.notification.showNotification({
@@ -158,7 +158,7 @@ export class LabelView extends React.Component {
     if (state && state.returnTo) {
       actions.router.push(state.returnTo)
     } else {
-      actions.router.push('/document')
+      actions.router.push('/documents')
     }
     return false
   }
