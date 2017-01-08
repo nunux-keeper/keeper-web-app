@@ -443,12 +443,10 @@ th {
     color: #000; }
   .readable blockquote {
     padding: 1em;
-    margin: 0;
     font-style: italic; }
   .readable blockquote:before {
     content: "\201C";
     font-size: 3em;
-    margin-left: -1em;
     color: #aaa;
     line-height: 0; }
   .readable blockquote > p {
@@ -512,6 +510,9 @@ body.dimmable.undetached.dimmed .pusher {
 
 .ui.form .fields {
   margin: 0 !important; }
+
+.ui.label .icons {
+  margin: 0 .75em 0 0; }
 
 #homepage #features {
   padding: 2em; }
