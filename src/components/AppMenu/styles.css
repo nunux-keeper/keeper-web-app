@@ -11,9 +11,6 @@
   padding: 1em 0;
   border-radius: 0;
 }
-#AppMenu .icons {
-  float: right;
-}
 
 #AppMenu > .header.item h2 {
   width: 100%;
@@ -21,3 +18,7 @@
   font-variant: small-caps;
 }
 
+#AppMenu a > .icon, #AppMenu a > .icons {
+  float: right;
+  font-size: 1.2em;
+}

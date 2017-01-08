@@ -67,14 +67,14 @@ export class AppMenu extends React.Component {
   getLabelIcon (label) {
     if (label.sharing) {
       return (
-        <Icon.Group size='large'>
+        <Icon.Group>
           <Icon name='tag' />
           <Icon corner name='share alternate' />
         </Icon.Group>
         )
     } else {
       return (
-        <Icon name='tag' size='large' />
+        <Icon name='tag' />
         )
     }
   }
@@ -106,7 +106,7 @@ export class AppMenu extends React.Component {
           to={{ pathname: '/documents' }}
           onClick={this.handleItemClick}>
           Documents
-          <Icon name='grid layout' size='large' />
+          <Icon name='grid layout'/>
         </Menu.Item>
         <Menu.Item>
           <Menu.Header>Labels</Menu.Header>
@@ -117,7 +117,7 @@ export class AppMenu extends React.Component {
               onClick={this.handleItemClick}
               title='Create new label'>
               Create a label
-              <Icon.Group size='large'>
+              <Icon.Group>
                 <Icon name='tag' />
                 <Icon corner name='add' />
               </Icon.Group>
@@ -129,21 +129,21 @@ export class AppMenu extends React.Component {
           to={{ pathname: '/sharing' }}
           onClick={this.handleItemClick}>
           Sharing
-          <Icon name='share alternate' size='large' />
+          <Icon name='share alternate' />
         </Menu.Item>
         <Menu.Item as={Link}
           title='View trash content'
           to={{ pathname: '/trash' }}
           onClick={this.handleItemClick}>
           Trash
-          <Icon name='trash' size='large' />
+          <Icon name='trash' />
         </Menu.Item>
         <Menu.Item as={Link}
           title='View your settings'
           to={{ pathname: '/settings' }}
           onClick={this.handleItemClick}>
           Settings
-          <Icon name='settings' size='large' />
+          <Icon name='settings' />
         </Menu.Item>
       </Menu>
     )
