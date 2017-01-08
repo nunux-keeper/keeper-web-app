@@ -57,6 +57,7 @@ export class AppMenu extends React.Component {
         key={`label-${label.id}`}
         onClick={this.handleItemClick}
         title={`View label: ${label.label}`}
+        activeClassName='active'
         to={{ pathname: `/labels/${label.id}` }} >
         {label.label}
         {this.getLabelIcon(label)}
@@ -104,6 +105,7 @@ export class AppMenu extends React.Component {
         <Menu.Item as={Link}
           title='View all documents'
           to={{ pathname: '/documents' }}
+          activeClassName='active'
           onClick={this.handleItemClick}>
           Documents
           <Icon name='grid layout'/>
@@ -115,6 +117,7 @@ export class AppMenu extends React.Component {
             <Menu.Item as={Link}
               to={{ pathname: '/labels/create', state: {modal: true, returnTo: location, title: 'Create new label'} }}
               onClick={this.handleItemClick}
+              activeClassName='active'
               title='Create new label'>
               Create a label
               <Icon.Group>
@@ -127,6 +130,7 @@ export class AppMenu extends React.Component {
         <Menu.Item as={Link}
           title='View sharing'
           to={{ pathname: '/sharing' }}
+          activeClassName='active'
           onClick={this.handleItemClick}>
           Sharing
           <Icon name='share alternate' />
@@ -134,6 +138,7 @@ export class AppMenu extends React.Component {
         <Menu.Item as={Link}
           title='View trash content'
           to={{ pathname: '/trash' }}
+          activeClassName='active'
           onClick={this.handleItemClick}>
           Trash
           <Icon name='trash' />
@@ -141,6 +146,7 @@ export class AppMenu extends React.Component {
         <Menu.Item as={Link}
           title='View your settings'
           to={{ pathname: '/settings' }}
+          activeClassName='active'
           onClick={this.handleItemClick}>
           Settings
           <Icon name='settings' />
