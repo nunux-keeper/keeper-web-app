@@ -89,6 +89,39 @@ export class SharingListView extends React.Component {
     return $duration
   }
 
+  getRowLinks (sharing, label) {
+    if (!label) {
+      return <div><Icon name='attention' /> missing label</div>
+    }
+    const outdated = sharing.endDate && new Date(sharing.endDate) < new Date()
+    let $sharingPage = null
+    if (!outdated) {
+      $sharingPage = <Label as={Link} to={{pathname: `/sharing/${sharing.id}`}} title='View sharing page'>
+        <Icon name='linkify' />
+        Sharing page
+      </Label>
+    }
+    let $publicPage = null
+    if (sharing.pub && !outdated) {
+      $publicPage = <Label as={Link} to={{pathname: `/pub/${sharing.id}`}} title='View public page'>
+        <i className='icons'>
+          <i className='world icon'></i>
+          <i className='corner linkify icon'></i>
+        </i>
+        Public page
+      </Label>
+    }
+    return (
+      <div>
+        <Label as={Link} to={{pathname: `/labels/${label.id}`}} title='View label page'>
+          <Icon name='circle' style={{ color: label.color }} />{label.label}
+        </Label>
+        { $sharingPage }
+        { $publicPage }
+      </div>
+    )
+  }
+
   getRowButtons (sharing, label) {
     if (!label) {
       return <b>-</b>
@@ -108,12 +141,6 @@ export class SharingListView extends React.Component {
           content='edit'
           to={{pathname: `/labels/${sharing.targetLabel}/share`, state: {modal: true, returnTo: loc, title: `Share label: ${label.label}`}}}
         />
-        <Button as={Link}
-          compact
-          content='view'
-          icon='share'
-          to={{pathname: `/sharing/${sharing.id}`}}
-        />
       </div>
     )
   }
@@ -121,17 +148,13 @@ export class SharingListView extends React.Component {
   getRow (sharing) {
     const { labels } = this.props
     const l = labels.items.find((l) => l.id === sharing.targetLabel)
-    const color = l ? {color: l.color} : {}
-    const $label = l
-      ? <Label as={Link} to={{pathname: `/labels/${l.id}`}} ><Icon name='circle' style={color} />{l.label}</Label>
-      : <div><Icon name='attention' /> missing label</div>
     const $pub = sharing.pub ? <Icon color='green' name='checkmark' size='large' /> : null
     const error = !l
-    const warning = sharing.endDate && new Date(sharing.endDate) < new Date()
+    const outdated = sharing.endDate && new Date(sharing.endDate) < new Date()
     return (
-      <Table.Row key={`sharing-${sharing.id}`} warning={warning} error={error}>
+      <Table.Row key={`sharing-${sharing.id}`} warning={outdated} error={error}>
         <Table.Cell>
-          {$label}
+          {this.getRowLinks(sharing, l)}
         </Table.Cell>
         <Table.Cell>
           {this.getRowDurationLabel(sharing)}
@@ -166,7 +189,7 @@ export class SharingListView extends React.Component {
         <Table celled>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Label</Table.HeaderCell>
+              <Table.HeaderCell>Links</Table.HeaderCell>
               <Table.HeaderCell>Duration</Table.HeaderCell>
               <Table.HeaderCell>Public</Table.HeaderCell>
               <Table.HeaderCell textAlign='center'>Actions</Table.HeaderCell>
