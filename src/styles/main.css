@@ -608,7 +608,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  min-width: inherit; }
+  min-width: inherit !important; }
 
 *, *:before, *:after {
   box-sizing: inherit; }

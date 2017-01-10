@@ -4,6 +4,7 @@ import { Icon } from 'semantic-ui-react'
 
 import { bindActions } from 'store/helper'
 
+import { actions as AuthActions } from 'store/modules/auth'
 import { actions as DocumentActions } from 'store/modules/document'
 
 import './styles.css'
@@ -25,8 +26,16 @@ export class BookmarkletView extends React.Component {
       content: null,
       error: null,
       success: null,
-      loading: false
+      authenticated: false,
+      loading: true
     }
+    props.actions.auth.initAuthentication()
+      .then((response) => {
+        this.setState({
+          loading: false,
+          authenticated: response.payload.authenticated
+        })
+      })
   }
 
   componentDidMount () {
@@ -37,8 +46,8 @@ export class BookmarkletView extends React.Component {
     window.removeEventListener('message', this.receiveMessage)
   }
 
-  sendMessageBack (message) {
-    this.messages.push(message)
+  sendMessageBack (type, payload) {
+    this.messages.push({_type: type, payload})
   }
 
   receiveMessage (event) {
@@ -53,8 +62,8 @@ export class BookmarkletView extends React.Component {
     switch (msg._type) {
       case 'ping':
         while (this.messages.length > 0) {
-          var message = this.messages.shift()
-          event.source.postMessage(message, event.origin)
+          const message = this.messages.shift()
+          event.source.postMessage(JSON.stringify(message), event.origin)
         }
         break
       case 'onDragEnter':
@@ -123,8 +132,16 @@ export class BookmarkletView extends React.Component {
   }
 
   submit () {
-    const { success, error } = this.state
-    if (error) {
+    const { success, error, authenticated } = this.state
+    if (!authenticated) {
+      const { origin } = document.location
+      const { location } = this.props
+      const redirect = encodeURIComponent(location.query.url)
+      const redirectUri = `${origin}?redirect=${redirect}`
+      const msg = window._keycloak.createLoginUrl({redirectUri})
+      this.sendMessageBack('redirect', msg)
+      this.setState({loading: true})
+    } else if (error) {
       this.submitError()
     } else if (success) {
       this.submitSuccess()
@@ -140,7 +157,9 @@ export class BookmarkletView extends React.Component {
 
   get icon () {
     let icon = 'cloud upload'
-    if (this.state.onDragOver) {
+    if (!this.state.authenticated) {
+      icon = 'unlock'
+    } else if (this.state.onDragOver) {
       icon = 'dropdown'
     } else if (this.state.error) {
       icon = 'warning sign'
@@ -169,7 +188,9 @@ export class BookmarkletView extends React.Component {
 
   get title () {
     let t = 'Send page to the Keeper'
-    if (this.state.onDragOver) {
+    if (!this.state.authenticated) {
+      t = 'Please login first'
+    } else if (this.state.onDragOver) {
       t = 'Drop content on me'
     } else if (this.state.error) {
       t = 'Error!'
@@ -226,6 +247,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapActionsToProps = (dispatch) => (bindActions({
+  auth: AuthActions,
   document: DocumentActions
 }, dispatch))
 

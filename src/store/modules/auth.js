@@ -20,7 +20,7 @@ export const initAuthentication = () => {
   return (dispatch, getState) => {
     dispatch(initAuthenticationRequest())
     return new Promise(function (resolve, reject) {
-      window._keycloak.init({ onLoad: 'login-required' }).success((authenticated) => {
+      window._keycloak.init({onLoad: 'check-sso'}).success((authenticated) => {
         resolve(dispatch(initAuthenticationSuccess(authenticated)))
       }).error((e) => {
         reject(dispatch(initAuthenticationFailure(e)))

@@ -1,5 +1,5 @@
 import React from 'react'
-// import { Link } from 'react-router'
+import { Link } from 'react-router'
 
 export const HomeView = (props) => (
   <div id='homepage'>
@@ -38,9 +38,9 @@ export const HomeView = (props) => (
               <div className='sub header'>Your personal content curation service</div>
             </div>
           </h1>
-          <a className='ui huge primary button' href='/documents'>
+          <Link className='ui huge primary button' to='/documents'>
             View my documents <i className='right arrow icon'></i>
-          </a>
+          </Link>
         </div>
 
       </div>

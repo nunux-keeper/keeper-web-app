@@ -18,10 +18,14 @@ export function requireAuthentication (Component) {
       const {authenticated} = this.props
       if (!authenticated) {
         const {initAuthentication, profile} = this.props
-        initAuthentication().then(() => {
-          if (!profile.current) {
-            const {fetchProfile} = this.props
-            fetchProfile()
+        initAuthentication().then((res) => {
+          if (res.payload.authenticated) {
+            if (!profile.current) {
+              const {fetchProfile} = this.props
+              fetchProfile()
+            }
+          } else {
+            document.location.replace(window._keycloak.createLoginUrl())
           }
         })
       }

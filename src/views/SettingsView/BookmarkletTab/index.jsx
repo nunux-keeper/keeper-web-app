@@ -19,7 +19,7 @@ export default class BookmarkletTab extends React.Component {
           document.getElementsByTagName("head")[0].appendChild(K_SCR)})();`}
           onClick={this.handleClick}
           title='Drag me in your toolbar!'
-          className='bookmarklet'>
+          className='bookmarklet-link'>
           Keep This!
         </a>
       </div>

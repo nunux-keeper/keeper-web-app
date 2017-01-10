@@ -70,8 +70,18 @@ window.kBookmarklet = function () {
   if (!popup) alert('Unable to load bookmarklet.')
 
   var receiveMessage = function (e) {
-    if (e.data === 'close' && window.K_REALM === e.origin) {
+    let msg
+    try {
+      msg = JSON.parse(e.data)
+    } catch (e) {
+      console.error('Unable to parse received event data', e)
+      return
+    }
+    if (msg._type === 'close' && window.K_REALM === e.origin) {
       $c.parentNode.removeChild($c)
+    } else if (msg._type === 'redirect') {
+      console.log('Redirecting to ', msg.payload)
+      document.location.replace(msg.payload)
     }
   }
   window.addEventListener('message', receiveMessage, false)

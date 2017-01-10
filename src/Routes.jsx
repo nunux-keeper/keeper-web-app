@@ -33,8 +33,8 @@ import {
 export default (store) => (
   <Route path='/' component={RootLayout}>
     <IndexRoute component={HomeView} />
+    <Route path='bookmarklet' component={BookmarkletView} />
     <Route component={requireAuthentication(MainLayout)}>
-      <Route path='bookmarklet' component={BookmarkletView} />
       <Route path='trash' component={fetchGraveyard(GraveyardView)} />
       <Route path='documents' component={fetchDocuments(DocumentsView)} />
       <Route path='documents/create' component={createNewDocument(DocumentView)} />
