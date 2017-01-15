@@ -56,7 +56,7 @@ export default class AbstractApi {
       }
       return fetch(this.resolveUrl(url, query), {method, body, headers, credentials})
       .then(response => {
-        if (response.status === 204) {
+        if (response.status === 204 || response.status === 205) {
           return Promise.resolve()
         } else if (response.status >= 200 && response.status < 300) {
           return response.json()
