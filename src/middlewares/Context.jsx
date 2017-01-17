@@ -77,7 +77,6 @@ export function fetchDocuments (Component) {
       if (!(location.state && location.state.backFromModal)) {
         actions.documents.fetchDocuments({
           label: params.labelId,
-          sharing: params.sharingId,
           ...location.query
         })
         if (!params.labelId) {
@@ -89,16 +88,14 @@ export function fetchDocuments (Component) {
     componentWillReceiveProps (nextProps) {
       console.debug('DocumentsAwareComponent::componentWillReceiveProps')
       const { params, location, actions } = this.props
-      if (params.labelId !== nextProps.params.labelId || params.sharingId !== nextProps.params.sharingId) {
+      if (params.labelId !== nextProps.params.labelId) {
         actions.documents.fetchDocuments({
           label: nextProps.params.labelId,
-          sharing: nextProps.params.sharingId,
           ...nextProps.location.query
         })
       } else if (location.search !== nextProps.location.search) {
         actions.documents.fetchDocuments({
           label: params.labelId,
-          sharing: params.sharingId,
           ...nextProps.location.query
         })
       }
@@ -258,13 +255,13 @@ export function fetchSharedDocument (Component) {
   class SharedDocumentAwareComponent extends React.Component {
     static propTypes = {
       params: PropTypes.object.isRequired,
-      fetchDocument: PropTypes.func.isRequired
+      fetchSharedDocument: PropTypes.func.isRequired
     };
 
     componentDidMount () {
-      const { fetchDocument } = this.props
+      const { fetchSharedDocument } = this.props
       const { sharingId, docId } = this.props.params
-      fetchDocument(docId, sharingId)
+      fetchSharedDocument(docId, sharingId)
     }
 
     render () {
@@ -273,5 +270,116 @@ export function fetchSharedDocument (Component) {
   }
 
   return connect(null, documentActions)(SharedDocumentAwareComponent)
+}
+
+export function fetchSharedDocuments (Component) {
+  class SharedDocumentsAwareComponent extends React.Component {
+    static propTypes = {
+      params: PropTypes.object.isRequired,
+      location: PropTypes.object.isRequired,
+      actions: PropTypes.object.isRequired
+    };
+
+    componentDidMount () {
+      const { params, location, actions } = this.props
+      if (!(location.state && location.state.backFromModal)) {
+        actions.documents.fetchSharedDocuments({
+          sharingId: params.sharingId,
+          ...location.query
+        })
+      }
+    }
+
+    componentWillReceiveProps (nextProps) {
+      const { params, location, actions } = this.props
+      if (params.sharingId !== nextProps.params.sharingId) {
+        actions.documents.fetchSharedDocuments({
+          sharingId: nextProps.params.sharingId,
+          ...nextProps.location.query
+        })
+      } else if (location.search !== nextProps.location.search) {
+        actions.documents.fetchSharedDocuments({
+          sharingId: params.sharingId,
+          ...nextProps.location.query
+        })
+      }
+    }
+
+    render () {
+      return (<Component {...this.props}/>)
+    }
+  }
+
+  const mapActionsToProps = (dispatch) => (bindActions({
+    documents: documentsActions
+  }, dispatch))
+
+  return connect(null, mapActionsToProps)(SharedDocumentsAwareComponent)
+}
+
+export function fetchPublicDocument (Component) {
+  class PublicDocumentAwareComponent extends React.Component {
+    static propTypes = {
+      params: PropTypes.object.isRequired,
+      fetchPublicDocument: PropTypes.func.isRequired
+    };
+
+    componentDidMount () {
+      const { fetchPublicDocument } = this.props
+      const { sharingId, docId } = this.props.params
+      fetchPublicDocument(docId, sharingId)
+    }
+
+    render () {
+      return (<Component {...this.props}/>)
+    }
+  }
+
+  return connect(null, documentActions)(PublicDocumentAwareComponent)
+}
+
+export function fetchPublicDocuments (Component) {
+  class PublicDocumentsAwareComponent extends React.Component {
+    static propTypes = {
+      params: PropTypes.object.isRequired,
+      location: PropTypes.object.isRequired,
+      actions: PropTypes.object.isRequired
+    };
+
+    componentDidMount () {
+      const { params, location, actions } = this.props
+      if (!(location.state && location.state.backFromModal)) {
+        actions.documents.fetchPublicDocuments({
+          sharingId: params.sharingId,
+          ...location.query
+        })
+      }
+    }
+
+    componentWillReceiveProps (nextProps) {
+      const { params, location, actions } = this.props
+      if (params.sharingId !== nextProps.params.sharingId) {
+        actions.documents.fetchPublicDocuments({
+          sharingId: nextProps.params.sharingId,
+          ...nextProps.location.query
+        })
+      } else if (location.search !== nextProps.location.search) {
+        actions.documents.fetchPublicDocuments({
+          sharingId: params.sharingId,
+          ...nextProps.location.query
+        })
+      }
+    }
+
+    render () {
+      return (<Component {...this.props}/>)
+    }
+  }
+
+  const mapActionsToProps = (dispatch) => (bindActions({
+    documents: documentsActions
+  }, dispatch))
+
+  return connect(null, mapActionsToProps)(PublicDocumentsAwareComponent)
 }
 

@@ -2,23 +2,45 @@ import AbstractApi from 'api/common/AbstractApi'
 
 export class DocumentApi extends AbstractApi {
   search (params) {
-    const {from, size, order, label, sharing} = params
+    const {from, size, order, label} = params
     let {q} = params
     if (label && q) {
       q = `labels:${label} AND ${q}`
     } else if (label) {
       q = `labels:${label}`
     }
-    const url = sharing ? `/sharing/${sharing}` : '/documents'
-    return this.fetch(url, {
+    return this.fetch('/documents', {
       query: {q, from, size, order}
     })
   }
 
-  get (id, sharing) {
-    return sharing
-      ? this.fetch(`/sharing/${sharing}/${id}`)
-      : this.fetch(`/documents/${id}`)
+  searchShared (params) {
+    const {q, from, size, order, sharingId} = params
+    return this.fetch(`/sharing/${sharingId}`, {
+      query: {q, from, size, order}
+    })
+  }
+
+  searchPublic (params) {
+    const {q, from, size, order, sharingId} = params
+    return this.fetch(`/public/${sharingId}`, {
+      query: {q, from, size, order},
+      credentials: 'none'
+    })
+  }
+
+  get (id) {
+    return this.fetch(`/documents/${id}`)
+  }
+
+  getShared (id, sharingId) {
+    return this.fetch(`/sharing/${sharingId}/${id}`)
+  }
+
+  getPublic (id, sharingId) {
+    return this.fetch(`/public/${sharingId}/${id}`, {
+      credentials: 'none'
+    })
   }
 
   create (doc) {

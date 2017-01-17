@@ -15,11 +15,15 @@ export default class DocumentTile extends React.Component {
     base: PropTypes.object.isRequired,
     value: PropTypes.object.isRequired,
     sharing: PropTypes.string,
-    menu: PropTypes.string
+    menu: PropTypes.string,
+    pub: PropTypes.bool.isRequired
   };
 
   get contextualMenu () {
-    const {value: doc} = this.props
+    const {value: doc, pub} = this.props
+    if (pub) {
+      return null
+    }
     const menu = doc.ghost ? 'restore,destroy' : this.props.menu
     const trigger = <Button circular icon='ellipsis vertical' />
     return (
@@ -46,11 +50,12 @@ export default class DocumentTile extends React.Component {
   }
 
   get illustrationUrl () {
-    const {value: doc, sharing} = this.props
+    const {value: doc, sharing, pub} = this.props
     if (doc.attachments.length) {
       const att = doc.attachments[0]
       if (sharing) {
-        return `${API_ROOT}/sharing/${sharing}/${doc.id}/files/${att.key}?size=320x200`
+        const type = pub ? 'public' : 'sharing'
+        return `${API_ROOT}/${type}/${sharing}/${doc.id}/files/${att.key}?size=320x200`
       } else {
         return `${API_ROOT}/documents/${doc.id}/files/${att.key}?size=320x200`
       }
@@ -72,8 +77,9 @@ export default class DocumentTile extends React.Component {
       )
     } else {
       const state = { modal: true, returnTo: base, title: doc.title }
+      const pathname = base.pathname.replace(/\/$/, '') + '/' + doc.id
       return (
-        <Link to={{ pathname: `${base.pathname}/${doc.id}`, state: state }} className='ui fluid image'>
+        <Link to={{ pathname, state }} className='ui fluid image'>
           {$img}
         </Link>
       )

@@ -13,11 +13,13 @@ export class DocumentContent extends React.Component {
   static propTypes = {
     doc: PropTypes.object.isRequired,
     editable: PropTypes.bool,
+    pub: PropTypes.bool,
     updateDocument: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    editable: false
+    editable: false,
+    pub: true
   };
 
   constructor (props) {
@@ -37,13 +39,14 @@ export class DocumentContent extends React.Component {
   }
 
   filterImgDataRefAttr () {
-    const { doc } = this.props
+    const { doc, pub } = this.props
     // Filtering images ref attributes...
     const $this = ReactDOM.findDOMNode(this)
     $this.querySelectorAll('img[data-ref]').forEach((el) => {
       const key = el.dataset.ref
+      const type = pub ? 'public' : 'sharing'
       const src = doc.sharing
-        ? `${API_ROOT}/sharing/${doc.sharing}/${doc.id}/files/${key}`
+        ? `${API_ROOT}/${type}/${doc.sharing}/${doc.id}/files/${key}`
         : `${API_ROOT}/documents/${doc.id}/files/${key}`
       el.src = src
     })

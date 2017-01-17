@@ -56,6 +56,7 @@ export class DocumentsView extends React.Component {
     this.headerStyle = {}
     this.headerIcon = 'grid layout'
     this.fetchFollowingDocuments = this.fetchFollowingDocuments.bind(this)
+    this.pub = false
   }
 
   componentDidUpdate (prevProps) {
@@ -123,8 +124,7 @@ export class DocumentsView extends React.Component {
   }
 
   get documents () {
-    const { isFetching, items, hasMore, error, params } = this.data
-    const { location } = this.props
+    const { isFetching, items, hasMore, error } = this.data
     if (error) {
       return (
         <AppSignPanel level='error'>
@@ -135,7 +135,7 @@ export class DocumentsView extends React.Component {
     } else if (!isFetching && items.length === 0) {
       return this.noContent
     } else {
-      const $items = items.map((doc) => <DocumentTile key={'doc-' + doc.id} value={doc} menu={this.tileContextMenuItems} base={location} sharing={params.sharing}/>)
+      const $items = items.map((doc) => this.getDocumentTile(doc))
       const sizes = ['one', 'three', 'five']
       const size = sizes[this.props.layout.size - 1]
       return (
@@ -144,6 +144,21 @@ export class DocumentsView extends React.Component {
         </InfiniteGrid>
       )
     }
+  }
+
+  getDocumentTile (doc) {
+    const { params } = this.data
+    const { location } = this.props
+    return (
+      <DocumentTile
+        key={'doc-' + doc.id}
+        value={doc}
+        menu={this.tileContextMenuItems}
+        base={location}
+        sharing={params.sharingId}
+        pub={this.pub}
+      />
+    )
   }
 
   render () {

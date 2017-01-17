@@ -23,7 +23,7 @@ export const fetchDocumentsSuccess = createAction(FETCH_DOCUMENTS, (res) => {
   return {response: {total: res.total, items: res.hits}}
 })
 
-export const fetchDocuments = (params = {from: 0, size: 20}) => {
+export const fetchDocuments = (params = {from: 0, size: 20}, type = 'user') => {
   params = Object.assign({
     from: 0,
     size: 20,
@@ -32,24 +32,36 @@ export const fetchDocuments = (params = {from: 0, size: 20}) => {
   return (dispatch, getState) => {
     const {documents} = getState()
     if (documents.isFetching || documents.isProcessing) {
-      console.warn('Unable to fetch documents. An action is pending...')
+      console.warn(`Unable to fetch ${type} documents. An action is pending...`)
       return Promise.resolve(null)
     } else if (documents.hasMore || params.from === 0) {
-      console.debug('Fetching documents:', params)
+      console.debug(`Fetching ${type} documents:`, params)
       dispatch(fetchDocumentsRequest(params))
-      return DocumentApi.search(params)
-      .then((res) => dispatch(fetchDocumentsSuccess(res)))
+      let fetched
+      switch (true) {
+        case type === 'shared':
+          fetched = DocumentApi.searchShared(params)
+          break
+        case type === 'public':
+          fetched = DocumentApi.searchPublic(params)
+          break
+        default:
+          fetched = DocumentApi.search(params)
+      }
+      return fetched.then((res) => dispatch(fetchDocumentsSuccess(res)))
       .catch((err) => dispatch(fetchDocumentsFailure(err)))
       .then(payloadResponse)
     } else {
-      console.warn('Unable to fetch documents. No more documents', params)
+      console.warn(`Unable to fetch ${type} documents. No more documents`, params)
       return Promise.resolve(null)
     }
   }
 }
 
 export const actions = {
-  fetchDocuments
+  fetchDocuments,
+  fetchSharedDocuments: (params) => fetchDocuments(params, 'shared'),
+  fetchPublicDocuments: (params) => fetchDocuments(params, 'public')
 }
 
 // ------------------------------------

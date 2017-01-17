@@ -58,12 +58,22 @@ export const restoreDocumentSuccess = createAction(RESTORE_DOCUMENT, (doc) => {
 
 export const toggleDocumentEditMode = createAction(EDIT_DOCUMENT)
 
-export const fetchDocument = (id, sharing) => {
+export const fetchDocument = (type = 'user', id, sharingId) => {
   return (dispatch, getState) => {
-    console.debug('Fetching document:', id)
+    console.debug(`Fetching ${type} document:`, id)
     dispatch(fetchDocumentRequest())
-    return DocumentApi.get(id, sharing)
-    .then((doc) => dispatch(fetchDocumentSuccess(doc)))
+    let fetched
+    switch (true) {
+      case type === 'shared':
+        fetched = DocumentApi.getShared(id, sharingId)
+        break
+      case type === 'public':
+        fetched = DocumentApi.getPublic(id, sharingId)
+        break
+      default:
+        fetched = DocumentApi.get(id)
+    }
+    return fetched.then((doc) => dispatch(fetchDocumentSuccess(doc)))
     .catch((err) => dispatch(fetchDocumentFailure(err)))
     .then(payloadResponse)
   }
@@ -173,7 +183,9 @@ export const resetDocument = () => {
 
 export const actions = {
   newDocument,
-  fetchDocument,
+  fetchDocument: (id) => fetchDocument('user', id),
+  fetchSharedDocument: (id, sharedId) => fetchDocument('shared', id, sharedId),
+  fetchPublicDocument: (id, sharedId) => fetchDocument('public', id, sharedId),
   createDocument,
   updateDocument,
   removeDocument,

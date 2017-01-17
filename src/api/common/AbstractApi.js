@@ -39,22 +39,29 @@ export default class AbstractApi {
       headers['Content-Type'] = 'application/json'
     }
 
-    return new Promise((resolve, reject) => {
-      window._keycloak.updateToken(30).success(resolve).error((err) => {
-        // Fatal error from keycloak server. Mainly due to CORS.
-        // Forced to reload the page.
-        // FIXME Find a better way to handle Keycloak errors.
-        console.error('Fatal error from Keycloak when updating the token', err)
-        location.reload()
+    let authz = Promise.resolve()
+    if (params.credentials !== 'none') {
+      authz = new Promise((resolve, reject) => {
+        window._keycloak.updateToken(30).success(resolve).error((err) => {
+          // Fatal error from keycloak server. Mainly due to CORS.
+          // Forced to reload the page.
+          // FIXME Find a better way to handle Keycloak errors.
+          console.error('Fatal error from Keycloak when updating the token', err)
+          location.reload()
+        })
+      }).then((updated) => {
+        if (updated || this.firstCall) {
+          // Token was updated or it's the first API call.
+          // Authorization header is set in order to update the API cookie.
+          headers['Authorization'] = `Bearer ${window._keycloak.token}`
+          this.firstCall = false
+        }
+        return Promise.resolve()
       })
-    }).then((updated) => {
-      if (updated || this.firstCall) {
-        // Token was updated or it's the first API call.
-        // Authorization header is set in order to update the API cookie.
-        headers['Authorization'] = `Bearer ${window._keycloak.token}`
-        this.firstCall = false
-      }
-      return fetch(this.resolveUrl(url, query), {method, body, headers, credentials})
+    }
+
+    const _url = this.resolveUrl(url, query)
+    return authz.then(() => fetch(_url, {method, body, headers, credentials}))
       .then(response => {
         if (response.status === 204 || response.status === 205) {
           return Promise.resolve()
@@ -64,6 +71,5 @@ export default class AbstractApi {
           return response.json().then((err) => Promise.reject(err))
         }
       })
-    })
   }
 }

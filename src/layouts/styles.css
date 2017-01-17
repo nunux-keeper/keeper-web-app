@@ -1,3 +1,30 @@
+#PublicLayout {
+  background-color: #0c1d2b;
+}
+
+#PublicLayout h1 {
+  text-align: center;
+  padding: 1em 0;
+  margin: 0;
+  text-shadow: 2px 2px 5px #000;
+  font-weight: 400;
+}
+
+#PublicLayout h1 .content {
+  text-align: left;
+}
+
+#PublicLayout h1 .content small {
+  font-size: small;
+}
+
+#PublicLayout .view.page {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 1em;
+  border-radius: 1em;
+}
 
 #DesktopLayout {
   height: 100vh;

@@ -3,12 +3,15 @@ import { Route, IndexRoute, Redirect } from 'react-router'
 
 import RootLayout from 'layouts/RootLayout'
 import MainLayout from 'layouts/MainLayout'
+import PublicLayout from 'layouts/PublicLayout'
 import HomeView from 'views/HomeView'
 import LabelView from 'views/LabelView'
 import ShareLabelView from 'views/ShareLabelView'
 import DocumentView from 'views/DocumentView'
 import LabelDocumentsView from 'views/LabelDocumentsView'
 import SharedDocumentsView from 'views/SharedDocumentsView'
+import PublicDocumentsView from 'views/PublicDocumentsView'
+import PublicDocumentView from 'views/PublicDocumentView'
 import DocumentsView from 'views/DocumentsView'
 import BookmarkletView from 'views/BookmarkletView'
 import GraveyardView from 'views/GraveyardView'
@@ -25,7 +28,10 @@ import {
   fetchLabelAndSharing,
   fetchLabelAndDocument,
   fetchLabelAndDocuments,
+  fetchSharedDocuments,
   fetchSharedDocument,
+  fetchPublicDocuments,
+  fetchPublicDocument,
   fetchSharing,
   fetchGraveyard
 } from 'middlewares/Context'
@@ -34,6 +40,10 @@ export default (store) => (
   <Route path='/' component={RootLayout}>
     <IndexRoute component={HomeView} />
     <Route path='bookmarklet' component={BookmarkletView} />
+    <Route component={PublicLayout}>
+      <Route path='pub/:sharingId' component={fetchPublicDocuments(PublicDocumentsView)} />
+      <Route path='pub/:sharingId/:docId' component={fetchPublicDocument(PublicDocumentView)} />
+    </Route>
     <Route component={requireAuthentication(MainLayout)}>
       <Route path='trash' component={fetchGraveyard(GraveyardView)} />
       <Route path='documents' component={fetchDocuments(DocumentsView)} />
@@ -45,7 +55,7 @@ export default (store) => (
       <Route path='labels/:labelId/share' component={fetchLabelAndSharing(ShareLabelView)} />
       <Route path='labels/:labelId/:docId' component={fetchLabelAndDocument(DocumentView)} />
       <Route path='sharing' component={fetchSharing(SharingListView)} />
-      <Route path='sharing/:sharingId' component={fetchDocuments(SharedDocumentsView)} />
+      <Route path='sharing/:sharingId' component={fetchSharedDocuments(SharedDocumentsView)} />
       <Route path='sharing/:sharingId/:docId' component={fetchSharedDocument(DocumentView)} />
       <Route path='settings' component={SettingsView} />
     </Route>
