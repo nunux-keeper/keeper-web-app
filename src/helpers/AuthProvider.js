@@ -1,6 +1,6 @@
 import Keycloak from 'keycloak-js'
 
-const keycloak = new Keycloak()
+const keycloak = new Keycloak(process.env.PUBLIC_URL + '/keycloak.json')
 
 const facade = {
   init: () => {
