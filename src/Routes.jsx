@@ -1,10 +1,9 @@
 import React from 'react'
-import { Route, IndexRoute, Redirect } from 'react-router'
+import { Route, IndexRedirect, Redirect } from 'react-router'
 
 import RootLayout from 'layouts/RootLayout'
 import MainLayout from 'layouts/MainLayout'
 import PublicLayout from 'layouts/PublicLayout'
-import HomeView from 'views/HomeView'
 import LabelView from 'views/LabelView'
 import ShareLabelView from 'views/ShareLabelView'
 import DocumentView from 'views/DocumentView'
@@ -38,7 +37,7 @@ import {
 
 export default (store) => (
   <Route path='/' component={RootLayout}>
-    <IndexRoute component={HomeView} />
+    <IndexRedirect to='documents' />
     <Route path='bookmarklet' component={BookmarkletView} />
     <Route component={PublicLayout}>
       <Route path='pub/:sharingId' component={fetchPublicDocuments(PublicDocumentsView)} />
