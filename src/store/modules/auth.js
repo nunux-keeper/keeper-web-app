@@ -1,4 +1,5 @@
 import { createAction, handleActions } from 'redux-actions'
+import authProvider from 'helpers/AuthProvider'
 
 // ------------------------------------
 // Constants
@@ -19,13 +20,12 @@ export const initAuthenticationSuccess = createAction(INIT_AUTH, (authenticated)
 export const initAuthentication = () => {
   return (dispatch, getState) => {
     dispatch(initAuthenticationRequest())
-    return new Promise(function (resolve, reject) {
-      window._keycloak.init({onLoad: 'check-sso'}).success((authenticated) => {
-        resolve(dispatch(initAuthenticationSuccess(authenticated)))
-      }).error((e) => {
-        reject(dispatch(initAuthenticationFailure(e)))
+    return authProvider.init()
+      .then((authenticated) => {
+        return dispatch(initAuthenticationSuccess(authenticated))
+      }, (err) => {
+        return dispatch(initAuthenticationFailure(err))
       })
-    })
   }
 }
 
@@ -56,5 +56,3 @@ export default handleActions({
   authenticated: false
 })
 
-// Put keycloak to window scope
-window._keycloak = new window.Keycloak('/keycloak.json')

@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
+import authProvider from 'helpers/AuthProvider'
 import { actions as authActions } from 'store/modules/auth'
 import { actions as profileActions } from 'store/modules/profile'
 
@@ -25,7 +26,7 @@ export function requireAuthentication (Component) {
               fetchProfile()
             }
           } else {
-            document.location.replace(window._keycloak.createLoginUrl())
+            document.location.replace(authProvider.getLoginUrl())
           }
         })
       }

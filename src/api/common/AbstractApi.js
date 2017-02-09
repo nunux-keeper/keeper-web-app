@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import authProvider from 'helpers/AuthProvider'
 
 export default class AbstractApi {
   constructor () {
@@ -41,22 +42,20 @@ export default class AbstractApi {
 
     let authz = Promise.resolve()
     if (params.credentials !== 'none') {
-      authz = new Promise((resolve, reject) => {
-        window._keycloak.updateToken(30).success(resolve).error((err) => {
-          // Fatal error from keycloak server. Mainly due to CORS.
-          // Forced to reload the page.
-          // FIXME Find a better way to handle Keycloak errors.
-          console.error('Fatal error from Keycloak when updating the token', err)
-          location.reload()
-        })
-      }).then((updated) => {
+      authz = authProvider.updateToken().then((updated) => {
         if (updated || this.firstCall) {
           // Token was updated or it's the first API call.
           // Authorization header is set in order to update the API cookie.
-          headers['Authorization'] = `Bearer ${window._keycloak.token}`
+          headers['Authorization'] = `Bearer ${authProvider.getToken()}`
           this.firstCall = false
         }
         return Promise.resolve()
+      }, (err) => {
+        // Fatal error from keycloak server. Mainly due to CORS.
+        // Forced to reload the page.
+        // FIXME Find a better way to handle Keycloak errors.
+        console.error('Fatal error when updating the token', err)
+        location.reload()
       })
     }
 

@@ -24,9 +24,10 @@
   "bugs": {
     "url": "https://gitlab.com/nunux-keeper/keeper-web-app/issues"
   },
-  "homepage": "https://keeper.nunux.org",
+  "homepage": "https://app.nunux.org/keeper",
   "dependencies": {
     "chance": "^1.0.4",
+    "keycloak-js": "^2.5.1",
     "node-sass": "^3.13.1",
     "nprogress": "^0.2.0",
     "react": "^15.4.1",

@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Image, Icon } from 'semantic-ui-react'
-
 import { default as Timeago } from 'timeago.js'
+
+import authProvider from 'helpers/AuthProvider'
 
 import './styles.css'
 
@@ -16,6 +17,7 @@ class ProfilePanel extends React.Component {
     if (current) {
       const gravatar = `https://www.gravatar.com/avatar/${current.hash}`
       const memberAgo = new Timeago().format(current.date)
+      const accountUrl = authProvider.getAccountUrl()
       return (
         <div className='ProfilePanel'>
           <Image avatar src={gravatar} alt='You on Gravatar' />
@@ -24,7 +26,7 @@ class ProfilePanel extends React.Component {
             <small>Member {memberAgo}</small>
           </span>
           <a target='_blank'
-            href='https://login.nunux.org/auth/realms/nunux.org/account?referrer=nunux-keeper-app'
+            href={accountUrl}
             title='Manage your profile'>
             <Icon name='user' />
           </a>
