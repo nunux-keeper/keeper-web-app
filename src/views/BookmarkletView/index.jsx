@@ -106,7 +106,7 @@ export class BookmarkletView extends React.Component {
 
   submitSuccess () {
     const { current: doc } = this.props.document
-    window.open(`${this.baseUrl}/document/${doc.id}`)
+    window.open(`${this.baseUrl}/documents/${doc.id}`)
   }
 
   submitDoc () {
