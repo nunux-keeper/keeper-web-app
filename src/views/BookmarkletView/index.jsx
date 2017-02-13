@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Icon } from 'semantic-ui-react'
 
 import { bindActions } from 'store/helper'
+import authProvider from 'helpers/AuthProvider'
 
 import { actions as AuthActions } from 'store/modules/auth'
 import { actions as DocumentActions } from 'store/modules/document'
@@ -138,7 +139,7 @@ export class BookmarkletView extends React.Component {
       const { location } = this.props
       const redirect = encodeURIComponent(location.query.url)
       const redirectUri = `${origin}?redirect=${redirect}`
-      const msg = window._keycloak.createLoginUrl({redirectUri})
+      const msg = authProvider.getLoginUrl({redirectUri})
       this.sendMessageBack('redirect', msg)
       this.setState({loading: true})
     } else if (error) {

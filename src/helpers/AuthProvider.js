@@ -21,7 +21,7 @@ const facade = {
   },
   getToken: () => keycloak.token,
   getAccountUrl: () => keycloak.createAccountUrl(),
-  getLoginUrl: () => keycloak.createLoginUrl()
+  getLoginUrl: (params) => keycloak.createLoginUrl(params)
 }
 
 export default facade
