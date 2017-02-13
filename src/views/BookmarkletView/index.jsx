@@ -10,6 +10,8 @@ import { actions as DocumentActions } from 'store/modules/document'
 
 import './styles.css'
 
+const basename = process.env.PUBLIC_URL || ''
+
 export class BookmarkletView extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
@@ -37,6 +39,11 @@ export class BookmarkletView extends React.Component {
           authenticated: response.payload.authenticated
         })
       })
+  }
+
+  get baseUrl () {
+    const { origin } = document.location
+    return origin + basename
   }
 
   componentDidMount () {
@@ -98,9 +105,8 @@ export class BookmarkletView extends React.Component {
   }
 
   submitSuccess () {
-    const { origin } = document.location
     const { current: doc } = this.props.document
-    window.open(`${origin}/document/${doc.id}`)
+    window.open(`${this.baseUrl}/document/${doc.id}`)
   }
 
   submitDoc () {
@@ -135,10 +141,9 @@ export class BookmarkletView extends React.Component {
   submit () {
     const { success, error, authenticated } = this.state
     if (!authenticated) {
-      const { origin } = document.location
       const { location } = this.props
       const redirect = encodeURIComponent(location.query.url)
-      const redirectUri = `${origin}?redirect=${redirect}`
+      const redirectUri = `${this.baseUrl}?redirect=${redirect}`
       const msg = authProvider.getLoginUrl({redirectUri})
       this.sendMessageBack('redirect', msg)
       this.setState({loading: true})
