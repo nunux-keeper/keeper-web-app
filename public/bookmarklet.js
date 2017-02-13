@@ -62,7 +62,7 @@ window.kBookmarklet = function () {
 
   $c.appendChild($ifrm)
 
-  var url = window.K_REALM + '/bookmarklet?url=' +
+  var url = window.K_REALM.replace(/\/$/, '') + '/bookmarklet?url=' +
     encodeURIComponent(window.location.href) +
     '&title=' + encodeURIComponent(window.document.title)
 
