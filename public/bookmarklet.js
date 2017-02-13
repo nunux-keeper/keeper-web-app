@@ -77,7 +77,7 @@ window.kBookmarklet = function () {
       console.error('Unable to parse received event data', e)
       return
     }
-    if (msg._type === 'close' && window.K_REALM === e.origin) {
+    if (msg._type === 'close' && window.K_REALM.indexOf(e.origin) === 0) {
       $c.parentNode.removeChild($c)
     } else if (msg._type === 'redirect') {
       console.log('Redirecting to ', msg.payload)
