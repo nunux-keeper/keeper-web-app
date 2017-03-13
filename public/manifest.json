@@ -34,8 +34,6 @@
     }
   ],
   "lang": "en_US",
-  "launch_path": "/",
-  "start_url": "/document",
   "display": "standalone",
   "background_color": "#ececec",
   "theme_color": "#2185d0"
