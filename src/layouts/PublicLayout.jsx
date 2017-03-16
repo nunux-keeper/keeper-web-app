@@ -14,7 +14,7 @@ export default class PublicLayout extends React.Component {
       <div id='PublicLayout'>
         <a href='/' title='Visite Nunux Keeper and manage your own documents'>
           <h1 className='ui inverted header'>
-            <img src='/icons/icon-192x192.png' alt='logo' data-pin-nopin='true' />
+            <img src='/logo.svg' alt='logo' data-pin-nopin='true' height='80' width='80' />
             <div className='content'>
               Nunux Keeper<small>v2</small>
               <div className='sub header'>Your personal content curation service</div>
