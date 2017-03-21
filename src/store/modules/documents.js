@@ -10,6 +10,7 @@ export const CREATE_DOCUMENT = 'CREATE_DOCUMENT'
 export const UPDATE_DOCUMENT = 'UPDATE_DOCUMENT'
 export const REMOVE_DOCUMENT = 'REMOVE_DOCUMENT'
 export const RESTORE_DOCUMENT = 'RESTORE_DOCUMENT'
+export const EDIT_DOCUMENT_LABELS = 'EDIT_DOCUMENT_LABELS'
 
 // ------------------------------------
 // Actions
@@ -58,10 +59,13 @@ export const fetchDocuments = (params = {from: 0, size: 20}, type = 'user') => {
   }
 }
 
+export const toggleDocumentLabelsEditMode = createAction(EDIT_DOCUMENT_LABELS)
+
 export const actions = {
   fetchDocuments,
   fetchSharedDocuments: (params) => fetchDocuments(params, 'shared'),
-  fetchPublicDocuments: (params) => fetchDocuments(params, 'public')
+  fetchPublicDocuments: (params) => fetchDocuments(params, 'public'),
+  toggleDocumentLabelsEditMode
 }
 
 // ------------------------------------
@@ -162,6 +166,18 @@ export default handleActions({
       return Object.assign({}, state, update)
     }
     return state
+  },
+  [EDIT_DOCUMENT_LABELS]: (state, action) => {
+    const doc = action.payload
+    const update = {}
+    update.items = state.items.reduce((acc, item, index) => {
+      if (item.id === doc.id) {
+        item.isEditingLabels = !item.isEditingLabels
+      }
+      acc.push(item)
+      return acc
+    }, [])
+    return Object.assign({}, state, update)
   }
 }, {
   isFetching: false,

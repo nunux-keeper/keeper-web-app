@@ -107,10 +107,11 @@ export default class DocumentTile extends React.Component {
 
   get extra () {
     const {value: doc} = this.props
-    if (doc.labels && doc.labels.length > 0) {
+    const editable = !!doc.isEditingLabels
+    if (editable || (doc.labels && doc.labels.length > 0)) {
       return (
         <Card.Content extra>
-          <DocumentLabels doc={doc} editable={false} />
+          <DocumentLabels doc={doc} editable={editable} />
         </Card.Content>
       )
     }

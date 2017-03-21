@@ -63,19 +63,13 @@ export class DocumentLabels extends React.Component {
         content: <div><Icon name='circle' style={color} /> {l.label}</div>
       }
     })
-    const renderLabel = (label, index, props) => {
-      const color = {color: label.color}
-      return (
-        <Label>
-          <Icon name='circle' style={color} />
-          {label.text}
-        </Label>
-      )
-    }
+    const renderLabel = (label, index, props) => ({
+      content: label.text,
+      icon: <Icon name='circle' style={{color: label.color}} />
+    })
 
     return (
       <Dropdown
-        search
         multiple
         selection
         fluid
