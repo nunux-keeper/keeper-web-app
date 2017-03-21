@@ -26,7 +26,6 @@
   },
   "homepage": "https://app.nunux.org/keeper",
   "dependencies": {
-    "chance": "^1.0.4",
     "keycloak-js": "2.5.x",
     "node-sass": "^3.13.1",
     "nprogress": "^0.2.0",
