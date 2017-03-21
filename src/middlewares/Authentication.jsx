@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 
 import authProvider from 'helpers/AuthProvider'
 import { actions as authActions } from 'store/modules/auth'
-import { actions as profileActions } from 'store/modules/profile'
+import profileActions from 'store/profile/actions'
 
 export function requireAuthentication (Component) {
   class AuthenticatedComponent extends React.Component {

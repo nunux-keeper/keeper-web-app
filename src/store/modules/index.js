@@ -7,7 +7,6 @@ import label from './label'
 import labels from './labels'
 import sharing from './sharing'
 import notification from './notification'
-import profile from './profile'
 import titleModal from './titleModal'
 import urlModal from './urlModal'
 
@@ -21,7 +20,6 @@ export default {
   labels,
   sharing,
   notification,
-  profile,
   titleModal,
   urlModal
 }
