@@ -15,9 +15,6 @@ PORTS_FLAGS=-p $(PORT):3000
 # Custom run flags
 RUN_CUSTOM_FLAGS?=$(PORTS_FLAGS) $(ENV_FLAGS)
 
-# Custom shell flags
-SHELL_CUSTOM_FLAGS=-P
-
 # Docker configuartion regarding the system architecture
 BASEIMAGE=node:6-onbuild
 ARM_BASEIMAGE=hypriot/rpi-node/6-onbuild
