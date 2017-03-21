@@ -11,6 +11,8 @@ import { actions as GraveyardActions } from 'store/modules/graveyard'
 import { actions as NotificationActions } from 'store/modules/notification'
 import { actions as TitleModalActions } from 'store/modules/titleModal'
 
+const API_ROOT = process.env.REACT_APP_API_ROOT
+
 export class DocumentContextMenu extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
@@ -55,13 +57,12 @@ export class DocumentContextMenu extends React.Component {
 
   get rawMenuItem () {
     const doc = this.props.doc
-    const base = window.API_ROOT
     return (
       <Dropdown.Item
         icon='file code outline'
         as='a'
         key={this.key('raw')}
-        href={`${base}/documents/${doc.id}?raw`}
+        href={`${API_ROOT}/documents/${doc.id}?raw`}
         title='View RAW document'
         target='_blank'
         text='View RAW' />
