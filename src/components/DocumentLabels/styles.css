@@ -1,0 +1,10 @@
+.DocumentLabels .labels {
+  display: inline-block;
+}
+.DocumentLabels .labels > .label {
+  margin-right: 1em 0;
+}
+.DocumentLabels .icons {
+  margin-right: .5em;
+}
+

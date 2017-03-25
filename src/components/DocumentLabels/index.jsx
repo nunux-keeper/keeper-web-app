@@ -6,6 +6,8 @@ import { Dropdown, Label, Icon } from 'semantic-ui-react'
 
 import { actions as documentActions } from 'store/modules/document'
 
+import './styles.css'
+
 export class DocumentLabels extends React.Component {
   static propTypes = {
     doc: PropTypes.object.isRequired,
@@ -21,14 +23,16 @@ export class DocumentLabels extends React.Component {
   constructor (props) {
     super(props)
     this.handleChange = this.handleChange.bind(this)
+    this.toggleEditable = this.toggleEditable.bind(this)
+    this.state = {
+      editable: props.editable
+    }
   }
 
   renderViewMode () {
     const { doc } = this.props
-    if (!doc.labels) {
-      return null
-    }
-    const $labels = doc.labels.map((id) => {
+    const labels = doc.labels || []
+    const $labels = labels.map((id) => {
       const l = this.resolveLabel(id)
       if (!l) {
         return null
@@ -45,9 +49,17 @@ export class DocumentLabels extends React.Component {
     })
 
     return (
-      <Label.Group size='mini'>
-        {$labels}
-      </Label.Group>
+      <div className='DocumentLabels' >
+        <Link title='Edit labels' onClick={this.toggleEditable}>
+          <Icon.Group >
+            <Icon link name='tag' />
+            <Icon link corner name='add' />
+          </Icon.Group>
+        </Link>
+        <Label.Group size='mini'>
+          {$labels}
+        </Label.Group>
+      </div>
     )
   }
 
@@ -83,8 +95,13 @@ export class DocumentLabels extends React.Component {
   }
 
   render () {
-    const { editable } = this.props
+    const { editable } = this.state
     return editable ? this.renderEditMode() : this.renderViewMode()
+  }
+
+  toggleEditable () {
+    const { editable } = this.props
+    this.setState({editable: !editable})
   }
 
   handleChange (event, {value}) {

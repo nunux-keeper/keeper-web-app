@@ -52,7 +52,7 @@ export class DocumentsView extends React.Component {
     super()
     this.title = 'All documents'
     this.contextMenuItems = 'refresh,order'
-    this.tileContextMenuItems = 'detail,share,divider,editTitle,editTileLabels,divider,delete'
+    this.tileContextMenuItems = 'detail,share,divider,editTitle,divider,delete'
     this.headerStyle = {}
     this.headerIcon = 'grid layout'
     this.fetchFollowingDocuments = this.fetchFollowingDocuments.bind(this)

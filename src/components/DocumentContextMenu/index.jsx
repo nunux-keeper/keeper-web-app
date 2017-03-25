@@ -6,7 +6,6 @@ import { Dropdown } from 'semantic-ui-react'
 import { bindActions } from 'store/helper'
 
 import { actions as DocumentActions } from 'store/modules/document'
-import { actions as DocumentsActions } from 'store/modules/documents'
 import { actions as GraveyardActions } from 'store/modules/graveyard'
 import { actions as NotificationActions } from 'store/modules/notification'
 import { actions as TitleModalActions } from 'store/modules/titleModal'
@@ -33,7 +32,6 @@ export class DocumentContextMenu extends React.Component {
     this.handleRemove = this.handleRemove.bind(this)
     this.handleUndoRemove = this.handleUndoRemove.bind(this)
     this.handleEditTitle = this.handleEditTitle.bind(this)
-    this.handleEditTileLabels = this.handleEditTileLabels.bind(this)
   }
 
   key (name) {
@@ -89,17 +87,6 @@ export class DocumentContextMenu extends React.Component {
         key={this.key('edit')}
         onClick={actions.document.toggleDocumentEditMode}
         text='Edit mode' />
-    )
-  }
-
-  get editTileLabelsMenuItem () {
-    return (
-      <Dropdown.Item
-        icon='edit'
-        as='div'
-        key={this.key('edit')}
-        onClick={this.handleEditTileLabels}
-        text='Edit labels' />
     )
   }
 
@@ -201,11 +188,6 @@ export class DocumentContextMenu extends React.Component {
     const { doc, actions } = this.props
     actions.titleModal.showTitleModal(doc)
   }
-
-  handleEditTileLabels () {
-    const { doc, actions } = this.props
-    actions.documents.toggleDocumentLabelsEditMode(doc)
-  }
 }
 
 const mapStateToProps = (state) => ({
@@ -216,7 +198,6 @@ const mapActionsToProps = (dispatch) => (bindActions({
   notification: NotificationActions,
   graveyard: GraveyardActions,
   document: DocumentActions,
-  documents: DocumentsActions,
   titleModal: TitleModalActions
 }, dispatch))
 
