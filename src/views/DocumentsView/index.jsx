@@ -1,3 +1,5 @@
+/*eslint new-cap: ["error", { "newIsCap": false }]*/
+
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
@@ -5,6 +7,7 @@ import { Dropdown, Menu, Dimmer, Loader, Icon } from 'semantic-ui-react'
 
 import { bindActions } from 'store/helper'
 
+import { routerActions as RouterActions } from 'react-router-redux'
 import { actions as DocumentsActions } from 'store/modules/documents'
 import { actions as GraveyardActions } from 'store/modules/graveyard'
 import { actions as UrlModalActions } from 'store/modules/urlModal'
@@ -18,6 +21,7 @@ import AppBar from 'components/AppBar'
 import AppSignPanel from 'components/AppSignPanel'
 
 import * as NProgress from 'nprogress'
+import * as Mousetrap from 'mousetrap'
 
 const mapStateToProps = (state) => ({
   location: state.router.locationBeforeTransitions,
@@ -31,7 +35,8 @@ const mapActionsToProps = (dispatch) => (bindActions({
   documents: DocumentsActions,
   graveyard: GraveyardActions,
   urlModal: UrlModalActions,
-  notification: NotificationActions
+  notification: NotificationActions,
+  router: RouterActions
 }, dispatch))
 
 export class DocumentsView extends React.Component {
@@ -48,6 +53,8 @@ export class DocumentsView extends React.Component {
     return connect(mapStateToProps, mapActionsToProps)(component)
   }
 
+  mousetrap = new Mousetrap.default();
+
   constructor () {
     super()
     this.title = 'All documents'
@@ -59,6 +66,14 @@ export class DocumentsView extends React.Component {
     this.pub = false
   }
 
+  componentDidMount () {
+    this.bindKeys()
+  }
+
+  componentWillUnmount () {
+    this.unBindKeys()
+  }
+
   componentDidUpdate (prevProps) {
     const {isProcessing} = this.props.documents
     const {isProcessing: wasProcessing} = prevProps.documents
@@ -68,6 +83,20 @@ export class DocumentsView extends React.Component {
       NProgress.done()
     }
     document.title = this.title
+  }
+
+  handleKeyShiftN = (e) => this.props.actions.router.push(this.createDocumentLink);
+  handleKeyShiftU = (e) => this.props.actions.urlModal.showUrlModal();
+
+  bindKeys () {
+    this.unBindKeys()
+    this.mousetrap.bind(['shift+n'], this.handleKeyShiftN)
+    this.mousetrap.bind(['shift+u'], this.handleKeyShiftU)
+  }
+
+  unBindKeys () {
+    this.mousetrap.unbind('shift+n')
+    this.mousetrap.unbind('shift+u')
   }
 
   get createDocumentLink () {
@@ -85,8 +114,8 @@ export class DocumentsView extends React.Component {
         <Dropdown.Menu>
           <Dropdown.Header content='New document' />
           <Dropdown.Divider />
-          <Dropdown.Item as={Link} icon='write' text='From skratch' to={this.createDocumentLink}/>
-          <Dropdown.Item icon='linkify' text='From URL' onClick={actions.urlModal.showUrlModal} />
+          <Dropdown.Item as={Link} icon='write' text='Empty [shift+n]' to={this.createDocumentLink}/>
+          <Dropdown.Item icon='linkify' text='From URL [shift+u]' onClick={actions.urlModal.showUrlModal} />
         </Dropdown.Menu>
       </Menu.Item>
     )

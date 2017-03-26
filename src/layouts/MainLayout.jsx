@@ -3,8 +3,10 @@ import { connect } from 'react-redux'
 import AppMenu from 'components/AppMenu'
 import AppModal from 'components/AppModal'
 import AppNotification from 'components/AppNotification'
+import AppKeyboardHandlers from 'components/AppKeyboardHandlers'
 import DocumentTitleModal from 'components/DocumentTitleModal'
 import DocumentUrlModal from 'components/DocumentUrlModal'
+import KeymapHelpModal from 'components/KeymapHelpModal'
 import { Sizes } from 'store/modules/layout'
 import { Sidebar } from 'semantic-ui-react'
 
@@ -63,6 +65,7 @@ export class MainLayout extends React.Component {
             <AppNotification />
             <DocumentTitleModal />
             <DocumentUrlModal />
+            <KeymapHelpModal />
           </div>
         </Sidebar.Pusher>
       </Sidebar.Pushable>
@@ -80,6 +83,7 @@ export class MainLayout extends React.Component {
           <AppNotification />
           <DocumentTitleModal />
           <DocumentUrlModal />
+          <KeymapHelpModal />
         </div>
         {this.renderModal()}
       </div>
@@ -88,7 +92,11 @@ export class MainLayout extends React.Component {
 
   render () {
     const { layout } = this.props
-    return layout.size < Sizes.LARGE ? this.renderMobileLayout() : this.renderDesktopLayout()
+    return (
+      <AppKeyboardHandlers>
+        {layout.size < Sizes.LARGE ? this.renderMobileLayout() : this.renderDesktopLayout()}
+      </AppKeyboardHandlers>
+      )
   }
 }
 

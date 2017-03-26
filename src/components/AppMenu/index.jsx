@@ -103,7 +103,7 @@ export class AppMenu extends React.Component {
           <ProfilePanel />
         </Menu.Item>
         <Menu.Item as={Link}
-          title='View all documents'
+          title='View all documents [g d]'
           to={{ pathname: '/documents' }}
           activeClassName='active'
           onClick={this.handleItemClick}>
@@ -128,7 +128,7 @@ export class AppMenu extends React.Component {
           </Menu.Menu>
         </Menu.Item>
         <Menu.Item as={Link}
-          title='View sharing'
+          title='View sharing [g r]'
           to={{ pathname: '/sharing' }}
           activeClassName='active'
           onClick={this.handleItemClick}>
@@ -136,7 +136,7 @@ export class AppMenu extends React.Component {
           <Icon name='share alternate' />
         </Menu.Item>
         <Menu.Item as={Link}
-          title='View trash content'
+          title='View trash content [g t]'
           to={{ pathname: '/trash' }}
           activeClassName='active'
           onClick={this.handleItemClick}>
@@ -144,7 +144,7 @@ export class AppMenu extends React.Component {
           <Icon name='trash' />
         </Menu.Item>
         <Menu.Item as={Link}
-          title='View your settings'
+          title='View your settings [g s]'
           to={{ pathname: '/settings' }}
           activeClassName='active'
           onClick={this.handleItemClick}>

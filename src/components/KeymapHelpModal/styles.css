@@ -1,0 +1,25 @@
+.keyboard-mappings {
+  line-height: 1.5;
+}
+
+.keyboard-mappings tr td:first-child {
+  padding-right: 10px;
+  color: #586069;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.keyboard-mappings kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  line-height: 10px;
+  color: #444d56;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #c6cbd1;
+  border-bottom-color: #959da5;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #959da5;
+  margin-right: 0.2em;
+}

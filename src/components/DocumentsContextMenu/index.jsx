@@ -1,7 +1,10 @@
+/*eslint new-cap: ["error", { "newIsCap": false }]*/
+
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { Dropdown } from 'semantic-ui-react'
+import * as Mousetrap from 'mousetrap'
 
 import { bindActions } from 'store/helper'
 
@@ -20,6 +23,8 @@ export class DocumentsContextMenu extends React.Component {
     items: PropTypes.string
   };
 
+  mousetrap = new Mousetrap.default();
+
   constructor (props) {
     super(props)
     this.handleRefresh = this.handleRefresh.bind(this)
@@ -27,6 +32,25 @@ export class DocumentsContextMenu extends React.Component {
     this.handleRemoveLabel = this.handleRemoveLabel.bind(this)
     this.handleUndoRemoveLabel = this.handleUndoRemoveLabel.bind(this)
     this.handleEmptyGraveyard = this.handleEmptyGraveyard.bind(this)
+  }
+
+  componentDidMount () {
+    this.bindKeys()
+  }
+
+  componentWillUnmount () {
+    this.unBindKeys()
+  }
+
+  bindKeys () {
+    this.unBindKeys()
+    this.mousetrap.bind(['r'], this.handleRefresh)
+    this.mousetrap.bind(['o'], this.handleOrderSwitch)
+  }
+
+  unBindKeys () {
+    this.mousetrap.unbind('r')
+    this.mousetrap.unbind('o')
   }
 
   key (name) {
@@ -44,7 +68,7 @@ export class DocumentsContextMenu extends React.Component {
         icon='refresh'
         key={this.key('refresh')}
         onClick={this.handleRefresh}
-        text='Refresh'
+        text='Refresh [r]'
       />
     )
   }
@@ -52,7 +76,7 @@ export class DocumentsContextMenu extends React.Component {
   get orderMenuItem () {
     const { documents } = this.props
     const asc = documents.params && documents.params.order === 'asc'
-    const text = asc ? 'From most recent' : 'From oldest'
+    const text = asc ? 'From most recent [o]' : 'From oldest [o]'
     const order = asc ? 'ascending' : 'descending'
     return (
       <Dropdown.Item
