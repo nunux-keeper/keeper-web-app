@@ -1,7 +1,6 @@
 .SILENT :
 .PHONY : up down install deploy
 
-USERNAME:=nunux-keeper
 APPNAME:=keeper-web-app
 env?=dev
 
@@ -17,14 +16,14 @@ RUN_CUSTOM_FLAGS?=$(PORTS_FLAGS) $(ENV_FLAGS)
 
 # Docker configuartion regarding the system architecture
 BASEIMAGE=node:6-onbuild
-ARM_BASEIMAGE=hypriot/rpi-node/6-onbuild
 
 DEPLOY_DIR:=/var/www/html/app.nunux.org/keeper
 
 # Include common Make tasks
-ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-DOCKERFILES:=$(ROOT_DIR)/dockerfiles
-include $(DOCKERFILES)/common/_Makefile
+root_dir:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+makefiles:=$(root_dir)/makefiles
+include $(makefiles)/help.Makefile
+include $(makefiles)/docker.Makefile
 
 ## Start a complete infrastucture
 up:
@@ -37,7 +36,7 @@ down:
 	make -C $(DOCKERFILES)/keycloak stop rm
 
 ## Install builded static files (needs root privileges)
-install: build
+install: image
 	echo "Install generated files at deployment location..."
 	mkdir -p $(DEPLOY_DIR)
 	$(DOCKER) run --rm -v $(DEPLOY_DIR):$(VOLUME_CONTAINER_PATH)/build $(IMAGE) run build

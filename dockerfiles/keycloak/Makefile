@@ -14,6 +14,9 @@ endef
 
 SHELL_CUSTOM_FLAGS=-P
 
-ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+# Include common Make tasks
+root_dir:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+makefiles:=$(root_dir)/../../makefiles
+include $(makefiles)/help.Makefile
+include $(makefiles)/docker.Makefile
 
-include $(ROOT_DIR)/../common/_Makefile
