@@ -14,6 +14,9 @@ PORTS_FLAGS=-p $(PORT):3000
 # Custom run flags
 RUN_CUSTOM_FLAGS?=$(PORTS_FLAGS) $(ENV_FLAGS)
 
+# Overide RUN flags
+RUN_FLAGS?=--rm -it --name $(APPNAME) $(RUN_CUSTOM_FLAGS)
+
 # Docker configuartion regarding the system architecture
 BASEIMAGE=node:6-onbuild
 
