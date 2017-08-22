@@ -4,6 +4,10 @@
   border-radius: 0;
 }
 
+#AppMenu .header {
+  font-weight: normal;
+}
+
 #AppMenu > .header.item {
   background: #2185d0;
   color: rgba(255,255,255,.9);
@@ -16,9 +20,20 @@
   width: 100%;
   color: rgba(255,255,255,.5);
   font-variant: small-caps;
+  font-weight: bold;
 }
 
-#AppMenu a > .icon, #AppMenu a > .icons {
+#AppMenu .header > a {
   float: right;
-  font-size: 1.2em;
+  color: inherit;
 }
+
+#AppMenu .tags,
+#AppMenu .menu a > .icon, #AppMenu .menu a > .icons,
+#AppMenu > a.item > .icon, #AppMenu > a.item > .icons {
+  margin: 0 .5em 0 0;
+  float: none;
+  font-size: 1.2em;
+  width: 1em;
+}
+

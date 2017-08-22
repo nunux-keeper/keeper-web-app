@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { bindActions } from 'store/helper'
+
 import AppMenu from 'components/AppMenu'
 import AppModal from 'components/AppModal'
 import AppNotification from 'components/AppNotification'
@@ -7,6 +9,9 @@ import AppKeyboardHandlers from 'components/AppKeyboardHandlers'
 import DocumentTitleModal from 'components/DocumentTitleModal'
 import DocumentUrlModal from 'components/DocumentUrlModal'
 import KeymapHelpModal from 'components/KeymapHelpModal'
+
+import { actions as layoutActions } from 'store/modules/layout'
+
 import { Sizes } from 'store/modules/layout'
 import { Sidebar } from 'semantic-ui-react'
 
@@ -18,6 +23,11 @@ export class MainLayout extends React.Component {
     location: PropTypes.object,
     layout: PropTypes.object.isRequired
   };
+
+  constructor () {
+    super()
+    this.handleDimmerClick = this.handleDimmerClick.bind(this)
+  }
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.location !== this.props.location) {
@@ -39,6 +49,14 @@ export class MainLayout extends React.Component {
       nextProps.layout !== this.props.layout
   }
 
+  handleDimmerClick (event) {
+    // console.log(event)
+    const { actions, layout } = this.props
+    if (layout.size < Sizes.LARGE && layout.sidebar.visible) {
+      actions.layout.toggleSidebar()
+    }
+  }
+
   renderModal () {
     if (this.previousChildren) {
       const { location, children } = this.props
@@ -58,7 +76,7 @@ export class MainLayout extends React.Component {
         <Sidebar animation='push' visible={layout.sidebar.visible} >
           <AppMenu />
         </Sidebar>
-        <Sidebar.Pusher dimmed={layout.sidebar.visible}>
+        <Sidebar.Pusher dimmed={layout.sidebar.visible} onClick={this.handleDimmerClick}>
           <div>
             {this.previousChildren || children}
             {this.renderModal()}
@@ -105,5 +123,10 @@ const mapStateToProps = (state) => ({
   layout: state.layout
 })
 
-export default connect(mapStateToProps)(MainLayout)
+const mapActionsToProps = (dispatch) => (bindActions({
+  layout: layoutActions
+}, dispatch))
+
+
+export default connect(mapStateToProps, mapActionsToProps)(MainLayout)
 

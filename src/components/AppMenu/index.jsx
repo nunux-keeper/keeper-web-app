@@ -59,8 +59,8 @@ export class AppMenu extends React.Component {
         title={`View label: ${label.label}`}
         activeClassName='active'
         to={{ pathname: `/labels/${label.id}` }} >
-        {label.label}
         {this.getLabelIcon(label)}
+        {label.label}
       </Menu.Item>
     )
   }
@@ -81,7 +81,7 @@ export class AppMenu extends React.Component {
   }
 
   handleItemClick (event) {
-    console.log(event)
+    // console.log(event)
     const { actions, layout } = this.props
     if (layout.size < Sizes.LARGE) {
       actions.layout.toggleSidebar()
@@ -107,24 +107,22 @@ export class AppMenu extends React.Component {
           to={{ pathname: '/documents' }}
           activeClassName='active'
           onClick={this.handleItemClick}>
-          Documents
           <Icon name='grid layout'/>
+          Documents
         </Menu.Item>
         <Menu.Item>
-          <Menu.Header>Labels</Menu.Header>
-          <Menu.Menu>
-            {this.labels}
-            <Menu.Item as={Link}
+          <Menu.Header>
+            <Icon name='tags' />
+            Labels
+            <Link
               to={{ pathname: '/labels/create', state: {modal: true, returnTo: location, title: 'Create new label'} }}
               onClick={this.handleItemClick}
-              activeClassName='active'
               title='Create new label'>
-              Create a label
-              <Icon.Group>
-                <Icon name='tag' />
-                <Icon corner name='add' />
-              </Icon.Group>
-            </Menu.Item>
+              <Icon link name='add'/>
+            </Link>
+          </Menu.Header>
+          <Menu.Menu>
+            {this.labels}
           </Menu.Menu>
         </Menu.Item>
         <Menu.Item as={Link}
@@ -132,24 +130,24 @@ export class AppMenu extends React.Component {
           to={{ pathname: '/sharing' }}
           activeClassName='active'
           onClick={this.handleItemClick}>
-          Sharing
           <Icon name='share alternate' />
+          Sharing
         </Menu.Item>
         <Menu.Item as={Link}
           title='View trash content [g t]'
           to={{ pathname: '/trash' }}
           activeClassName='active'
           onClick={this.handleItemClick}>
-          Trash
           <Icon name='trash' />
+          Trash
         </Menu.Item>
         <Menu.Item as={Link}
           title='View your settings [g s]'
           to={{ pathname: '/settings' }}
           activeClassName='active'
           onClick={this.handleItemClick}>
-          Settings
           <Icon name='settings' />
+          Settings
         </Menu.Item>
       </Menu>
     )

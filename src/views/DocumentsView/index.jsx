@@ -112,10 +112,8 @@ export class DocumentsView extends React.Component {
     return (
       <Menu.Item as={Dropdown} className='right hack plus' title='Add new document'>
         <Dropdown.Menu>
-          <Dropdown.Header content='New document' />
-          <Dropdown.Divider />
-          <Dropdown.Item as={Link} icon='write' text='Empty [shift+n]' to={this.createDocumentLink}/>
-          <Dropdown.Item icon='linkify' text='From URL [shift+u]' onClick={actions.urlModal.showUrlModal} />
+          <Dropdown.Item as={Link} icon='write' text='Empty [shift+n]' to={this.createDocumentLink} title='Add a brand new document'/>
+          <Dropdown.Item icon='linkify' text='From URL [shift+u]' onClick={actions.urlModal.showUrlModal} title='Add a document from an URL' />
         </Dropdown.Menu>
       </Menu.Item>
     )

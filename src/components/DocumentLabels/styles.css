@@ -1,3 +1,6 @@
+.DocumentLabels > a {
+  color: grey;
+}
 .DocumentLabels .labels {
   display: inline-block;
 }
