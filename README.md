@@ -1,33 +1,28 @@
-NUNUX Keeper Web App
-====================
+# NUNUX Keeper Web App
 
 > Your personal content curation service.
 
 Nunux Keeper allow you to collect, organize, and display web documents.
-This project is the official web frontend.
+
+**This project is the official web frontend.**
 
 ![Screenshot](screenshot.png)
 
-Table of Contents
------------------
+## Table of Contents
 1. [Requirements](#requirements)
 1. [Features](#features)
-1. [Getting Started](#getting-started)
-1. [Usage](#usage)
+1. [Installation](#installation)
+1. [Development server](#development-server)
+1. [Other commands](#other-commands)
 1. [Under the hood](#under-the-hood)
 1. [Structure](#structure)
-1. [Configuration](#configuration)
-1. [Deployment](#deployment)
 
-
-Requirements
-------------
+## Requirements
 
 Docker OR Node `^5.0.0`
 
 
-Features
---------
+## Features
 
 * Welcome page
 * Login with external identity provider (Google, Twitter, etc.)
@@ -37,11 +32,34 @@ Features
 * Search documents with a powerful search engine
 * Share documents
 
+## Configuration
 
-Getting Started
----------------
+Basic project configuration can be found in `etc/dev.env`. Here you'll be able
+to redefine some parameters:
 
-Just clone the repo and install the necessary node modules:
+* REACT_APP_API_ROOT: Nunux Keeper API endpoint
+* REACT_APP_DEBUG: Activate debug mode
+
+## Installation
+
+> Note that this project is "only" the web front end of the backend API of Linux
+> Keeper. If you want to use your own API server you have to install first this
+> project: [keeper-core-api](https://github.com/nunux-keeper/keeper-core-api)
+
+Once configured for your needs (see section above), you can build the static
+Web App into the directory of your choice:
+
+```bash
+$ git clone https://github.com/nunux-keeper/keeper-web-app.git
+$ cd keeper-web-app
+$ make install DEPLOY_DIR=/var/www/html
+```
+
+Then, you can serve this directory with your favorite HTTP server.
+
+## Development server
+
+With Node:
 
 ```shell
 $ git clone https://github.com/nunux-keeper/keeper-web-app.git
@@ -56,18 +74,16 @@ Or with Docker:
 ```shell
 $ git clone https://github.com/nunux-keeper/keeper-web-app.git
 $ cd keeper-web-app
-$ make build start logs  # Build Docker image and start it
+$ make image start  # Build Docker image and start it
 ```
 
-
-Usage
------
+## Other commands
 
 Here's a brief summary of available Docker commands:
 
 * `make help` - Show available commands.
 * `make volume` - Create development volume.
-* `make build` - Build Docker image.
+* `make image` - Build Docker image.
 * `make shell` - Start container with shell access.
 * `make mount shell` - Start container with shell access using the dev volume.
 * `make start` - Start container in background.
@@ -76,7 +92,7 @@ Here's a brief summary of available Docker commands:
 * `make logs` - View container logs.
 * `make rm` - Removing the container.
 * `make clean` - Removing the container and the image.
-* `make install` - Install container as a systemd service.
+* `make install` - Install generated site into the deployment directory.
 
 Here's a brief summary of available NPM commands:
 
@@ -85,8 +101,7 @@ Here's a brief summary of available NPM commands:
 * `npm run test` - Runs unit tests.
 * `npm run build-css`- Runs SASS to generate CSS file.
 
-Under the hood
---------------
+## Under the hood
 
 * [React](https://github.com/facebook/react)
 * [Redux](http://redux.js.org/)
@@ -96,8 +111,7 @@ Under the hood
 * [ESLint](http://eslint.org)
 
 
-Structure
----------
+## Structure
 
 Here the folder structure:
 
@@ -120,21 +134,6 @@ Here the folder structure:
 │   └── index.js        # Application entry point
 └── test                # Unit tests
 ```
-
-Configuration
--------------
-
-Basic project configuration can be found in `.env`. Here you'll be able to
-redefine some parameters:
-
-* REACT_APP_API_ROOT: Nunux Keeper API endpoint
-* REACT_APP_DEBUG: Activate debug mode
-
-Deployment
-----------
-
-Out of the box, this app is deployable by serving the `~/build` folder generated
-by `npm run build`.
 
 ----------------------------------------------------------------------
 
