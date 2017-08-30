@@ -2,7 +2,10 @@ import React from 'react'
 
 import AppBar from 'components/AppBar'
 
+import { Tab } from 'semantic-ui-react'
+
 import BookmarkletTab from 'views/SettingsView/BookmarkletTab'
+import ApiKeyTab from 'views/SettingsView/ApiKeyTab'
 
 export default class SettingsView extends React.Component {
   componentDidMount () {
@@ -16,25 +19,17 @@ export default class SettingsView extends React.Component {
     )
   }
 
-  get settings () {
-    return (
-      <div>
-        <div className='ui pointing secondary menu' ref='menu'>
-          <a className='item active' data-tab='bookmarklet'>
-            <h5 className='ui header'>
-              <i className='bookmark icon'></i>
-              <div className='content'>
-                Bookmarklet
-                <div className='sub header'>Improve  your browser</div>
-              </div>
-            </h5>
-          </a>
-        </div>
-        <div className='ui bottom attached tab active' data-tab='bookmarklet'>
-          <BookmarkletTab active />
-        </div>
-      </div>
-    )
+  get panes () {
+    return [
+      {
+        menuItem: { key: 'bm', icon: 'bookmark', content: 'Bookmarklet' },
+        render: () => <Tab.Pane><BookmarkletTab /></Tab.Pane>
+      },
+      {
+        menuItem: { key: 'api', icon: 'key', content: 'API key' },
+        render: () => <Tab.Pane><ApiKeyTab /></Tab.Pane>
+      }
+    ]
   }
 
   render () {
@@ -42,7 +37,7 @@ export default class SettingsView extends React.Component {
       <div className='view'>
         {this.header}
         <div className='viewContent'>
-          {this.settings}
+          <Tab panes={this.panes} />
         </div>
       </div>
     )
