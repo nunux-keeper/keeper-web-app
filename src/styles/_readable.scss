@@ -5,7 +5,7 @@
   font-variant: normal;
   font-weight: normal;
   margin: 1em 0;
-  img { max-width: 100% };
+  img, figure { max-width: 100%; margin: 0; };
   p { color: #111; font-weight: 300;}
   p img { margin: 0; padding: 0; }
   h1,h2, h3,h4,h5,h6 { font-weight: normal; color: #333; }
