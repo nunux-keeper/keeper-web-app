@@ -20,7 +20,7 @@ const fetchProfileRequest = createRequestAction(FETCH_PROFILE)
 const fetchProfileFailure = createFailureAction(FETCH_PROFILE)
 const fetchProfileSuccess = createSuccessAction(FETCH_PROFILE)
 
-export const fetchProfile = () => {
+export const fetchProfile = (withStats = false) => {
   return (dispatch, getState) => {
     const {profile} = getState()
     if (profile.isProcessing) {
@@ -29,7 +29,7 @@ export const fetchProfile = () => {
     }
     console.debug('Fetching profile...')
     dispatch(fetchProfileRequest())
-    return ProfileApi.get()
+    return ProfileApi.get({withStats})
       .then(
         res => dispatchAction(dispatch, fetchProfileSuccess(res)),
         err => dispatchAction(dispatch, fetchProfileFailure(err))

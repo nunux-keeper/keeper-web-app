@@ -5,9 +5,11 @@ import { createAction } from 'redux-actions'
 // - request action
 // - success action
 // - failure action
+// - progress action
 export const createRequestAction = name => createAction(name, null, () => ({request: true}))
 export const createSuccessAction = name => createAction(name, null, () => ({success: true}))
 export const createFailureAction = name => createAction(name, null, () => ({failure: true}))
+export const createProgressAction = name => createAction(name, null, () => ({progress: true}))
 
 /**
  * Dispatch an action and return a rpromise related to the action payload type.

@@ -1,8 +1,8 @@
 import AbstractApi from 'api/common/AbstractApi'
 
 export class ProfileApi extends AbstractApi {
-  get () {
-    return this.fetch('/profiles/current')
+  get (query) {
+    return this.fetch('/profiles/current', {query})
   }
 
   update (update) {

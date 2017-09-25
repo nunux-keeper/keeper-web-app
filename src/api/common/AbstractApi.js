@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import authProvider from 'helpers/AuthProvider'
+import 'event-source-polyfill'
 
 export default class AbstractApi {
   constructor () {
@@ -10,7 +11,7 @@ export default class AbstractApi {
   buildQueryString (query) {
     if (query) {
       const params = Object.keys(query).reduce((acc, key) => {
-        if (query[key]) {
+        if (query.hasOwnProperty(key)) {
           acc.push(
             encodeURIComponent(key) + '=' + encodeURIComponent(query[key])
           )
@@ -25,6 +26,40 @@ export default class AbstractApi {
 
   resolveUrl (url, query) {
     return this.apiRoot + url + this.buildQueryString(query)
+  }
+
+  sse (url, params) {
+    params = Object.assign({
+      headers: {
+        Accept: 'application/json'
+      },
+      credentials: 'include'
+    }, params)
+    const {headers, query} = params
+    let authz = Promise.resolve()
+    if (params.credentials !== 'none') {
+      authz = authProvider.updateToken().then((updated) => {
+        if (updated || this.firstCall) {
+          // Token was updated or it's the first API call.
+          // Authorization header is set in order to update the API cookie.
+          headers['Authorization'] = `Bearer ${authProvider.getToken()}`
+          this.firstCall = false
+        }
+        return Promise.resolve()
+      }, (err) => {
+        // Fatal error from keycloak server. Mainly due to CORS.
+        // Forced to reload the page.
+        // FIXME Find a better way to handle Keycloak errors.
+        console.error('Fatal error when updating the token', err)
+        location.reload()
+      })
+    }
+
+    const _url = this.resolveUrl(url, query)
+    return authz.then(() => {
+      const source = new EventSource(_url, {headers, withCredentials: params.credentials !== 'none'})
+      return Promise.resolve(source)
+    })
   }
 
   fetch (url, params) {

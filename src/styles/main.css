@@ -385,8 +385,9 @@ th {
   font-weight: normal;
   margin: 1em 0;
   /* From Tripoli  */ }
-  .readable img {
-    max-width: 100%; }
+  .readable img, .readable figure {
+    max-width: 100%;
+    margin: 0; }
   .readable p {
     color: #111;
     font-weight: 300; }

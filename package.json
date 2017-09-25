@@ -26,6 +26,7 @@
   },
   "homepage": "https://app.nunux.org/keeper",
   "dependencies": {
+    "event-source-polyfill": "0.0.9",
     "mousetrap": "^1.6.0",
     "node-sass": "^3.13.1",
     "nprogress": "^0.2.0",

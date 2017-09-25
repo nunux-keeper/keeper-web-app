@@ -6,6 +6,7 @@ import { Tab } from 'semantic-ui-react'
 
 import BookmarkletTab from 'views/SettingsView/BookmarkletTab'
 import ApiKeyTab from 'views/SettingsView/ApiKeyTab'
+import ExportTab from 'views/SettingsView/ExportTab'
 
 export default class SettingsView extends React.Component {
   componentDidMount () {
@@ -28,6 +29,10 @@ export default class SettingsView extends React.Component {
       {
         menuItem: { key: 'api', icon: 'key', content: 'API key' },
         render: () => <Tab.Pane><ApiKeyTab /></Tab.Pane>
+      },
+      {
+        menuItem: { key: 'exp', icon: 'download', content: 'Export' },
+        render: () => <Tab.Pane><ExportTab /></Tab.Pane>
       }
     ]
   }
