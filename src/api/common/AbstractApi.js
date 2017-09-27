@@ -11,7 +11,7 @@ export default class AbstractApi {
   buildQueryString (query) {
     if (query) {
       const params = Object.keys(query).reduce((acc, key) => {
-        if (query.hasOwnProperty(key)) {
+        if (query.hasOwnProperty(key) && query[key] != null) {
           acc.push(
             encodeURIComponent(key) + '=' + encodeURIComponent(query[key])
           )
