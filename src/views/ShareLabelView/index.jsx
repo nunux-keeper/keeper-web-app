@@ -6,7 +6,7 @@ import { bindActions } from '../../store/helper'
 import DateHelper from '../../helpers/DateHelper'
 
 import { routerActions as RouterActions } from 'react-router-redux'
-import { actions as LabelActions } from '../../store/modules/label'
+import LabelActions from '../../store/label/actions'
 import { actions as SharingActions } from '../../store/modules/sharing'
 import { actions as NotificationActions } from '../../store/modules/notification'
 

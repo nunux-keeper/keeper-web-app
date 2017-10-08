@@ -5,7 +5,7 @@ import { Form, Button } from 'semantic-ui-react'
 import { bindActions } from 'store/helper'
 
 import { routerActions as RouterActions } from 'react-router-redux'
-import { actions as LabelActions } from 'store/modules/label'
+import LabelActions from 'store/label/actions'
 import { actions as NotificationActions } from 'store/modules/notification'
 
 import ColorSwatch from 'components/ColorSwatch'
@@ -36,7 +36,6 @@ export class LabelView extends React.Component {
 
   componentWillReceiveProps (nextProps) {
     if (
-      !nextProps.label.isFetching &&
       !nextProps.label.isProcessing &&
       nextProps.label.current
     ) {

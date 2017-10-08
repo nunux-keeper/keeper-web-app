@@ -3,6 +3,9 @@ import { routerReducer as router } from 'react-router-redux'
 import syncReducers from './modules'
 
 import profile from './profile'
+import label from './label'
+import webhook from './webhook'
+import webhooks from './webhooks'
 import exports from './exports'
 
 export const makeRootReducer = (asyncReducers) => {
@@ -10,6 +13,9 @@ export const makeRootReducer = (asyncReducers) => {
     router,
     ...syncReducers,
     profile,
+    label,
+    webhook,
+    webhooks,
     exports,
     ...asyncReducers
   })

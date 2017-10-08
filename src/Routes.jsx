@@ -15,6 +15,7 @@ import DocumentsView from 'views/DocumentsView'
 import BookmarkletView from 'views/BookmarkletView'
 import GraveyardView from 'views/GraveyardView'
 import SettingsView from 'views/SettingsView'
+import WebhookView from 'views/WebhookView'
 import SharingListView from 'views/SharingListView'
 
 import { requireAuthentication } from 'middlewares/Authentication'
@@ -34,6 +35,9 @@ import {
   fetchSharing,
   fetchGraveyard
 } from 'middlewares/Context'
+
+const WebhookCreateView = props => <WebhookView {...props} mode='create' />
+const WebhookEditView = props => <WebhookView {...props} mode='edit' />
 
 export default (store) => (
   <Route path='/' component={RootLayout}>
@@ -56,8 +60,11 @@ export default (store) => (
       <Route path='sharing' component={fetchSharing(SharingListView)} />
       <Route path='sharing/:sharingId' component={fetchSharedDocuments(SharedDocumentsView)} />
       <Route path='sharing/:sharingId/:docId' component={fetchSharedDocument(DocumentView)} />
-      <Route path='settings' component={SettingsView} />
+      <Route path='settings/:tab' component={SettingsView} />
+      <Route path='settings/webhooks/create' component={WebhookCreateView} />
+      <Route path='settings/webhooks/:id' component={WebhookEditView} />
     </Route>
+    <Redirect from='/settings' to='/settings/bookmarklet' />
     <Redirect from='*' to='/documents' />
   </Route>
 )

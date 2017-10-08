@@ -20,9 +20,9 @@ export const createProgressAction = name => createAction(name, null, () => ({pro
 export const dispatchAction = function (dispatch, action) {
   // The action is dispatched...
   dispatch(action)
-  // If action the action payload is an instance of Error
+  // If action is a failure
   // then the promise is rejected with this error
-  if (action.error) {
+  if (action.meta.failure) {
     console.error(action.payload)
     return Promise.reject(action.payload)
   }
@@ -62,3 +62,27 @@ export const bindActions = function (actions, dispatch) {
   }, {})
   return {actions: result}
 }
+
+/**
+ * Common action handler for CRUD operations.
+ * Manage a classic CRUD state of a object.
+ * @param {Object} state The global state
+ * @param {Object} action The applied action
+ * @return the altered store
+ */
+export const commonActionHandler = function (state, action) {
+  const update = {
+    isProcessing: false,
+    error: null
+  }
+  const {request, success, failure} = action.meta
+  if (failure) {
+    update.error = action.payload
+  } else if (success) {
+    update.current = action.payload
+  } else if (request) {
+    update.isProcessing = true
+  }
+  return Object.assign({}, state, update)
+}
+

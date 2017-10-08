@@ -11,7 +11,7 @@ import { bindActions } from 'store/helper'
 import { routerActions as RouterActions } from 'react-router-redux'
 import { actions as DocumentsActions } from 'store/modules/documents'
 import { actions as GraveyardActions } from 'store/modules/graveyard'
-import { actions as LabelActions } from 'store/modules/label'
+import LabelActions from 'store/label/actions'
 import { actions as NotificationActions } from 'store/modules/notification'
 
 export class DocumentsContextMenu extends React.Component {

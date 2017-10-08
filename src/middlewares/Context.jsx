@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 
 import { bindActions } from 'store/helper'
 
-import { actions as labelActions } from 'store/modules/label'
+import labelActions from 'store/label/actions'
 import { actions as sharingActions } from 'store/modules/sharing'
 import { actions as documentsActions } from 'store/modules/documents'
 import { actions as documentActions } from 'store/modules/document'
