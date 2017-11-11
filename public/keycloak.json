@@ -1,5 +1,5 @@
 {
-  "realm": "nunux.org",
+  "realm": "nunux-keeper",
   "realm-public-key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC7kgrRHj3XvKylJmt4uoqXN/EU\nK8+GCuWEvWk2uaOoIJhsqqTsxR7Y4CLkdAQS05y3YJK/FT4wNIMmyMZGCCvZd6iO\nLA4u7DuoQs3/WTQfwQzu7ZLDK1xvo9Pk8wMZdAQ8uCYaeffNpVLOcSzX3v7mEoBa\nMOsTa4smYTcSs9/G3QIDAQAB\n-----END PUBLIC KEY-----\n",
   "auth-server-url": "https://login.nunux.org/auth",
   "ssl-required": "external",
