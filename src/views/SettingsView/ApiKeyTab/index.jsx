@@ -48,7 +48,7 @@ class ApiKeyTab extends React.Component {
   get apiKey () {
     const profile = this.props.profile.current
 
-    if (profile.apiKey) {
+    if (profile && profile.apiKey) {
       return (
         <Message success>
           <Message.Content>
@@ -75,7 +75,7 @@ class ApiKeyTab extends React.Component {
         <Header size='small'>API key</Header>
         <Divider />
         <p>
-          To fully access this API you have to use an OpenID Connect client and claim a valid access token.
+          To fully access the API you have to use an OpenID Connect client and claim a valid access token.
           It's the <b>standard</b> way to interact with the API.<br/>
           But if you want something a bit simpler you have the possibility to use an API key.
           You only have to use this key as a basic password to acces the API.

@@ -48,7 +48,7 @@ export class ExportTab extends React.Component {
           <p>{error.toString()}</p>
         </Message>
       )
-    } else {
+    } else if (current != null) {
       const usage = Math.ceil(current.storageUsage / 1048576)
       return (
         <Statistic.Group widths='four' size='small'>

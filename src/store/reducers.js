@@ -6,6 +6,8 @@ import profile from './profile'
 import label from './label'
 import webhook from './webhook'
 import webhooks from './webhooks'
+import client from './client'
+import clients from './clients'
 import exports from './exports'
 
 export const makeRootReducer = (asyncReducers) => {
@@ -16,6 +18,8 @@ export const makeRootReducer = (asyncReducers) => {
     label,
     webhook,
     webhooks,
+    client,
+    clients,
     exports,
     ...asyncReducers
   })

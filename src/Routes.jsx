@@ -16,6 +16,7 @@ import BookmarkletView from 'views/BookmarkletView'
 import GraveyardView from 'views/GraveyardView'
 import SettingsView from 'views/SettingsView'
 import WebhookView from 'views/WebhookView'
+import ApiClientView from 'views/ApiClientView'
 import SharingListView from 'views/SharingListView'
 
 import { requireAuthentication } from 'middlewares/Authentication'
@@ -38,6 +39,9 @@ import {
 
 const WebhookCreateView = props => <WebhookView {...props} mode='create' />
 const WebhookEditView = props => <WebhookView {...props} mode='edit' />
+
+const ApiClientCreateView = props => <ApiClientView {...props} mode='create' />
+const ApiClientEditView = props => <ApiClientView {...props} mode='edit' />
 
 export default (store) => (
   <Route path='/' component={RootLayout}>
@@ -63,6 +67,8 @@ export default (store) => (
       <Route path='settings/:tab' component={SettingsView} />
       <Route path='settings/webhooks/create' component={WebhookCreateView} />
       <Route path='settings/webhooks/:id' component={WebhookEditView} />
+      <Route path='settings/clients/create' component={ApiClientCreateView} />
+      <Route path='settings/clients/:id' component={ApiClientEditView} />
     </Route>
     <Redirect from='/settings' to='/settings/bookmarklet' />
     <Redirect from='*' to='/documents' />

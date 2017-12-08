@@ -21,7 +21,8 @@ export class MainLayout extends React.Component {
   static propTypes = {
     children: PropTypes.node,
     location: PropTypes.object,
-    layout: PropTypes.object.isRequired
+    layout: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired
   };
 
   constructor () {
@@ -126,7 +127,6 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = (dispatch) => (bindActions({
   layout: layoutActions
 }, dispatch))
-
 
 export default connect(mapStateToProps, mapActionsToProps)(MainLayout)
 

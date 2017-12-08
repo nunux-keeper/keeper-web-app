@@ -19,7 +19,8 @@ const facade = {
   },
   getToken: () => keycloak.token,
   getAccountUrl: () => keycloak.createAccountUrl(),
-  getLoginUrl: (params) => keycloak.createLoginUrl(params)
+  getLoginUrl: (params) => keycloak.createLoginUrl(params),
+  getRealmUrl: () => `${keycloak.authServerUrl}/realms/${encodeURIComponent(keycloak.realm)}`
 }
 
 export default facade

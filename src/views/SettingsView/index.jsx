@@ -10,6 +10,7 @@ import { routerActions as RouterActions } from 'react-router-redux'
 
 import BookmarkletTab from 'views/SettingsView/BookmarkletTab'
 import ApiKeyTab from 'views/SettingsView/ApiKeyTab'
+import ApiClientsTab from 'views/SettingsView/ApiClientsTab'
 import ExportTab from 'views/SettingsView/ExportTab'
 import WebhooksTab from 'views/SettingsView/WebhooksTab'
 
@@ -20,6 +21,9 @@ const PANES = [
   }, {
     menuItem: { key: 'api-key', icon: 'key', content: 'API key' },
     render: () => <Tab.Pane><ApiKeyTab /></Tab.Pane>
+  }, {
+    menuItem: { key: 'api-clients', icon: 'protect', content: 'API clients' },
+    render: () => <Tab.Pane><ApiClientsTab /></Tab.Pane>
   }, {
     menuItem: { key: 'export', icon: 'download', content: 'Export' },
     render: () => <Tab.Pane><ExportTab /></Tab.Pane>
