@@ -514,6 +514,11 @@ body.dimmable.undetached.dimmed .pusher {
 .ui.label .icons {
   margin: 0 .75em 0 0; }
 
+@media screen and (max-width: 640px) {
+  .ui.attached.tabular.menu {
+    overflow-x: auto;
+    overflow-y: hidden; } }
+
 html {
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif; }
