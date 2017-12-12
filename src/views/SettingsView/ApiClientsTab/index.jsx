@@ -186,8 +186,8 @@ class ApiClientsTab extends React.Component {
         <Header size='small'>API clients</Header>
         <Divider />
         <p>
-          To fully access the <a href={`${API_ROOT}/../api-docs/`} target='_blank'>API</a>
-          you have to use an OpenID Connect client and claim a valid access token.
+          To fully access the <a href={`${API_ROOT}/../api-docs/`} target='_blank'>API</a> you
+          have to use an OpenID Connect client and claim a valid access token.
           Use this screen to configure your client app credentials.
         </p>
         <Dimmer.Dimmable dimmed={isProcessing} >
