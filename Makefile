@@ -1,50 +1,63 @@
 .SILENT :
-.PHONY : up down install deploy
 
+# Image name
+USERNAME:=ncarlier
 APPNAME:=keeper-web-app
 env?=dev
 
-# Default configuration
-ENV_FLAGS?=--env-file="./etc/default/$(env).env"
+# Compose files
+COMPOSE_FILES?=-f docker-compose.yml
 
-# Define port
-PORT?=3000
-PORTS_FLAGS=-p $(PORT):3000
-
-# Custom run flags
-RUN_CUSTOM_FLAGS?=$(PORTS_FLAGS) $(ENV_FLAGS)
-
-# Overide RUN flags
-RUN_FLAGS?=--rm -it --name $(APPNAME) $(RUN_CUSTOM_FLAGS)
-
-# Docker configuartion regarding the system architecture
-BASEIMAGE=node:6-onbuild
-
+# Deploy directory
 DEPLOY_DIR:=/var/www/html/app.nunux.org/keeper
 
 # Include common Make tasks
 root_dir:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 makefiles:=$(root_dir)/makefiles
 include $(makefiles)/help.Makefile
-include $(makefiles)/docker.Makefile
+include $(makefiles)/docker/compose.Makefile
 
-## Start a complete infrastucture
-up:
-	echo "Starting Keycloak ..."
-	make -C $(DOCKERFILES)/keycloak stop rm start
+all: help
 
-## Stop the infrastucture
-down:
-	echo "Stoping Keycloak ..."
-	make -C $(DOCKERFILES)/keycloak stop rm
+# Get Docker binaries version
+infos:
+	echo "Using $(shell docker --version)"
+	echo "Using $(shell docker-compose --version)"
+.PHONY: infos
 
-## Install builded static files (needs root privileges)
-install: image
+## Build Docker image
+build:
+	docker build --rm -t $(USERNAME)/$(APPNAME) .
+.PHONY: build
+
+## Run the container in test mode
+test:
+	echo "Running tests..."
+	CMD=test docker-compose $(COMPOSE_FILES) up --no-deps --no-build --abort-on-container-exit --exit-code-from app app
+.PHONY: test
+
+## Run the container in foreground
+start:
+	echo "Running container..."
+	docker-compose $(COMPOSE_FILES) up --no-deps --no-build --abort-on-container-exit --exit-code-from app app
+.PHONY: start
+
+## Start required services
+deploy: infos compose-up
+.PHONY: up
+
+## Stop all services
+undeploy: compose-down-force
+.PHONY: down
+
+## Show services logs
+logs: compose-logs
+.PHONY: logs
+
+## Install as a service (needs root privileges)
+install: build
 	echo "Install generated files at deployment location..."
 	mkdir -p $(DEPLOY_DIR)
-	$(DOCKER) run --rm -v $(DEPLOY_DIR):$(VOLUME_CONTAINER_PATH)/build $(IMAGE) run build
+	docker run --rm -v $(DEPLOY_DIR):/usr/src/app/build $(USERNAME)/$(APPNAME) run build
+.PHONY: install
 
-## Deploy application
-deploy:
-	echo "Deploying application..."
-	git push deploy

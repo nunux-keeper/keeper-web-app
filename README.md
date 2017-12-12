@@ -21,7 +21,6 @@ Nunux Keeper allow you to collect, organize, and display web documents.
 
 Docker OR Node `^5.0.0`
 
-
 ## Features
 
 * Welcome page
@@ -74,7 +73,7 @@ Or with Docker:
 ```shell
 $ git clone https://github.com/nunux-keeper/keeper-web-app.git
 $ cd keeper-web-app
-$ make image start  # Build Docker image and start it
+$ make build start  # Build Docker image and start it
 ```
 
 ## Other commands
@@ -82,16 +81,12 @@ $ make image start  # Build Docker image and start it
 Here's a brief summary of available Docker commands:
 
 * `make help` - Show available commands.
-* `make volume` - Create development volume.
-* `make image` - Build Docker image.
-* `make shell` - Start container with shell access.
-* `make mount shell` - Start container with shell access using the dev volume.
-* `make start` - Start container in background.
-* `make mount start` - Start container in background using the dev volume.
-* `make stop` - Stop background running container.
+* `make build` - Build Docker image.
+* `make test` - Start container with tests.
+* `make start` - Start container in foreground.
+* `make deploy` - Start container in background.
+* `make undeploy` - Stop container in background.
 * `make logs` - View container logs.
-* `make rm` - Removing the container.
-* `make clean` - Removing the container and the image.
 * `make install` - Install generated site into the deployment directory.
 
 Here's a brief summary of available NPM commands:
@@ -118,7 +113,8 @@ Here the folder structure:
 ```
 .
 ├── build               # Builded website
-├── dockerfiles         # Docker files
+├── etc                 # Configuration
+├── makefiles           # Makefiles
 ├── public              # Static files to serve as is
 ├── src                 # Application source code
 │   ├── api             # Backend API connector (real and mock)

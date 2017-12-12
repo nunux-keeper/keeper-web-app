@@ -1,5 +1,4 @@
-.SILENT :
-.PHONY : help
+.SILENT:
 
 ## This help screen
 help:
@@ -13,4 +12,5 @@ help:
 		} \
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
+.PHONY: help
 
