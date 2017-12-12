@@ -7,8 +7,6 @@ services:
     image: "ncarlier/keeper-web-app:latest"
     env_file: "etc/default/${ENV:-dev}.env"
     command: "${CMD:-start}"
-    environment:
-      - APP_DATABASE_URI=${APP_DATABASE_URI:-mongodb://mongo/keeper}
     volumes:
       - ${PWD}:${APP_SRC_DIR:-/usr/src/app_src}
     ports:
