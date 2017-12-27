@@ -26,6 +26,9 @@ export class DocumentContent extends React.Component {
     super(props)
     this.handleEditorChange = this.handleEditorChange.bind(this)
     this.handleContentChange = this.handleContentChange.bind(this)
+    this.state = {
+      content: props.doc.content
+    }
   }
 
   componentDidMount () {
@@ -72,6 +75,7 @@ export class DocumentContent extends React.Component {
 
   renderEditMode () {
     const { doc } = this.props
+    const { content } = this.state
     if (doc.contentType.match(/^text\/html/)) {
       const config = {
         inline: true,
@@ -81,7 +85,7 @@ export class DocumentContent extends React.Component {
       }
       return (
         <TinyMCE
-          content={doc.content}
+          content={content}
           config={config}
           onChange={this.handleEditorChange}
         />
