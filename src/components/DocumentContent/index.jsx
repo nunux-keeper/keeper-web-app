@@ -19,7 +19,7 @@ export class DocumentContent extends React.Component {
 
   static defaultProps = {
     editable: false,
-    pub: true
+    pub: false
   };
 
   constructor (props) {
