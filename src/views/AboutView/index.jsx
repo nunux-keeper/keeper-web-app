@@ -21,7 +21,7 @@ export default class AboutView extends React.Component {
         <div className='viewContent'>
           <div className='ui basic segment' style={{textAlign: 'center'}}>
             <h2 className='ui icon center aligned header'>
-              <img src='/logo.svg' className='ui icon' role='presentation' />
+              <img src='./logo.svg' className='ui icon' role='presentation' />
               Nunux Keeper
               <div className='sub header'>Your personal content curation service</div>
             </h2>
