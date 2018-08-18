@@ -70,13 +70,14 @@ export default class AbstractApi {
       },
       credentials: 'include'
     }, params)
-    const {method, body, headers, query, credentials} = params
+    const {method, body, headers, query} = params
+    let {credentials} = params
     if (method === 'post' || method === 'put' || method === 'patch') {
       headers['Content-Type'] = 'application/json'
     }
 
     let authz = Promise.resolve()
-    if (params.credentials !== 'none') {
+    if (credentials !== 'none') {
       authz = authProvider.updateToken().then((updated) => {
         if (updated || this.firstCall) {
           // Token was updated or it's the first API call.
@@ -92,6 +93,8 @@ export default class AbstractApi {
         console.error('Fatal error when updating the token', err)
         location.reload()
       })
+    } else {
+      credentials = undefined
     }
 
     const _url = this.resolveUrl(url, query)
