@@ -149,6 +149,14 @@ export class AppMenu extends React.Component {
           <Icon name='settings' />
           Settings
         </Menu.Item>
+        <Menu.Item as={Link}
+          title='View about screen [g a]'
+          to={{ pathname: '/about' }}
+          activeClassName='active'
+          onClick={this.handleItemClick}>
+          <Icon name='question circle outline' />
+          About
+        </Menu.Item>
       </Menu>
     )
   }

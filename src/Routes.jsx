@@ -18,6 +18,7 @@ import SettingsView from 'views/SettingsView'
 import WebhookView from 'views/WebhookView'
 import ApiClientView from 'views/ApiClientView'
 import SharingListView from 'views/SharingListView'
+import AboutView from 'views/AboutView'
 
 import { requireAuthentication } from 'middlewares/Authentication'
 
@@ -69,6 +70,7 @@ export default (store) => (
       <Route path='settings/webhooks/:id' component={WebhookEditView} />
       <Route path='settings/clients/create' component={ApiClientCreateView} />
       <Route path='settings/clients/:id' component={ApiClientEditView} />
+      <Route path='about' component={AboutView} />
     </Route>
     <Redirect from='/settings' to='/settings/bookmarklet' />
     <Redirect from='*' to='/documents' />
