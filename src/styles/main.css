@@ -519,6 +519,9 @@ body.dimmable.undetached.dimmed .pusher {
     overflow-x: auto;
     overflow-y: hidden; } }
 
+.ui.page.modals.dimmer.transition.visible.active {
+  display: flex !important; }
+
 html {
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif; }

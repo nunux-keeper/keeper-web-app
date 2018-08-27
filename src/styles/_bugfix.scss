@@ -55,3 +55,8 @@ body.dimmable.undetached.dimmed {
     overflow-y: hidden;
   }
 }
+
+// Workaround for modals that are not correctly centered
+.ui.page.modals.dimmer.transition.visible.active {
+  display: flex!important;
+}
