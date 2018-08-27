@@ -23,7 +23,7 @@ window.kBookmarklet = function () {
     $o.style.top = '40px'
     $o.style.right = 0
     $o.style.width = '200px'
-    $o.style.background = 'transparent'
+    $o.style.background = '#ffffff01'
     $o.style.cursor = 'pointer'
     $o.addEventListener('dragenter', function (e) {
       popup.postMessage(JSON.stringify({ _type: 'onDragEnter' }), window.K_REALM)
