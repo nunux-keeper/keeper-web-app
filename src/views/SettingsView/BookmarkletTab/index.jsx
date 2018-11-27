@@ -10,8 +10,13 @@ export default class BookmarkletTab extends React.Component {
     alert('Don\'t click on me! But drag and drop me to your toolbar.')
   }
 
+  baseUrl () {
+    const { origin, pathname } = document.location
+    const basePath = pathname.replace('/settings/bookmarklet', '')
+    return origin + basePath
+  }
+
   render () {
-    const { origin } = document.location
     return (
       <div>
         <Header size='small'>The bookmarklet</Header>
@@ -23,7 +28,7 @@ export default class BookmarkletTab extends React.Component {
         </p>
         <Segment>
           Drag and drop the link bellow in your toolbar:&nbsp;
-          <a href={`javascript:(function(){K_REALM="${origin}";K_SCR=document.createElement("SCRIPT");
+          <a href={`javascript:(function(){K_REALM="${this.baseUrl()}";K_SCR=document.createElement("SCRIPT");
             K_SCR.type="text/javascript";K_SCR.src=K_REALM+"/bookmarklet.js";
             document.getElementsByTagName("head")[0].appendChild(K_SCR)})();`}
             onClick={this.handleClick}
