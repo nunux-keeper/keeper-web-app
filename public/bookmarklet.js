@@ -27,16 +27,16 @@ window.kBookmarklet = function () {
     $o.style.cursor = 'pointer'
     $o.addEventListener('dragenter', function (e) {
       popup.postMessage(JSON.stringify({ _type: 'onDragEnter' }), window.K_REALM)
-    }, false)
+    })
     $o.addEventListener('dragover', function (e) {
       if (e.preventDefault) {
         e.preventDefault()
       }
       return false
-    }, false)
+    })
     $o.addEventListener('dragleave', function (e) {
       popup.postMessage(JSON.stringify({ _type: 'onDragLeave' }), window.K_REALM)
-    }, false)
+    })
     $o.addEventListener('drop', function (e) {
       if (e.preventDefault) {
         e.preventDefault()
@@ -44,23 +44,23 @@ window.kBookmarklet = function () {
       var data = e.dataTransfer.getData('text/html')
       popup.postMessage(JSON.stringify({ _type: 'onDropData', data: data }), window.K_REALM)
       return false
-    }, false)
+    })
     $o.addEventListener('click', function (e) {
       popup.postMessage(JSON.stringify({ _type: 'onClick' }), window.K_REALM)
-    }, false)
+    })
     $c.appendChild($o)
+
+    var $ifrm = document.createElement('iframe')
+    $ifrm.setAttribute('id', frameId)
+    $ifrm.setAttribute('name', frameId)
+    $ifrm.style.width = '100%'
+    $ifrm.style.height = '100%'
+    $ifrm.style.border = 'none'
+    $ifrm.style.margin = 0
+
+    $c.appendChild($ifrm)
     document.body.appendChild($c)
   }
-
-  var $ifrm = document.createElement('iframe')
-  $ifrm.setAttribute('id', frameId)
-  $ifrm.setAttribute('name', frameId)
-  $ifrm.style.width = '100%'
-  $ifrm.style.height = '100%'
-  $ifrm.style.border = 'none'
-  $ifrm.style.margin = 0
-
-  $c.appendChild($ifrm)
 
   var url = window.K_REALM.replace(/\/$/, '') + '/bookmarklet?url=' +
     encodeURIComponent(window.location.href) +
