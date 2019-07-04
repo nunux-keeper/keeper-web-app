@@ -13,7 +13,9 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "build-css": "node-sass src/styles/main.scss src/styles/main.css",
-    "watch-css": "node-sass src/styles/main.scss src/styles/main.css -w"
+    "watch-css": "node-sass src/styles/main.scss src/styles/main.css -w",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -43,10 +45,12 @@
     "redux-thunk": "^2.1.0",
     "semantic-ui-css": "^2.2.12",
     "semantic-ui-react": "^0.71.5",
-    "timeago.js": "^2.0.4"
+    "timeago.js": "^2.0.4",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "node-sass": "^3.13.0",
     "react-scripts": "0.8.1"
-  }
+  },
+  "snyk": true
 }
