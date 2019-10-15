@@ -147,7 +147,7 @@ export class SharingListView extends React.Component {
 
   getRow (sharing) {
     const { labels } = this.props
-    const l = labels.items.find((l) => l.id === sharing.targetLabel)
+    const l = labels.current.labels.find((l) => l.id === sharing.targetLabel)
     const $pub = sharing.pub ? <Icon color='green' name='checkmark' size='large' /> : null
     const error = !l
     const outdated = sharing.endDate && new Date(sharing.endDate) < new Date()

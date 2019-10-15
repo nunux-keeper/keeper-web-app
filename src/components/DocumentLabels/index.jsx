@@ -66,7 +66,7 @@ export class DocumentLabels extends React.Component {
   renderEditMode () {
     const { labels, doc } = this.props
     const value = doc.labels ? doc.labels : []
-    const options = labels.items.map((l) => {
+    const options = labels.current.labels.map((l) => {
       const color = {color: l.color}
       return {
         text: l.label,
@@ -113,7 +113,7 @@ export class DocumentLabels extends React.Component {
   }
 
   resolveLabel (id) {
-    const { items: labels } = this.props.labels
+    const { labels } = this.props.labels.current
     return labels ? labels.find((l) => l.id === id) : null
   }
 }

@@ -97,7 +97,7 @@ export const removeLabel = (label) => {
     dispatch(removeLabelRequest())
     return LabelApi.remove(label)
       .then(
-        res => dispatchAction(dispatch, removeLabelSuccess(null)),
+        res => dispatchAction(dispatch, removeLabelSuccess(label)),
         err => dispatchAction(dispatch, removeLabelFailure(err))
       )
   }

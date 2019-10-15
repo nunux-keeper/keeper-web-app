@@ -4,7 +4,7 @@ import { bindActions } from 'store/helper'
 import { Menu, Header, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router'
 
-import { actions as labelsActions } from 'store/modules/labels'
+import labelsActions from 'store/labels/actions'
 import { actions as layoutActions } from 'store/modules/layout'
 
 import { Sizes } from 'store/modules/layout'
@@ -32,8 +32,8 @@ export class AppMenu extends React.Component {
   }
 
   get spinner () {
-    const { isFetching } = this.props.labels
-    if (isFetching) {
+    const { isProcessing } = this.props.labels
+    if (isProcessing) {
       return (
         <div className='ui active dimmer'>
           <div className='ui loader'></div>
@@ -43,15 +43,15 @@ export class AppMenu extends React.Component {
   }
 
   get labels () {
-    const { labels } = this.props
-    if (labels.isFetching && labels.items.length === 0) {
+    const { isProcessing, current } = this.props.labels
+    if (isProcessing && current.labels.length === 0) {
       return (
         <Menu.Item as='span' >
           <Icon loading name='spinner' />
         </Menu.Item>
       )
     }
-    return labels.items.map(
+    return current.labels.map(
       (label) => <Menu.Item
         as={Link}
         key={`label-${label.id}`}

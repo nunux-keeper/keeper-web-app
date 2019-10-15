@@ -4,6 +4,7 @@ import syncReducers from './modules'
 
 import profile from './profile'
 import label from './label'
+import labels from './labels'
 import webhook from './webhook'
 import webhooks from './webhooks'
 import client from './client'
@@ -16,6 +17,7 @@ export const makeRootReducer = (asyncReducers) => {
     ...syncReducers,
     profile,
     label,
+    labels,
     webhook,
     webhooks,
     client,

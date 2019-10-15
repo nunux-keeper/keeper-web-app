@@ -176,7 +176,7 @@ export class DocumentsContextMenu extends React.Component {
   handleRemoveLabel () {
     const { actions } = this.props
     actions.label.removeLabel(this.label)
-    .then((label) => {
+    .then(label => {
       actions.router.push({pathname: '/documents'})
       actions.notification.showNotification({
         message: 'Label deleted',
