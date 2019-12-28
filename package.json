@@ -28,7 +28,7 @@
   "dependencies": {
     "event-source-polyfill": "0.0.12",
     "mousetrap": "^1.6.0",
-    "node-sass": "^3.13.1",
+    "node-sass": "^4.11.0",
     "nprogress": "^0.2.0",
     "react": "^15.4.1",
     "react-addons-css-transition-group": "^15.4.1",
@@ -46,7 +46,7 @@
     "timeago.js": "^2.0.4"
   },
   "devDependencies": {
-    "node-sass": "^3.13.0",
+    "node-sass": "^4.11.0",
     "react-scripts": "0.8.1"
   }
 }
