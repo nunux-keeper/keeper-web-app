@@ -12,8 +12,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "build-css": "node-sass src/styles/main.scss src/styles/main.css",
-    "watch-css": "node-sass src/styles/main.scss src/styles/main.css -w"
+    "build-css": "sass src/styles/main.scss src/styles/main.css",
+    "watch-css": "sass src/styles/main.scss src/styles/main.css -w"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,6 @@
   "dependencies": {
     "event-source-polyfill": "0.0.12",
     "mousetrap": "^1.6.0",
-    "node-sass": "^3.13.1",
     "nprogress": "^0.2.0",
     "react": "^15.4.1",
     "react-addons-css-transition-group": "^15.4.1",
@@ -46,7 +45,7 @@
     "timeago.js": "^2.0.4"
   },
   "devDependencies": {
-    "node-sass": "^3.13.0",
     "react-scripts": "^0.9.0"
+    "sass": "^1.49.9"
   }
 }
